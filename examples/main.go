@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/katallaxie/pkg/logger"
 	"github.com/spf13/cobra"
+	htmx "github.com/zeiss/fiber-htmx"
 )
 
 // Config ...
@@ -44,6 +45,12 @@ func run(ctx context.Context) error {
 
 	app := fiber.New()
 	app.Static("/", "./public")
+
+	app.Get("/api/redirect", htmx.NewHtmxHandler(func(hx *htmx.Htmx) error {
+		hx.Redirect("https://google.com")
+
+		return nil
+	}))
 
 	err := app.Listen(cfg.Flags.Addr)
 	if err != nil {

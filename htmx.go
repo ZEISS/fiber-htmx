@@ -39,6 +39,7 @@ func (h *HxResponseHeaders) Set(k HxResponseHeader, val string) {
 	h.headers.Set(k.String(), val)
 }
 
+// Get ...
 func (h *HxResponseHeaders) Get(k HxResponseHeader) string {
 	return h.headers.Get(k.String())
 }
@@ -198,6 +199,11 @@ func (h *Htmx) WriteJSON(data any) (n int, err error) {
 	}
 
 	return h.Write(payload)
+}
+
+// Redirect ..
+func (h *Htmx) Redirect(url string) {
+	h.ctx.Append(HXRedirect.String(), url)
 }
 
 // WriteHTML ...
