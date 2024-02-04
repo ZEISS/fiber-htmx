@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/katallaxie/pkg/logger"
 	"github.com/spf13/cobra"
 )
@@ -41,6 +42,14 @@ func run(ctx context.Context) error {
 
 	logger.RedirectStdLog(logger.LogSink)
 
+	app := fiber.New()
+	app.Static("/", "./public")
+
+	err := app.Listen(cfg.Flags.Addr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return nil
 }
 
@@ -49,5 +58,3 @@ func main() {
 		panic(err)
 	}
 }
-
-var indexTemplate = `<div>Hooray!</div>`

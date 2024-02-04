@@ -180,7 +180,9 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 
 		h := &Htmx{hx, c}
 
-		return handler(h)
+		err := handler(h)
+
+		return cfg.ErrorHandler(c, err)
 	}
 }
 
