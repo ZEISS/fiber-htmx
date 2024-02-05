@@ -178,7 +178,7 @@ func (h *Htmx) Write(data []byte) (n int, err error) {
 
 // WriteHTML ...
 func (h *Htmx) WriteHTML(html template.HTML) (n int, err error) {
-	return h.Write([]byte(html))
+	return h.WriteString(string(html))
 }
 
 // WriteJSON ...
@@ -193,7 +193,7 @@ func (h *Htmx) WriteJSON(data any) (n int, err error) {
 
 // WriteString ...
 func (h *Htmx) WriteString(s string) (n int, err error) {
-	return h.Write([]byte(s))
+	return h.ctx.WriteString(s)
 }
 
 // StopPolling ...
