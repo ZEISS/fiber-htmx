@@ -191,6 +191,11 @@ func (h *Htmx) WriteJSON(data any) (n int, err error) {
 	return h.Write(payload)
 }
 
+// RenderComp ...
+func (h *Htmx) RenderComp(n Node) error {
+	return n.Render(h)
+}
+
 // WriteString ...
 func (h *Htmx) WriteString(s string) (n int, err error) {
 	return h.ctx.WriteString(s)
@@ -250,8 +255,25 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 		h := &Htmx{hx, c}
 
 		err := handler(h)
+		if err != nil {
+			return cfg.ErrorHandler(c, err)
+		}
 
-		return cfg.ErrorHandler(c, err)
+		return nil
+	}
+}
+
+// NewCompHandler ...
+func NewCompHandler(n Node, config ...Config) fiber.Handler {
+	cfg := configDefault(config...)
+
+	return func(c *fiber.Ctx) error {
+		err := n.Render(c)
+		if err != nil {
+			return cfg.ErrorHandler(c, err)
+		}
+
+		return nil
 	}
 }
 
