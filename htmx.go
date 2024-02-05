@@ -97,7 +97,7 @@ func HxFromContext(c *fiber.Ctx) *Hx {
 
 // ContextWithHx ...
 func ContextWithHx(c *fiber.Ctx) *fiber.Ctx {
-	c.Locals(htmxContext, HxFromContext(c))
+	_ = c.Locals(htmxContext, HxFromContext(c))
 
 	return c
 }
@@ -176,6 +176,21 @@ func (h *Htmx) Write(data []byte) (n int, err error) {
 	return h.ctx.Write(data)
 }
 
+// WriteHTML ...
+func (h *Htmx) WriteHTML(html template.HTML) (n int, err error) {
+	return h.Write([]byte(html))
+}
+
+// WriteJSON ...
+func (h *Htmx) WriteJSON(data any) (n int, err error) {
+	payload, err := json.Marshal(data)
+	if err != nil {
+		return 0, err
+	}
+
+	return h.Write(payload)
+}
+
 // WriteString ...
 func (h *Htmx) WriteString(s string) (n int, err error) {
 	return h.Write([]byte(s))
@@ -191,24 +206,34 @@ func (h *Htmx) Ctx() *fiber.Ctx {
 	return h.ctx
 }
 
-// WriteJSON ...
-func (h *Htmx) WriteJSON(data any) (n int, err error) {
-	payload, err := json.Marshal(data)
-	if err != nil {
-		return 0, err
-	}
-
-	return h.Write(payload)
-}
-
 // Redirect ..
 func (h *Htmx) Redirect(url string) {
-	h.ctx.Append(HXRedirect.String(), url)
+	h.ctx.Set(HXRedirect.String(), url)
 }
 
-// WriteHTML ...
-func (h *Htmx) WriteHTML(html template.HTML) (n int, err error) {
-	return h.Write([]byte(html))
+// ReplaceURL ...
+func (h *Htmx) ReplaceURL(url string) {
+	h.ctx.Set(HXReplaceUrl.String(), url)
+}
+
+// ReSwap ...
+func (h *Htmx) ReSwap(target string) {
+	h.ctx.Set(HXReswap.String(), target)
+}
+
+// ReTarget ...
+func (h *Htmx) ReTarget(target string) {
+	h.ctx.Set(HXRetarget.String(), target)
+}
+
+// ReSelect ...
+func (h *Htmx) ReSelect(target string) {
+	h.ctx.Set(HXReselect.String(), target)
+}
+
+// Trigger ...
+func (h *Htmx) Trigger(target string) {
+	h.ctx.Set(HXTrigger.String(), target)
 }
 
 // HtmxHandler ...
@@ -219,6 +244,7 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
 	return func(c *fiber.Ctx) error {
+		c = ContextWithHx(c)
 		hx := HxFromContext(c)
 
 		h := &Htmx{hx, c}
