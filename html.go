@@ -315,11 +315,6 @@ func Summary(children ...Node) Node {
 	return Element("summary", children...)
 }
 
-// SVG represents an HTML svg element.
-func SVG(children ...Node) Node {
-	return Element("svg", children...)
-}
-
 // Table represents an HTML table element.
 func Table(children ...Node) Node {
 	return Element("table", children...)
