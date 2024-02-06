@@ -268,6 +268,8 @@ func NewCompHandler(n Node, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
 	return func(c *fiber.Ctx) error {
+		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
+
 		err := n.Render(c)
 		if err != nil {
 			return cfg.ErrorHandler(c, err)

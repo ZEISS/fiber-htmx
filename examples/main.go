@@ -44,12 +44,15 @@ func run(ctx context.Context) error {
 	logger.RedirectStdLog(logger.LogSink)
 
 	app := fiber.New()
-	app.Static("/", "./public")
+	app.Get("/", htmx.NewCompHandler(indexPage))
 
-	app.Get("/api/redirect", htmx.NewHtmxHandler(func(hx *htmx.Htmx) error {
-		hx.Redirect("https://google.com")
+	app.Post("/api/respond", htmx.NewHtmxHandler(func(hx *htmx.Htmx) error {
+		if !hx.IsHxRequest() {
+			return nil
+		}
 
-		return nil
+		_, err := hx.WriteHTML("<div>New Content</div>")
+		return err
 	}))
 
 	err := app.Listen(cfg.Flags.Addr)
@@ -65,3 +68,14 @@ func main() {
 		panic(err)
 	}
 }
+
+var indexPage = htmx.HTML5(htmx.HTML5Props{
+	Title:    "index",
+	Language: "en",
+	Head: []htmx.Node{
+		htmx.Script(htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.10"), htmx.Attribute("type", "application/javascript")),
+	},
+	Body: []htmx.Node{
+		htmx.Button(htmx.Text("Button"), htmx.HxPost("/api/respond"), htmx.HxSwap("outerHTML"), htmx.ClassNames{"inline-block cursor-pointer rounded-md bg-gray-800 px-4 py-3 text-center text-sm font-semibold uppercase text-white transition duration-200 ease-in-out hover:bg-gray-900": true}),
+	},
+})
