@@ -6,16 +6,16 @@ import (
 	"strings"
 )
 
-// HTML5Props ...
+// HTML5Props represents the properties for an HTML5 document.
 type HTML5Props struct {
-	Title       string
-	Description string
-	Language    string
-	Head        []Node
-	Body        []Node
+	Title       string // The title of the HTML document.
+	Description string // The description of the HTML document.
+	Language    string // The language of the HTML document.
+	Head        []Node // The nodes to be included in the head section of the HTML document.
+	Body        []Node // The nodes to be included in the body section of the HTML document.
 }
 
-// HTML5 ...
+// HTML5 generates an HTML5 document based on the provided properties.
 func HTML5(p HTML5Props) Node {
 	return Doctype(
 		HTML(If(p.Language != "", Lang(p.Language)),
@@ -31,10 +31,10 @@ func HTML5(p HTML5Props) Node {
 	)
 }
 
-// HxClassName ...
+// HxClassName represents a class name for htmx elements.
 type HxClassName string
 
-// String ...
+// String returns the string representation of the HxClassName.
 func (c HxClassName) String() string {
 	return string(c)
 }
@@ -47,10 +47,10 @@ const (
 	HxClassNameSwapping  HxClassName = "htmx-swapping"
 )
 
-// ClassNames ...
+// ClassNames represents a set of class names.
 type ClassNames map[string]bool
 
-// Render ...
+// Render writes the class names to the provided writer.
 func (c ClassNames) Render(w io.Writer) error {
 	var included []string
 	for c, include := range c {
@@ -64,12 +64,12 @@ func (c ClassNames) Render(w io.Writer) error {
 	return Class(strings.Join(included, " ")).Render(w)
 }
 
-// Type ...
+// Type returns the node type of the ClassNames.
 func (c ClassNames) Type() NodeType {
 	return AttributeType
 }
 
-// String ...
+// String returns the string representation of the ClassNames.
 func (c ClassNames) String() string {
 	var b strings.Builder
 
