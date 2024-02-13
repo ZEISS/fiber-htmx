@@ -73,9 +73,34 @@ var indexPage = htmx.HTML5(htmx.HTML5Props{
 	Title:    "index",
 	Language: "en",
 	Head: []htmx.Node{
+		htmx.Link(htmx.Attribute("href", "https://cdn.jsdelivr.net/npm/daisyui@4.7.0/dist/full.min.css"), htmx.Attribute("rel", "stylesheet"), htmx.Attribute("type", "text/css")),
 		htmx.Script(htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.10"), htmx.Attribute("type", "application/javascript")),
+		htmx.Script(htmx.Attribute("src", "https://cdn.tailwindcss.com"), htmx.Attribute("type", "application/javascript")),
 	},
 	Body: []htmx.Node{
-		htmx.Button(htmx.Text("Button"), htmx.HxPost("/api/respond"), htmx.HxSwap("outerHTML"), htmx.ClassNames{"inline-block cursor-pointer rounded-md bg-gray-800 px-4 py-3 text-center text-sm font-semibold uppercase text-white transition duration-200 ease-in-out hover:bg-gray-900": true}),
+		htmx.Div(
+			htmx.ClassNames{"bg-base-100": true},
+			Navbar(NavbarProps{}), htmx.Button(htmx.Text("Button"), htmx.HxPost("/api/respond"), htmx.HxSwap("outerHTML"), htmx.ClassNames{"btn": true}),
+		),
 	},
 })
+
+type NavbarProps struct{}
+
+func Navbar(p NavbarProps) htmx.Node {
+	return htmx.Nav(
+		htmx.ClassNames{"bg-base-100": true, "navbar": true},
+		htmx.Div(htmx.ClassNames{"flex-none": true},
+			htmx.Button(htmx.ClassNames{"btn btn-square btn-ghost": true},
+				htmx.SVG(htmx.Attribute("xmlns", "http://www.w3.org/2000/svg"),
+					htmx.Attribute("fill", "none"), htmx.Attribute("viewBox", "0 0 24 24"),
+					htmx.ClassNames{"inline-block w-5 h-5 stroke-current": true},
+					htmx.Path(htmx.Attribute("stroke-linecap", "round"),
+						htmx.Attribute("stroke-linejoin", "round"), htmx.Attribute("stroke-width", "2"),
+						htmx.Attribute("d", "M4 6h16M4 12h16M4 18h16"),
+					),
+				),
+			),
+			htmx.Input(htmx.ClassNames{"toggle theme-controller": true}, htmx.Attribute("type", "checkbox"), htmx.Attribute("value", "light")),
+		))
+}

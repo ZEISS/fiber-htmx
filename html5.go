@@ -26,7 +26,7 @@ func HTML5(p HTML5Props) Node {
 				If(p.Description != "", Meta(Name("description"), Content(p.Description))),
 				Group(p.Head...),
 			),
-			Body(Group(p.Body...)),
+			Body(p.Body...),
 		),
 	)
 }

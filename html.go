@@ -190,8 +190,8 @@ func Input(children ...Node) Node {
 	return Element("input", children...)
 }
 
-// LabElement represents an HTML label element.
-func LabElement(children ...Node) Node {
+// Label represents an HTML label element.
+func Label(children ...Node) Node {
 	return Element("label", children...)
 }
 
