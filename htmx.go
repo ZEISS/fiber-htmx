@@ -9,14 +9,14 @@ import (
 )
 
 const (
-	// StatusStopPolling ...
+	// StatusStopPolling is a helper status code to stop polling.
 	StatusStopPolling = 286
 )
 
-// HxRequestHeader ...
+// HxRequestHeader is a helper type for htmx request headers.
 type HxRequestHeader string
 
-// String ...
+// String returns the header as a string.
 func (h HxRequestHeader) String() string {
 	return string(h)
 }
@@ -29,17 +29,17 @@ type HxResponseHeaders struct {
 	headers http.Header
 }
 
-// String ...
+// String returns the header as a string.
 func (h HxResponseHeader) String() string {
 	return string(h)
 }
 
-// Set ...
+// Set is a helper function to set a header.
 func (h *HxResponseHeaders) Set(k HxResponseHeader, val string) {
 	h.headers.Set(k.String(), val)
 }
 
-// Get ...
+// Get is a helper function to get a header.
 func (h *HxResponseHeaders) Get(k HxResponseHeader) string {
 	return h.headers.Get(k.String())
 }
@@ -145,43 +145,43 @@ func New(config ...Config) fiber.Handler {
 	}
 }
 
-// Htmx ...
+// Htmx is a helper struct for htmx requests.
 type Htmx struct {
 	request *Hx
 	ctx     *fiber.Ctx
 }
 
-// IsHxRequest ...
+// IsHxRequest returns true if the request is an htmx request.
 func (h *Htmx) IsHxRequest() bool {
 	return h.request.HxRequest
 }
 
-// IsHxBoosted ...
+// IsHxBoosted returns true if the request is an htmx request.
 func (h *Htmx) IsHxBoosted() bool {
 	return h.request.HxBoosted
 }
 
-// IsHxHistoryRestoreRequest ...
+// IsHxHistoryRestoreRequest returns true if the request is an htmx request.
 func (h *Htmx) IsHxHistoryRestoreRequest() bool {
 	return h.request.HxHistoryRestoreRequest
 }
 
-// RenderPartial ...
+// RenderPartial reutrns true if the request is an htmx request.
 func (h *Htmx) RenderPartial() bool {
 	return (h.request.HxRequest || h.request.HxBoosted) && !h.request.HxHistoryRestoreRequest
 }
 
-// Write ...
+// Write writes a response.
 func (h *Htmx) Write(data []byte) (n int, err error) {
 	return h.ctx.Write(data)
 }
 
-// WriteHTML ...
+// WriteHTML writes an HTML response.
 func (h *Htmx) WriteHTML(html template.HTML) (n int, err error) {
 	return h.WriteString(string(html))
 }
 
-// WriteJSON ...
+// WriteJSON writes a JSON response.
 func (h *Htmx) WriteJSON(data any) (n int, err error) {
 	payload, err := json.Marshal(data)
 	if err != nil {
@@ -191,12 +191,12 @@ func (h *Htmx) WriteJSON(data any) (n int, err error) {
 	return h.Write(payload)
 }
 
-// RenderComp ...
+// RenderComp is a helper function to render a component.
 func (h *Htmx) RenderComp(n Node) error {
 	return n.Render(h)
 }
 
-// WriteString ...
+// WriteString is a helper function to write a string.
 func (h *Htmx) WriteString(s string) (n int, err error) {
 	return h.ctx.WriteString(s)
 }
@@ -206,17 +206,17 @@ func (h *Htmx) StopPolling() error {
 	return h.ctx.SendStatus(StatusStopPolling)
 }
 
-// Ctx ...
+// Ctx returns the fiber context.
 func (h *Htmx) Ctx() *fiber.Ctx {
 	return h.ctx
 }
 
-// Redirect ..
+// Redirect is a helper function to redirect the client.
 func (h *Htmx) Redirect(url string) {
 	h.ctx.Set(HXRedirect.String(), url)
 }
 
-// ReplaceURL ...
+// ReplaceURL is a helper function to replace the current URL.
 func (h *Htmx) ReplaceURL(url string) {
 	h.ctx.Set(HXReplaceUrl.String(), url)
 }
@@ -244,7 +244,7 @@ func (h *Htmx) Trigger(target string) {
 // HtmxHandler ...
 type HtmxHandlerFunc = func(hx *Htmx) error
 
-// NewHtmxHandler ...
+// NewHtmxHandler returns a new htmx handler.
 func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
@@ -263,7 +263,7 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 	}
 }
 
-// NewCompHandler ...
+// NewCompHandler returns a new comp handler.
 func NewCompHandler(n Node, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 

@@ -1,10 +1,13 @@
 package htmx
 
 import (
+	"context"
 	"io"
 	"sort"
 	"strings"
 )
+
+var _ Props[HTML5Props] = (*HTML5Props)(nil)
 
 // HTML5Props represents the properties for an HTML5 document.
 type HTML5Props struct {
@@ -13,6 +16,36 @@ type HTML5Props struct {
 	Language    string // The language of the HTML document.
 	Head        []Node // The nodes to be included in the head section of the HTML document.
 	Body        []Node // The nodes to be included in the body section of the HTML document.
+
+	ctx context.Context
+}
+
+// WithContext returns the HTML5Props with the provided context.
+func (p HTML5Props) WithContext(ctx context.Context) HTML5Props {
+	p.ctx = ctx
+
+	return p
+}
+
+// Context returns the context of the provided props.
+func (p HTML5Props) Context() context.Context {
+	return p.ctx
+}
+
+// PropsWithContext returns the HTML5Props with the provided context.
+type PropsWithContext[P any] interface {
+	WithContext(ctx context.Context) P
+}
+
+// PropsContext returns the context of the provided props.
+type PropContext interface {
+	Context() context.Context
+}
+
+// Props is the interface for components that have properties.
+type Props[P any] interface {
+	PropContext
+	PropsWithContext[P]
 }
 
 // HTML5 generates an HTML5 document based on the provided properties.

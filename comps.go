@@ -7,12 +7,12 @@ import (
 	"strings"
 )
 
-// Node ...
+// Node is a node in the HTML tree.
 type Node interface {
 	Render(w io.Writer) error
 }
 
-// NodeType ...
+// NodeType is the type of a node.
 type NodeType int
 
 const (
@@ -20,25 +20,25 @@ const (
 	AttributeType
 )
 
-// NodeTypeDescriptor ...
+// NodeTypeDescriptor is a node that has a type.
 type NodeTypeDescriptor interface {
 	Type() NodeType
 }
 
-// NodeFunc ...
+// NodeFunc is a function that renders a node.
 type NodeFunc func(io.Writer) error
 
-// Render ...
+// Render renders the node.
 func (n NodeFunc) Render(w io.Writer) error {
 	return n(w)
 }
 
-// Type ...
+// Type returns the node type.
 func (n NodeFunc) Type() NodeType {
 	return ElementType
 }
 
-// String ...
+// String returns the node as a string.
 func (n NodeFunc) String() string {
 	var b strings.Builder
 
@@ -47,7 +47,7 @@ func (n NodeFunc) String() string {
 	return b.String()
 }
 
-// Element ...
+// Element is a node that renders an HTML element.
 func Element(name string, children ...Node) Node {
 	return NodeFunc(func(w2 io.Writer) error {
 		w := &statefulWriter{w: w2}
@@ -135,7 +135,7 @@ func isVoidElement(name string) bool {
 	return ok
 }
 
-// Attribute ...
+// Attribute is a node that renders an HTML attribute.
 func Attribute(name string, value ...string) Node {
 	switch len(value) {
 	case 0:
@@ -152,7 +152,7 @@ type attr struct {
 	value *string
 }
 
-// Render ...
+// Render is a node that renders an attribute.
 func (a *attr) Render(w io.Writer) error {
 	if a.value == nil {
 		_, err := w.Write([]byte(" " + a.name))
@@ -164,12 +164,12 @@ func (a *attr) Render(w io.Writer) error {
 	return err
 }
 
-// Type ...
+// Type is a node that returns the type of an attribute.
 func (a *attr) Type() NodeType {
 	return AttributeType
 }
 
-// String ...
+// String is a node that returns the attribute as a string.
 func (a *attr) String() string {
 	var b strings.Builder
 
@@ -178,7 +178,7 @@ func (a *attr) String() string {
 	return b.String()
 }
 
-// Text ...
+// Text is a node that renders a text.
 func Text(t string) Node {
 	return NodeFunc(func(w io.Writer) error {
 		_, err := w.Write([]byte(template.HTMLEscapeString(t)))
@@ -187,7 +187,7 @@ func Text(t string) Node {
 	})
 }
 
-// Textf ...
+// Textf is a node that renders a formatted text.
 func Textf(format string, a ...interface{}) Node {
 	return NodeFunc(func(w io.Writer) error {
 		_, err := w.Write([]byte(template.HTMLEscapeString(fmt.Sprintf(format, a...))))
@@ -196,7 +196,7 @@ func Textf(format string, a ...interface{}) Node {
 	})
 }
 
-// Raw ...
+// Raw is a node that renders raw HTML.
 func Raw(t string) Node {
 	return NodeFunc(func(w io.Writer) error {
 		_, err := w.Write([]byte(t))
@@ -205,7 +205,7 @@ func Raw(t string) Node {
 	})
 }
 
-// Rawf ...
+// Rawf is a node that renders a formatted raw HTML.
 func Rawf(format string, a ...interface{}) Node {
 	return NodeFunc(func(w io.Writer) error {
 		_, err := fmt.Fprintf(w, format, a...)
@@ -218,22 +218,22 @@ type group struct {
 	children []Node
 }
 
-// String ...
+// String is a node that renders a group of nodes.
 func (c group) String() string {
 	panic("cannot render group directly")
 }
 
-// Render ...
+// Render is a node that renders a group of nodes.
 func (c group) Render(io.Writer) error {
 	panic("cannot render children directly")
 }
 
-// Group ...
+// Group is a node that groups children nodes.
 func Group(children ...Node) Node {
 	return group{children: children}
 }
 
-// If ...
+// If is a node that renders a child node if a condition is true.
 func If(condition bool, n Node) Node {
 	if condition {
 		return n
