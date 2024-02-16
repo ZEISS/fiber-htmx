@@ -1,10 +1,11 @@
 package htmx
 
 import (
-	"context"
 	"io"
 	"sort"
 	"strings"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 var _ Props[HTML5Props] = (*HTML5Props)(nil)
@@ -17,29 +18,29 @@ type HTML5Props struct {
 	Head        []Node // The nodes to be included in the head section of the HTML document.
 	Body        []Node // The nodes to be included in the body section of the HTML document.
 
-	ctx context.Context
+	ctx *fiber.Ctx
 }
 
 // WithContext returns the HTML5Props with the provided context.
-func (p HTML5Props) WithContext(ctx context.Context) HTML5Props {
+func (p HTML5Props) WithContext(ctx *fiber.Ctx) HTML5Props {
 	p.ctx = ctx
 
 	return p
 }
 
 // Context returns the context of the provided props.
-func (p HTML5Props) Context() context.Context {
+func (p HTML5Props) Context() *fiber.Ctx {
 	return p.ctx
 }
 
 // PropsWithContext returns the HTML5Props with the provided context.
 type PropsWithContext[P any] interface {
-	WithContext(ctx context.Context) P
+	WithContext(ctx *fiber.Ctx) P
 }
 
 // PropsContext returns the context of the provided props.
 type PropContext interface {
-	Context() context.Context
+	Context() *fiber.Ctx
 }
 
 // Props is the interface for components that have properties.

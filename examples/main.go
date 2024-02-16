@@ -83,7 +83,7 @@ var indexPage = htmx.HTML5(htmx.HTML5Props{
 			Navbar(NavbarProps{}), htmx.Button(htmx.Text("Button"), htmx.HxPost("/api/respond"), htmx.HxSwap("outerHTML"), htmx.ClassNames{"btn": true}),
 		),
 	},
-}.WithContext(context.TODO()))
+}.WithContext(&fiber.Ctx{}))
 
 type NavbarProps struct{}
 
