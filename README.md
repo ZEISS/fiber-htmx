@@ -14,6 +14,21 @@
 $ go get github.com/zeiss/fiber-htmx
 ```
 
+## Components
+
+- [x] [htmx](https://htmx.org/)
+- [x] [HTML5](https://www.w3.org/TR/2011/WD-html5-20110405/)
+
+The package supports to write HTML5 components and HTMX components in Go.
+
+```go
+htmx.Button(
+    htmx.Attribute("type", "submit")
+    htmx.Text("Button"),
+    htmx.HxPost("/api/respond")
+)
+```
+
 ## Examples
 
 See [examples](https://github.com/zeiss/fiber-htmx/tree/master/examples) to understand the provided interfaces.

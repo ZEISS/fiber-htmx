@@ -48,7 +48,7 @@ func (n NodeFunc) String() string {
 }
 
 // Element is a node that renders an HTML element.
-func Element(name string, children ...Node) Node {
+func Element(name string, children ...Node) NodeFunc {
 	return NodeFunc(func(w2 io.Writer) error {
 		w := &statefulWriter{w: w2}
 
@@ -104,6 +104,7 @@ type statefulWriter struct {
 	err error
 }
 
+// Write is a node that writes to the stateful writer.
 func (w *statefulWriter) Write(p []byte) {
 	if w.err != nil {
 		return
