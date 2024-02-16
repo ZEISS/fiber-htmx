@@ -83,6 +83,15 @@ const (
 // ClassNames represents a set of class names.
 type ClassNames map[string]bool
 
+// Merge merges the provided class names into the class names.
+func (c ClassNames) Merge(classNames ClassNames) ClassNames {
+	for className, include := range classNames {
+		c[className] = include
+	}
+
+	return c
+}
+
 // Render writes the class names to the provided writer.
 func (c ClassNames) Render(w io.Writer) error {
 	var included []string
