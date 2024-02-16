@@ -279,6 +279,30 @@ func NewCompHandler(n Node, config ...Config) fiber.Handler {
 	}
 }
 
+// CompFunc is a helper type for component functions.
+type CompFunc func(c *fiber.Ctx) (Node, error)
+
+// NewCompFuncHandler returns a new comp handler.
+func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
+	cfg := configDefault(config...)
+
+	return func(c *fiber.Ctx) error {
+		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
+
+		n, err := handler(c)
+		if err != nil {
+			return cfg.ErrorHandler(c, err)
+		}
+
+		err = n.Render(c)
+		if err != nil {
+			return cfg.ErrorHandler(c, err)
+		}
+
+		return nil
+	}
+}
+
 // Helper function to set default values
 func configDefault(config ...Config) Config {
 	if len(config) < 1 {
