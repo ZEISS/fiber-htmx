@@ -47,3 +47,94 @@ func Primary(p LinkProps) htmx.Node {
 		htmx.Group(p.Children...),
 	)
 }
+
+// Secondary generates a secondary link element based on the provided properties.
+func Secondary(p LinkProps) htmx.Node {
+	return htmx.A(
+		htmx.ClassNames{
+			"link":           true,
+			"link-secondary": true,
+		}.Merge(p.ClassNames),
+		htmx.Href(p.Href),
+		htmx.Rel(p.Rel),
+		htmx.Group(p.Children...),
+	)
+}
+
+// Accent generates an accent link element based on the provided properties.
+func Accent(p LinkProps) htmx.Node {
+	return htmx.A(
+		htmx.ClassNames{
+			"link":        true,
+			"link-accent": true,
+		}.Merge(p.ClassNames),
+		htmx.Href(p.Href),
+		htmx.Rel(p.Rel),
+		htmx.Group(p.Children...),
+	)
+}
+
+// Neutral generates a neutral link element based on the provided properties.
+func Neutral(p LinkProps) htmx.Node {
+	return htmx.A(
+		htmx.ClassNames{
+			"link":         true,
+			"link-neutral": true,
+		}.Merge(p.ClassNames),
+		htmx.Href(p.Href),
+		htmx.Rel(p.Rel),
+		htmx.Group(p.Children...),
+	)
+}
+
+// Info generates an info link element based on the provided properties.
+func Info(p LinkProps) htmx.Node {
+	return htmx.A(
+		htmx.ClassNames{
+			"link":      true,
+			"link-info": true,
+		}.Merge(p.ClassNames),
+		htmx.Href(p.Href),
+		htmx.Rel(p.Rel),
+		htmx.Group(p.Children...),
+	)
+}
+
+// Warning generates a warning link element based on the provided properties.
+func Warning(p LinkProps) htmx.Node {
+	return htmx.A(
+		htmx.ClassNames{
+			"link":         true,
+			"link-warning": true,
+		}.Merge(p.ClassNames),
+		htmx.Href(p.Href),
+		htmx.Rel(p.Rel),
+		htmx.Group(p.Children...),
+	)
+}
+
+// Error generates an error link element based on the provided properties.
+func Error(p LinkProps) htmx.Node {
+	return htmx.A(
+		htmx.ClassNames{
+			"link":       true,
+			"link-error": true,
+		}.Merge(p.ClassNames),
+		htmx.Href(p.Href),
+		htmx.Rel(p.Rel),
+		htmx.Group(p.Children...),
+	)
+}
+
+// Underline generates an underline link element based on the provided properties.
+func Underline(p LinkProps) htmx.Node {
+	return htmx.A(
+		htmx.ClassNames{
+			"link":       true,
+			"link-hover": true,
+		}.Merge(p.ClassNames),
+		htmx.Href(p.Href),
+		htmx.Rel(p.Rel),
+		htmx.Group(p.Children...),
+	)
+}
