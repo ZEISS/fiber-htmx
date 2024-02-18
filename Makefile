@@ -1,9 +1,14 @@
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := release
 
 GO ?= go
 GO_RUN_TOOLS ?= $(GO) run -modfile ./tools/go.mod
 GO_TEST = $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
+GO_RELEASER ?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
 GO_MOD ?= $(shell ${GO} list -m)
+
+.PHONY: release
+release: ## Release the project.
+	$(GO_RELEASER) release --clean
 
 .PHONY: generate
 generate: ## Generate code.
