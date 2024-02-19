@@ -90,7 +90,7 @@ func HxDelete(url string) Node {
 
 // HxOn sets the hx-put-{target} attribute to specify the JavaScript code to execute on a PUT request.
 func HxOn(target string, js string) Node {
-	return Attribute(fmt.Sprintf("hx-put-%s", target), js)
+	return Attribute(fmt.Sprintf("hx-on:%s", target), js)
 }
 
 // HxPut sets the hx-put attribute to specify the URL for PUT requests.
