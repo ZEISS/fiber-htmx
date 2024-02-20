@@ -4,7 +4,7 @@ import htmx "github.com/zeiss/fiber-htmx"
 
 // BadgeProps represents the properties for a badge element.
 type BadgeProps struct {
-	ClassNames map[string]bool // The class names for the badge element.
+	ClassNames htmx.ClassNames // The class names for the badge element.
 }
 
 // Badge generates a badge element based on the provided properties.

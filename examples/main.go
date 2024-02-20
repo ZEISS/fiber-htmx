@@ -9,6 +9,8 @@ import (
 	"github.com/katallaxie/pkg/logger"
 	"github.com/spf13/cobra"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/dropdowns"
+	"github.com/zeiss/fiber-htmx/components/forms"
 )
 
 // Config ...
@@ -81,6 +83,80 @@ var indexPage = htmx.HTML5(htmx.HTML5Props{
 		htmx.Div(
 			htmx.ClassNames{"bg-base-100": true},
 			Navbar(NavbarProps{}), htmx.Button(htmx.Text("Button"), htmx.HxPost("/api/respond"), htmx.HxSwap("outerHTML"), htmx.ClassNames{"btn": true}),
+			htmx.Div(
+				dropdowns.Dropdown(
+					dropdowns.DropdownProps{},
+					dropdowns.DropdownButton(
+						dropdowns.DropdownButtonProps{},
+						htmx.Text("Dropdown"),
+					),
+					dropdowns.DropdownMenuItems(
+						dropdowns.DropdownMenuItemsProps{},
+						dropdowns.DropdownMenuItem(
+							dropdowns.DropdownMenuItemProps{},
+							htmx.A(
+								htmx.Text("Item 1"),
+							),
+						),
+						dropdowns.DropdownMenuItem(
+							dropdowns.DropdownMenuItemProps{},
+							htmx.A(
+								htmx.Text("Item 2"),
+							),
+						),
+					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				forms.Radio(
+					forms.RadioProps{
+						Name:    "radio1",
+						Value:   "radio1",
+						Checked: true,
+					},
+				),
+				forms.Radio(
+					forms.RadioProps{
+						Name:  "radio1",
+						Value: "radio2",
+					},
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				forms.Checkbox(
+					forms.CheckboxProps{
+						Name:    "checkbox1",
+						Value:   "checkbox1",
+						Checked: true,
+					},
+				),
+				forms.Checkbox(
+					forms.CheckboxProps{
+						Name:  "checkbox1",
+						Value: "checkbox1",
+					},
+				),
+				forms.CheckboxPrimary(
+					forms.CheckboxProps{
+						Name:  "checkbox1",
+						Value: "checkbox1",
+					},
+				),
+				forms.CheckboxSuccess(
+					forms.CheckboxProps{
+						Name:  "checkbox1",
+						Value: "checkbox1",
+					},
+				),
+			),
 		),
 	},
 }.WithContext(&fiber.Ctx{}))
@@ -102,5 +178,6 @@ func Navbar(p NavbarProps) htmx.Node {
 				),
 			),
 			htmx.Input(htmx.ClassNames{"toggle theme-controller": true}, htmx.Attribute("type", "checkbox"), htmx.Attribute("value", "light")),
-		))
+		),
+	)
 }

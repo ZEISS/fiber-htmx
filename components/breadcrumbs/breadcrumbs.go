@@ -4,7 +4,7 @@ import htmx "github.com/zeiss/fiber-htmx"
 
 // BreadcrumsbProps represents the properties for a breadcrumb element.
 type BreadcrumbsProps struct {
-	ClassNames map[string]bool // The class names for the breadcrumb element.
+	ClassNames htmx.ClassNames // The class names for the breadcrumb element.
 }
 
 // BreadCrumbs generates a breadcrumb element based on the provided properties.
@@ -22,7 +22,7 @@ func Breadcrumbs(p BreadcrumbsProps, children ...htmx.Node) htmx.Node {
 
 // BreadcrumbProps represents the properties for a breadcrumb item element.
 type BreadcrumbProps struct {
-	ClassNames map[string]bool // The class names for the breadcrumb item element.
+	ClassNames htmx.ClassNames // The class names for the breadcrumb item element.
 	Href       string          // The URL of the linked document.
 	Rel        string          // The relationship between the current document and the linked document.
 	Title      string          // The title of the linked document.
