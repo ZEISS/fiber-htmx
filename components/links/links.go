@@ -11,6 +11,7 @@ type LinkProps struct {
 	Rel        string          // The relationship between the current document and the linked document.
 	Href       string          // The URL of the linked document.
 	ClassNames map[string]bool // The class names for the link element.
+	Active     bool            // Whether the link is active.
 
 	ctx context.Context
 }
@@ -26,7 +27,8 @@ func (p LinkProps) WithContext(ctx context.Context, children ...htmx.Node) LinkP
 func Link(p LinkProps, children ...htmx.Node) htmx.Node {
 	return htmx.A(
 		htmx.ClassNames{
-			"link": true,
+			"link":   true,
+			"active": p.Active,
 		}.Merge(p.ClassNames),
 		htmx.Href(p.Href),
 		htmx.Rel(p.Rel),
@@ -40,6 +42,7 @@ func Primary(p LinkProps, children ...htmx.Node) htmx.Node {
 		htmx.ClassNames{
 			"link":         true,
 			"link-primary": true,
+			"active":       p.Active,
 		}.Merge(p.ClassNames),
 		htmx.Href(p.Href),
 		htmx.Rel(p.Rel),
@@ -53,6 +56,7 @@ func Secondary(p LinkProps, children ...htmx.Node) htmx.Node {
 		htmx.ClassNames{
 			"link":           true,
 			"link-secondary": true,
+			"active":         p.Active,
 		}.Merge(p.ClassNames),
 		htmx.Href(p.Href),
 		htmx.Rel(p.Rel),
@@ -66,6 +70,7 @@ func Accent(p LinkProps, children ...htmx.Node) htmx.Node {
 		htmx.ClassNames{
 			"link":        true,
 			"link-accent": true,
+			"active":      p.Active,
 		}.Merge(p.ClassNames),
 		htmx.Href(p.Href),
 		htmx.Rel(p.Rel),
@@ -79,6 +84,7 @@ func Neutral(p LinkProps, children ...htmx.Node) htmx.Node {
 		htmx.ClassNames{
 			"link":         true,
 			"link-neutral": true,
+			"active":       p.Active,
 		}.Merge(p.ClassNames),
 		htmx.Href(p.Href),
 		htmx.Rel(p.Rel),
@@ -92,6 +98,7 @@ func Info(p LinkProps, children ...htmx.Node) htmx.Node {
 		htmx.ClassNames{
 			"link":      true,
 			"link-info": true,
+			"active":    p.Active,
 		}.Merge(p.ClassNames),
 		htmx.Href(p.Href),
 		htmx.Rel(p.Rel),
@@ -105,6 +112,7 @@ func Warning(p LinkProps, children ...htmx.Node) htmx.Node {
 		htmx.ClassNames{
 			"link":         true,
 			"link-warning": true,
+			"active":       p.Active,
 		}.Merge(p.ClassNames),
 		htmx.Href(p.Href),
 		htmx.Rel(p.Rel),
@@ -118,6 +126,7 @@ func Error(p LinkProps, children ...htmx.Node) htmx.Node {
 		htmx.ClassNames{
 			"link":       true,
 			"link-error": true,
+			"active":     p.Active,
 		}.Merge(p.ClassNames),
 		htmx.Href(p.Href),
 		htmx.Rel(p.Rel),
@@ -131,6 +140,7 @@ func Underline(p LinkProps, children ...htmx.Node) htmx.Node {
 		htmx.ClassNames{
 			"link":       true,
 			"link-hover": true,
+			"active":     p.Active,
 		}.Merge(p.ClassNames),
 		htmx.Href(p.Href),
 		htmx.Rel(p.Rel),
