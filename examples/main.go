@@ -9,6 +9,7 @@ import (
 	"github.com/katallaxie/pkg/logger"
 	"github.com/spf13/cobra"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 )
@@ -155,6 +156,40 @@ var indexPage = htmx.HTML5(htmx.HTML5Props{
 						Name:  "checkbox1",
 						Value: "checkbox1",
 					},
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				buttons.Button(
+					buttons.ButtonProps{},
+					htmx.Text("Button"),
+				),
+				buttons.Neutral(
+					buttons.ButtonProps{},
+					htmx.Text("Button"),
+				),
+				buttons.Secondary(
+					buttons.ButtonProps{},
+					htmx.Text("Button"),
+				),
+				buttons.Accent(
+					buttons.ButtonProps{},
+					htmx.Text("Button"),
+				),
+				buttons.Ghost(
+					buttons.ButtonProps{},
+					htmx.Text("Button"),
+				),
+				buttons.Link(
+					buttons.ButtonProps{},
+					htmx.Text("Button"),
+				),
+				buttons.Outline(
+					buttons.ButtonProps{},
+					htmx.Text("Button"),
 				),
 			),
 		),
