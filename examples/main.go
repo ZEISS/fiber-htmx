@@ -9,6 +9,7 @@ import (
 	"github.com/katallaxie/pkg/logger"
 	"github.com/spf13/cobra"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/avatars"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
@@ -247,6 +248,42 @@ var indexPage = htmx.HTML5(htmx.HTML5Props{
 					collapsible.CollapseContent(
 						collapsible.CollapseContentProps{},
 						htmx.Text("Content"),
+					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				avatars.AvatarRoundSmall(
+					avatars.AvatarProps{},
+					htmx.Img(
+						htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
+					),
+				),
+				avatars.AvatarRoundLarge(
+					avatars.AvatarProps{},
+					htmx.Img(
+						htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
+					),
+				),
+				avatars.AvatarRoundedLarge(
+					avatars.AvatarProps{},
+					htmx.Img(
+						htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
+					),
+				),
+				avatars.AvatarRoundedMedium(
+					avatars.AvatarProps{},
+					htmx.Img(
+						htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
+					),
+				),
+				avatars.AvatarRoundedSmall(
+					avatars.AvatarProps{},
+					htmx.Img(
+						htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
 					),
 				),
 			),
