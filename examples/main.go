@@ -9,6 +9,7 @@ import (
 	"github.com/katallaxie/pkg/logger"
 	"github.com/spf13/cobra"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/accordions"
 	"github.com/zeiss/fiber-htmx/components/avatars"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
@@ -284,6 +285,104 @@ var indexPage = htmx.HTML5(htmx.HTML5Props{
 					avatars.AvatarProps{},
 					htmx.Img(
 						htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
+					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				accordions.Accordion(
+					accordions.AccordionProps{
+						ClassNames: htmx.ClassNames{
+							"mb-4": true,
+						},
+					},
+					accordions.AccordionRadio(
+						accordions.AccordionRadioProps{
+							Name: "accordion1",
+						},
+					),
+					accordions.AccordionTitle(
+						accordions.AccordionTitleProps{},
+						htmx.Text("Accordion 1"),
+					),
+					accordions.AccordionContent(
+						accordions.AccordionContentProps{},
+						htmx.Text("Content 1"),
+					),
+				),
+				accordions.Accordion(
+					accordions.AccordionProps{
+						ClassNames: htmx.ClassNames{
+							"mb-4": true,
+						},
+					},
+					accordions.AccordionRadio(
+						accordions.AccordionRadioProps{
+							Name: "accordion1",
+						},
+					),
+					accordions.AccordionTitle(
+						accordions.AccordionTitleProps{},
+						htmx.Text("Accordion 2"),
+					),
+					accordions.AccordionContent(
+						accordions.AccordionContentProps{},
+						htmx.Text("Content 2"),
+					),
+				),
+				accordions.Accordion(
+					accordions.AccordionProps{
+						ClassNames: htmx.ClassNames{
+							"mb-4": true,
+						},
+					},
+					accordions.AccordionRadio(
+						accordions.AccordionRadioProps{
+							Name: "accordion1",
+						},
+					),
+					accordions.AccordionTitle(
+						accordions.AccordionTitleProps{},
+						htmx.Text("Accordion 1"),
+					),
+					accordions.AccordionContent(
+						accordions.AccordionContentProps{},
+						htmx.Text("Content 1"),
+					),
+				),
+				accordions.AccordionArrow(
+					accordions.AccordionProps{},
+					accordions.AccordionRadio(
+						accordions.AccordionRadioProps{
+							Name: "accordion1",
+						},
+					),
+					accordions.AccordionTitle(
+						accordions.AccordionTitleProps{},
+						htmx.Text("Accordion 2"),
+					),
+					accordions.AccordionContent(
+						accordions.AccordionContentProps{},
+						htmx.Text("Content 2"),
+					),
+				),
+				accordions.AccordionArrow(
+					accordions.AccordionProps{},
+					accordions.AccordionRadio(
+						accordions.AccordionRadioProps{
+							Name: "accordion1",
+						},
+					),
+					accordions.AccordionTitle(
+						accordions.AccordionTitleProps{},
+						htmx.Text("Accordion 2"),
+					),
+					accordions.AccordionContent(
+						accordions.AccordionContentProps{},
+						htmx.Text("Content 2"),
 					),
 				),
 			),
