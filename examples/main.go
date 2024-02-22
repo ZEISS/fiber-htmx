@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
+	"github.com/zeiss/fiber-htmx/components/collapsible"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 )
@@ -190,6 +191,63 @@ var indexPage = htmx.HTML5(htmx.HTML5Props{
 				buttons.Outline(
 					buttons.ButtonProps{},
 					htmx.Text("Button"),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				collapsible.Collapse(
+					collapsible.CollapseProps{
+						ClassNames: htmx.ClassNames{
+							"mb-4": true,
+						},
+					},
+					collapsible.CollapseTitle(
+						collapsible.CollapseTitleProps{},
+						htmx.Text("Title"),
+					),
+					collapsible.CollapseContent(
+						collapsible.CollapseContentProps{},
+						htmx.Text("Content"),
+					),
+				),
+				collapsible.Collapse(
+					collapsible.CollapseProps{
+						ClassNames: htmx.ClassNames{
+							"mb-4": true,
+						},
+					},
+					collapsible.CollapseTitle(
+						collapsible.CollapseTitleProps{},
+						htmx.Text("Title with Checkbox"),
+					),
+					collapsible.CollapseCheckbox(
+						collapsible.CollapseCheckboxProps{},
+					),
+					collapsible.CollapseContent(
+						collapsible.CollapseContentProps{},
+						htmx.Text("Content"),
+					),
+				),
+				collapsible.CollapseArrow(
+					collapsible.CollapseProps{
+						ClassNames: htmx.ClassNames{
+							"mb-4": true,
+						},
+					},
+					collapsible.CollapseTitle(
+						collapsible.CollapseTitleProps{},
+						htmx.Text("Title with Checkbox"),
+					),
+					collapsible.CollapseCheckbox(
+						collapsible.CollapseCheckboxProps{},
+					),
+					collapsible.CollapseContent(
+						collapsible.CollapseContentProps{},
+						htmx.Text("Content"),
+					),
 				),
 			),
 		),

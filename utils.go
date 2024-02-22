@@ -14,3 +14,8 @@ func AsBool(str string) bool {
 func AsStr(v bool) string {
 	return strconv.FormatBool(v)
 }
+
+// IntAsString ...
+func IntAsString(v int) string {
+	return strconv.Itoa(v)
+}
