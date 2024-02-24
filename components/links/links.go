@@ -147,3 +147,16 @@ func Underline(p LinkProps, children ...htmx.Node) htmx.Node {
 		htmx.Group(children...),
 	)
 }
+
+// Button generate a link that looks like a button.
+func Button(p LinkProps, children ...htmx.Node) htmx.Node {
+	return htmx.A(
+		htmx.ClassNames{
+			"btn":    true,
+			"active": p.Active,
+		}.Merge(p.ClassNames),
+		htmx.Href(p.Href),
+		htmx.Rel(p.Rel),
+		htmx.Group(children...),
+	)
+}

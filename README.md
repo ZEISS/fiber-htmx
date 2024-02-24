@@ -19,6 +19,7 @@ $ go get github.com/zeiss/fiber-htmx
 - [x] [htmx](https://htmx.org/)
 - [x] [HTML5](https://www.w3.org/TR/2011/WD-html5-20110405/)
 - [ ] [DaisyUI](https://daisyui.com/) (WIP)
+- [ ] [Heroicons](https://heroicons.com/) (WIP)
 
 The package supports to write HTML5 components and HTMX components in Go.
 
