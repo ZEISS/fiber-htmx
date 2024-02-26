@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/katallaxie/pkg/logger"
@@ -15,6 +16,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/collapsible"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
 // Config ...
@@ -25,6 +27,12 @@ type Config struct {
 // Flags ...
 type Flags struct {
 	Addr string
+}
+
+// DemoRow ...
+type DemoRow struct {
+	ID   int
+	Name string
 }
 
 var cfg = &Config{
@@ -384,6 +392,46 @@ var indexPage = htmx.HTML5(htmx.HTML5Props{
 						accordions.AccordionContentProps{},
 						htmx.Text("Content 2"),
 					),
+				),
+			),
+			htmx.Div(
+				tables.Table[DemoRow](
+					tables.TableProps[DemoRow]{
+						Columns: tables.Columns[DemoRow]{
+							{
+								ID:          "id",
+								AccessorKey: "ID",
+								Header: func(p tables.TableProps[DemoRow]) htmx.Node {
+									return htmx.Th(htmx.Text("ID"))
+								},
+								Cell: func(p tables.TableProps[DemoRow], row DemoRow) htmx.Node {
+									return htmx.Td(
+										htmx.Text(strconv.Itoa(row.ID)),
+									)
+								},
+							},
+							{
+								ID:          "name",
+								AccessorKey: "Name",
+								Header: func(p tables.TableProps[DemoRow]) htmx.Node {
+									return htmx.Th(htmx.Text("Name"))
+								},
+								Cell: func(p tables.TableProps[DemoRow], row DemoRow) htmx.Node {
+									return htmx.Td(htmx.Text(row.Name))
+								},
+							},
+						},
+						Rows: tables.NewRows[DemoRow]([]DemoRow{
+							{
+								ID:   1,
+								Name: "Name 1",
+							},
+							{
+								ID:   2,
+								Name: "Name 2",
+							},
+						}),
+					},
 				),
 			),
 		),
