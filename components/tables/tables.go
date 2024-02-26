@@ -3,19 +3,19 @@ package tables
 import htmx "github.com/zeiss/fiber-htmx"
 
 // TableProps is a struct that contains the properties of a table
-type TableProps[R comparable] struct {
+type TableProps[R any] struct {
 	ClassName htmx.ClassNames
 	Columns   Columns[R]
 	Rows      Rows[R]
 }
 
 // Rows ...
-type Rows[R comparable] struct {
+type Rows[R any] struct {
 	Data []R
 }
 
 // NewRows ...
-func NewRows[R comparable](data []R) Rows[R] {
+func NewRows[R any](data []R) Rows[R] {
 	return Rows[R]{
 		Data: data,
 	}
@@ -41,10 +41,10 @@ func (r *Rows[T]) GetAll() []T {
 }
 
 // Columns ...
-type Columns[R comparable] []ColumnDef[R]
+type Columns[R any] []ColumnDef[R]
 
 // ColumnDef ...
-type ColumnDef[R comparable] struct {
+type ColumnDef[R any] struct {
 	ID              string
 	AccessorKey     string
 	Header          func(p TableProps[R]) htmx.Node
@@ -54,7 +54,7 @@ type ColumnDef[R comparable] struct {
 }
 
 // Table is a struct that contains the properties of a table
-func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
+func Table[R any](p TableProps[R], children ...htmx.Node) htmx.Node {
 	headers := []htmx.Node{}
 	for _, column := range p.Columns {
 		headers = append(headers, column.Header(p))
