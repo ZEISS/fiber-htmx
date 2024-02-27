@@ -1,6 +1,9 @@
 package tables
 
-import htmx "github.com/zeiss/fiber-htmx"
+import (
+	"github.com/gofiber/fiber/v2"
+	htmx "github.com/zeiss/fiber-htmx"
+)
 
 // TableProps is a struct that contains the properties of a table
 type TableProps[R comparable] struct {
@@ -74,6 +77,7 @@ func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
 		htmx.ClassNames{
 			"table": true,
 		}.Merge(p.ClassName),
+		htmx.Group(children...),
 		htmx.THead(
 			htmx.Tr(
 				headers...,
@@ -83,4 +87,19 @@ func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
 			rows...,
 		),
 	)
+}
+
+// Pagination ...
+type Pagination struct {
+	Offset int
+	Limit  int
+}
+
+// PaginationFromContext is a helper function to get the pagination from the context.
+// Default values are used if the query parameters are not set.
+func PaginationFromContext(ctx *fiber.Ctx) *Pagination {
+	return &Pagination{
+		Offset: ctx.QueryInt("offset", 0),
+		Limit:  ctx.QueryInt("limit", 10),
+	}
 }
