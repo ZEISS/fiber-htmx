@@ -7,9 +7,10 @@ import (
 
 // TableProps is a struct that contains the properties of a table
 type TableProps[R comparable] struct {
-	ClassName htmx.ClassNames
-	Columns   Columns[R]
-	Rows      Rows[R]
+	ClassName  htmx.ClassNames
+	Columns    Columns[R]
+	Rows       Rows[R]
+	Pagination func(TableProps[R], Rows[R]) htmx.Node
 }
 
 // Rows ...
@@ -38,15 +39,15 @@ func (r *Rows[R]) ValueByIndex(index int) R {
 	return r.Data[index]
 }
 
-// GetAll ...
+// GetAll returns all the rows.
 func (r *Rows[T]) GetAll() []T {
 	return r.Data
 }
 
-// Columns ...
+// Columns returns a new column definition.
 type Columns[R comparable] []ColumnDef[R]
 
-// ColumnDef ...
+// ColumnDef returns a new column definition.
 type ColumnDef[R comparable] struct {
 	ID              string
 	AccessorKey     string
@@ -86,6 +87,7 @@ func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
 		htmx.TBody(
 			rows...,
 		),
+		htmx.Group(p.Pagination(p, p.Rows)),
 	)
 }
 
