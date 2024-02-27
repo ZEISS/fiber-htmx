@@ -249,6 +249,8 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
 	return func(c *fiber.Ctx) error {
+		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
+
 		c = ContextWithHx(c)
 		hx := HxFromContext(c)
 
