@@ -87,7 +87,7 @@ func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
 		htmx.TBody(
 			rows...,
 		),
-		htmx.Group(p.Pagination(p, p.Rows)),
+		// htmx.Group(p.Pagination(p, p.Rows)),
 	)
 }
 

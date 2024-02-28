@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/selects"
+	"github.com/zeiss/fiber-htmx/components/forms"
 )
 
 var DefaultLimits = []int{10, 25, 50, 100}
@@ -21,9 +21,12 @@ type PaginationProps struct {
 // Pagination ...
 func Pagination(p PaginationProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"join": true,
-		}.Merge(p.ClassName),
+		htmx.Merge(
+			htmx.ClassNames{
+				"join": true,
+			},
+			p.ClassName,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -69,15 +72,15 @@ type SelectProps struct {
 func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 	options := []htmx.Node{}
 	for _, limit := range p.Limits {
-		options = append(options, selects.Option(
-			selects.OptionProps{},
+		options = append(options, forms.Option(
+			forms.OptionProps{},
 			htmx.Text(fmt.Sprintf("%d", limit)),
 		))
 	}
 
-	return selects.Select(
-		selects.SelectProps{
-			ClassName: htmx.ClassNames{}.Merge(p.ClassName),
+	return forms.Select(
+		forms.SelectProps{
+			ClassName: htmx.Merge(p.ClassName),
 		},
 		options...,
 	)

@@ -13,9 +13,12 @@ type CheckboxProps struct {
 // Checkbox generates a checkbox element based on the provided properties.
 func Checkbox(p CheckboxProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
-		htmx.ClassNames{
-			"checkbox": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"checkbox": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Attribute("type", "checkbox"),
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),

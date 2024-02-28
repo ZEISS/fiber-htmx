@@ -16,9 +16,9 @@ import (
 	"github.com/zeiss/fiber-htmx/components/collapsible"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/paginations"
 	pagination "github.com/zeiss/fiber-htmx/components/paginations"
-	"github.com/zeiss/fiber-htmx/components/selects"
 	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
@@ -443,20 +443,20 @@ var indexPage = htmx.HTML5(htmx.HTML5Props{
 					"bg-base-100": true,
 					"p-4":         true,
 				},
-				selects.Select(
-					selects.SelectProps{},
-					selects.Option(
-						selects.OptionProps{
+				forms.Select(
+					forms.SelectProps{},
+					forms.Option(
+						forms.OptionProps{
 							Disabled: true,
 						},
 						htmx.Text("Option 1"),
 					),
-					selects.Option(
-						selects.OptionProps{},
+					forms.Option(
+						forms.OptionProps{},
 						htmx.Text("Option 2"),
 					),
-					selects.Option(
-						selects.OptionProps{
+					forms.Option(
+						forms.OptionProps{
 							Selected: true,
 						},
 						htmx.Text("Option 3"),
@@ -476,6 +476,52 @@ var indexPage = htmx.HTML5(htmx.HTML5Props{
 					paginations.Next(
 						pagination.PaginationProps{},
 					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				forms.TextInput(
+					forms.TextInputProps{},
+				),
+				forms.TextInputBordered(
+					forms.TextInputProps{},
+				),
+				forms.TextInputGhost(
+					forms.TextInputProps{},
+				),
+				forms.FileInput(
+					forms.FileInputProps{},
+				),
+				forms.FileInputAccent(
+					forms.FileInputProps{},
+				),
+				forms.FileInputPrimary(
+					forms.FileInputProps{},
+				),
+				forms.FileInputSuccess(
+					forms.FileInputProps{},
+				),
+				forms.FileInputWarning(
+					forms.FileInputProps{},
+				),
+				forms.FileInputError(
+					forms.FileInputProps{},
+				),
+				forms.TextInputGhost(
+					forms.TextInputProps{},
+				),
+				forms.TextInputGhost(
+					forms.TextInputProps{},
+				),
+				forms.TextInputWithIcon(
+					forms.TextInputProps{
+						Icon: icons.Search(
+							icons.IconProps{},
+						),
+					},
 				),
 			),
 		),
