@@ -10,9 +10,12 @@ type DividerProps struct {
 // Divider is a struct that contains the props of a divider.
 func Divider(p DividerProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"divider": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"divider": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -20,10 +23,13 @@ func Divider(p DividerProps, children ...htmx.Node) htmx.Node {
 // DividerNeutral is a struct that contains the props of a neutral divider.
 func DividerNeutral(p DividerProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"divider":         true,
-			"divider-neutral": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"divider":         true,
+				"divider-neutral": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -31,10 +37,13 @@ func DividerNeutral(p DividerProps, children ...htmx.Node) htmx.Node {
 // DividerPrimary is a struct that contains the props of a primary divider.
 func DividerPrimary(p DividerProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"divider":         true,
-			"divider-primary": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"divider":         true,
+				"divider-primary": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -42,10 +51,13 @@ func DividerPrimary(p DividerProps, children ...htmx.Node) htmx.Node {
 // DividerSecondary is a struct that contains the props of a secondary divider.
 func DividerSecondary(p DividerProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"divider":           true,
-			"divider-secondary": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"divider":           true,
+				"divider-secondary": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -53,10 +65,13 @@ func DividerSecondary(p DividerProps, children ...htmx.Node) htmx.Node {
 // DividerSuccess is a struct that contains the props of a success divider.
 func DividerSuccess(p DividerProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"divider":         true,
-			"divider-success": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"divider":         true,
+				"divider-success": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -64,10 +79,13 @@ func DividerSuccess(p DividerProps, children ...htmx.Node) htmx.Node {
 // DividerWarning is a struct that contains the props of a warning divider.
 func DividerWarning(p DividerProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"divider":         true,
-			"divider-warning": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"divider":         true,
+				"divider-warning": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -75,10 +93,13 @@ func DividerWarning(p DividerProps, children ...htmx.Node) htmx.Node {
 // DividerInfo is a struct that contains the props of an info divider.
 func DividerInfo(p DividerProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"divider":      true,
-			"divider-info": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"divider":      true,
+				"divider-info": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -86,10 +107,13 @@ func DividerInfo(p DividerProps, children ...htmx.Node) htmx.Node {
 // DividerError is a struct that contains the props of an error divider.
 func DividerError(p DividerProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"divider":       true,
-			"divider-error": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"divider":      true,
+				"divider-info": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
