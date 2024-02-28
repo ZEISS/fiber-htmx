@@ -524,6 +524,38 @@ var indexPage = htmx.HTML5(htmx.HTML5Props{
 					},
 				),
 			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				forms.Toggle(
+					forms.ToggleProps{},
+				),
+				forms.ToggleSuccess(
+					forms.ToggleProps{
+						Checked:  true,
+						Disabled: true,
+					},
+				),
+				forms.ToggleWarning(
+					forms.ToggleProps{
+						Checked: true,
+					},
+				),
+				forms.ToggleError(
+					forms.ToggleProps{
+						Checked: true,
+					},
+				),
+				forms.ToggleInfo(
+					forms.ToggleProps{},
+				),
+				forms.ToggleLabel(
+					forms.ToggleProps{},
+					htmx.Text("Toggle"),
+				),
+			),
 		),
 	},
 }.WithContext(&fiber.Ctx{}))
