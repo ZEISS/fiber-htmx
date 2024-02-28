@@ -1,10 +1,11 @@
 .DEFAULT_GOAL := release
 
-GO ?= go
-GO_RUN_TOOLS ?= $(GO) run -modfile ./tools/go.mod
-GO_TEST = $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
-GO_RELEASER ?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
-GO_MOD ?= $(shell ${GO} list -m)
+GO 				?= go
+GO_RUN_TOOLS 	?= $(GO) run -modfile ./tools/go.mod
+GO_TEST 		?= $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
+GO_RELEASER 	?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
+GO_BENCHSTAT 	?= $(GO_RUN_TOOLS) golang.org/x/perf/cmd/benchstat
+GO_MOD 			?= $(shell ${GO} list -m)
 
 .PHONY: release
 release: ## Release the project.
@@ -17,6 +18,10 @@ generate: ## Generate code.
 .PHONY: fmt
 fmt: ## Run go fmt against code.
 	$(GO_RUN_TOOLS) mvdan.cc/gofumpt -w .
+
+.PHONY: bench
+bench: ## Run benchmarks.
+	$(GO) test -bench=. ./...
 
 .PHONY: vet
 vet: ## Run go vet against code.

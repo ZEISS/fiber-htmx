@@ -35,6 +35,16 @@ htmx.Button(
 
 See [examples](https://github.com/zeiss/fiber-htmx/tree/master/examples) to understand the provided interfaces.
 
+## Benchmarks
+
+```bash
+BenchmarkElement-2               7863930               132.8 ns/op
+BenchmarkAttribute-2             8052403               157.9 ns/op
+Benchmark_HTML5_Render-2             788           1596065 ns/op
+```
+
+Rendering `10.000` nodes took `>1.6ms`. The package is fast enough to render HTML5 and HTMX components. 
+
 ## License
 
 [MIT](/LICENSE)
