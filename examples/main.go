@@ -6,9 +6,6 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/katallaxie/pkg/logger"
-	"github.com/spf13/cobra"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/accordions"
 	"github.com/zeiss/fiber-htmx/components/avatars"
@@ -18,8 +15,12 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/paginations"
-	pagination "github.com/zeiss/fiber-htmx/components/paginations"
 	"github.com/zeiss/fiber-htmx/components/tables"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
+	"github.com/spf13/cobra"
 )
 
 // Config ...
@@ -58,9 +59,10 @@ func run(ctx context.Context) error {
 	log.SetFlags(0)
 	log.SetOutput(os.Stderr)
 
-	logger.RedirectStdLog(logger.LogSink)
-
 	app := fiber.New()
+	app.Use(requestid.New())
+	app.Use(logger.New())
+
 	app.Get("/", htmx.NewCompHandler(indexPage))
 
 	app.Post("/api/respond", htmx.NewHtmxHandler(func(hx *htmx.Htmx) error {
@@ -86,479 +88,484 @@ func main() {
 	}
 }
 
-var indexPage = htmx.HTML5(htmx.HTML5Props{
-	Title:    "index",
-	Language: "en",
-	Head: []htmx.Node{
-		htmx.Link(htmx.Attribute("href", "https://cdn.jsdelivr.net/npm/daisyui@4.7.0/dist/full.min.css"), htmx.Attribute("rel", "stylesheet"), htmx.Attribute("type", "text/css")),
-		htmx.Script(htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.10"), htmx.Attribute("type", "application/javascript")),
-		htmx.Script(htmx.Attribute("src", "https://cdn.tailwindcss.com"), htmx.Attribute("type", "application/javascript")),
+var rootCtx = htmx.NewDefaultCtx(nil)
+
+var indexPage = htmx.HTML5(
+	htmx.HTML5Props{
+		Title:    "index",
+		Language: "en",
+		Head: []htmx.Node{
+			htmx.Link(htmx.Attribute("href", "https://cdn.jsdelivr.net/npm/daisyui@4.7.0/dist/full.min.css"), htmx.Attribute("rel", "stylesheet"), htmx.Attribute("type", "text/css")),
+			htmx.Script(htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.10"), htmx.Attribute("type", "application/javascript")),
+			htmx.Script(htmx.Attribute("src", "https://cdn.tailwindcss.com"), htmx.Attribute("type", "application/javascript")),
+		},
+		Ctx: rootCtx,
 	},
-	Body: []htmx.Node{
+	htmx.Div(
+		htmx.ClassNames{
+			"bg-base-100": true,
+		},
+		Navbar(NavbarProps{}), htmx.Button(htmx.Text("Button"), htmx.HxPost("/api/respond"), htmx.HxSwap("outerHTML"), htmx.ClassNames{"btn": true}),
 		htmx.Div(
-			htmx.ClassNames{"bg-base-100": true},
-			Navbar(NavbarProps{}), htmx.Button(htmx.Text("Button"), htmx.HxPost("/api/respond"), htmx.HxSwap("outerHTML"), htmx.ClassNames{"btn": true}),
-			htmx.Div(
-				dropdowns.Dropdown(
-					dropdowns.DropdownProps{},
-					dropdowns.DropdownButton(
-						dropdowns.DropdownButtonProps{},
-						htmx.Text("Dropdown"),
-					),
-					dropdowns.DropdownMenuItems(
-						dropdowns.DropdownMenuItemsProps{},
-						dropdowns.DropdownMenuItem(
-							dropdowns.DropdownMenuItemProps{},
-							htmx.A(
-								htmx.Text("Item 1"),
-							),
-						),
-						dropdowns.DropdownMenuItem(
-							dropdowns.DropdownMenuItemProps{},
-							htmx.A(
-								htmx.Text("Item 2"),
-							),
+			dropdowns.Dropdown(
+				dropdowns.DropdownProps{},
+				dropdowns.DropdownButton(
+					dropdowns.DropdownButtonProps{},
+					htmx.Text("Dropdown"),
+				),
+				dropdowns.DropdownMenuItems(
+					dropdowns.DropdownMenuItemsProps{},
+					dropdowns.DropdownMenuItem(
+						dropdowns.DropdownMenuItemProps{},
+						htmx.A(
+							htmx.Text("Item 1"),
 						),
 					),
-				),
-			),
-			htmx.Div(
-				htmx.ClassNames{
-					"bg-base-100": true,
-					"p-4":         true,
-				},
-				forms.Radio(
-					forms.RadioProps{
-						Name:    "radio1",
-						Value:   "radio1",
-						Checked: true,
-					},
-				),
-				forms.Radio(
-					forms.RadioProps{
-						Name:  "radio1",
-						Value: "radio2",
-					},
-				),
-			),
-			htmx.Div(
-				htmx.ClassNames{
-					"bg-base-100": true,
-					"p-4":         true,
-				},
-				forms.Checkbox(
-					forms.CheckboxProps{
-						Name:    "checkbox1",
-						Value:   "checkbox1",
-						Checked: true,
-					},
-				),
-				forms.Checkbox(
-					forms.CheckboxProps{
-						Name:  "checkbox1",
-						Value: "checkbox1",
-					},
-				),
-				forms.CheckboxPrimary(
-					forms.CheckboxProps{
-						Name:  "checkbox1",
-						Value: "checkbox1",
-					},
-				),
-				forms.CheckboxSuccess(
-					forms.CheckboxProps{
-						Name:  "checkbox1",
-						Value: "checkbox1",
-					},
-				),
-			),
-			htmx.Div(
-				htmx.ClassNames{
-					"bg-base-100": true,
-					"p-4":         true,
-				},
-				buttons.Button(
-					buttons.ButtonProps{},
-					htmx.Text("Button"),
-				),
-				buttons.Neutral(
-					buttons.ButtonProps{},
-					htmx.Text("Button"),
-				),
-				buttons.Secondary(
-					buttons.ButtonProps{},
-					htmx.Text("Button"),
-				),
-				buttons.Accent(
-					buttons.ButtonProps{},
-					htmx.Text("Button"),
-				),
-				buttons.Ghost(
-					buttons.ButtonProps{},
-					htmx.Text("Button"),
-				),
-				buttons.Link(
-					buttons.ButtonProps{},
-					htmx.Text("Button"),
-				),
-				buttons.Outline(
-					buttons.ButtonProps{},
-					htmx.Text("Button"),
-				),
-			),
-			htmx.Div(
-				htmx.ClassNames{
-					"bg-base-100": true,
-					"p-4":         true,
-				},
-				collapsible.Collapse(
-					collapsible.CollapseProps{
-						ClassNames: htmx.ClassNames{
-							"mb-4": true,
-						},
-					},
-					collapsible.CollapseTitle(
-						collapsible.CollapseTitleProps{},
-						htmx.Text("Title"),
-					),
-					collapsible.CollapseContent(
-						collapsible.CollapseContentProps{},
-						htmx.Text("Content"),
-					),
-				),
-				collapsible.Collapse(
-					collapsible.CollapseProps{
-						ClassNames: htmx.ClassNames{
-							"mb-4": true,
-						},
-					},
-					collapsible.CollapseTitle(
-						collapsible.CollapseTitleProps{},
-						htmx.Text("Title with Checkbox"),
-					),
-					collapsible.CollapseCheckbox(
-						collapsible.CollapseCheckboxProps{},
-					),
-					collapsible.CollapseContent(
-						collapsible.CollapseContentProps{},
-						htmx.Text("Content"),
-					),
-				),
-				collapsible.CollapseArrow(
-					collapsible.CollapseProps{
-						ClassNames: htmx.ClassNames{
-							"mb-4": true,
-						},
-					},
-					collapsible.CollapseTitle(
-						collapsible.CollapseTitleProps{},
-						htmx.Text("Title with Checkbox"),
-					),
-					collapsible.CollapseCheckbox(
-						collapsible.CollapseCheckboxProps{},
-					),
-					collapsible.CollapseContent(
-						collapsible.CollapseContentProps{},
-						htmx.Text("Content"),
-					),
-				),
-			),
-			htmx.Div(
-				htmx.ClassNames{
-					"bg-base-100": true,
-					"p-4":         true,
-				},
-				avatars.AvatarRoundSmall(
-					avatars.AvatarProps{},
-					htmx.Img(
-						htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
-					),
-				),
-				avatars.AvatarRoundLarge(
-					avatars.AvatarProps{},
-					htmx.Img(
-						htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
-					),
-				),
-				avatars.AvatarRoundedLarge(
-					avatars.AvatarProps{},
-					htmx.Img(
-						htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
-					),
-				),
-				avatars.AvatarRoundedMedium(
-					avatars.AvatarProps{},
-					htmx.Img(
-						htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
-					),
-				),
-				avatars.AvatarRoundedSmall(
-					avatars.AvatarProps{},
-					htmx.Img(
-						htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
-					),
-				),
-			),
-			htmx.Div(
-				htmx.ClassNames{
-					"bg-base-100": true,
-					"p-4":         true,
-				},
-				accordions.Accordion(
-					accordions.AccordionProps{
-						ClassNames: htmx.ClassNames{
-							"mb-4": true,
-						},
-					},
-					accordions.AccordionRadio(
-						accordions.AccordionRadioProps{
-							Name: "accordion1",
-						},
-					),
-					accordions.AccordionTitle(
-						accordions.AccordionTitleProps{},
-						htmx.Text("Accordion 1"),
-					),
-					accordions.AccordionContent(
-						accordions.AccordionContentProps{},
-						htmx.Text("Content 1"),
-					),
-				),
-				accordions.Accordion(
-					accordions.AccordionProps{
-						ClassNames: htmx.ClassNames{
-							"mb-4": true,
-						},
-					},
-					accordions.AccordionRadio(
-						accordions.AccordionRadioProps{
-							Name: "accordion1",
-						},
-					),
-					accordions.AccordionTitle(
-						accordions.AccordionTitleProps{},
-						htmx.Text("Accordion 2"),
-					),
-					accordions.AccordionContent(
-						accordions.AccordionContentProps{},
-						htmx.Text("Content 2"),
-					),
-				),
-				accordions.Accordion(
-					accordions.AccordionProps{
-						ClassNames: htmx.ClassNames{
-							"mb-4": true,
-						},
-					},
-					accordions.AccordionRadio(
-						accordions.AccordionRadioProps{
-							Name: "accordion1",
-						},
-					),
-					accordions.AccordionTitle(
-						accordions.AccordionTitleProps{},
-						htmx.Text("Accordion 1"),
-					),
-					accordions.AccordionContent(
-						accordions.AccordionContentProps{},
-						htmx.Text("Content 1"),
-					),
-				),
-				accordions.AccordionArrow(
-					accordions.AccordionProps{},
-					accordions.AccordionRadio(
-						accordions.AccordionRadioProps{
-							Name: "accordion1",
-						},
-					),
-					accordions.AccordionTitle(
-						accordions.AccordionTitleProps{},
-						htmx.Text("Accordion 2"),
-					),
-					accordions.AccordionContent(
-						accordions.AccordionContentProps{},
-						htmx.Text("Content 2"),
-					),
-				),
-				accordions.AccordionArrow(
-					accordions.AccordionProps{},
-					accordions.AccordionRadio(
-						accordions.AccordionRadioProps{
-							Name: "accordion1",
-						},
-					),
-					accordions.AccordionTitle(
-						accordions.AccordionTitleProps{},
-						htmx.Text("Accordion 2"),
-					),
-					accordions.AccordionContent(
-						accordions.AccordionContentProps{},
-						htmx.Text("Content 2"),
-					),
-				),
-			),
-			htmx.Div(
-				tables.Table[DemoRow](
-					tables.TableProps[DemoRow]{
-						Columns: tables.Columns[DemoRow]{
-							{
-								ID:          "id",
-								AccessorKey: "ID",
-								Header: func(p tables.TableProps[DemoRow]) htmx.Node {
-									return htmx.Th(htmx.Text("ID"))
-								},
-								Cell: func(p tables.TableProps[DemoRow], row DemoRow) htmx.Node {
-									return htmx.Td(
-										htmx.Text(strconv.Itoa(row.ID)),
-									)
-								},
-							},
-							{
-								ID:          "name",
-								AccessorKey: "Name",
-								Header: func(p tables.TableProps[DemoRow]) htmx.Node {
-									return htmx.Th(htmx.Text("Name"))
-								},
-								Cell: func(p tables.TableProps[DemoRow], row DemoRow) htmx.Node {
-									return htmx.Td(htmx.Text(row.Name))
-								},
-							},
-						},
-						Rows: tables.NewRows[DemoRow]([]DemoRow{
-							{
-								ID:   1,
-								Name: "Name 1",
-							},
-							{
-								ID:   2,
-								Name: "Name 2",
-							},
-						}),
-					},
-					htmx.ID("data-table"),
-				),
-			),
-			htmx.Div(
-				htmx.ClassNames{
-					"bg-base-100": true,
-					"p-4":         true,
-				},
-				forms.Select(
-					forms.SelectProps{},
-					forms.Option(
-						forms.OptionProps{
-							Disabled: true,
-						},
-						htmx.Text("Option 1"),
-					),
-					forms.Option(
-						forms.OptionProps{},
-						htmx.Text("Option 2"),
-					),
-					forms.Option(
-						forms.OptionProps{
-							Selected: true,
-						},
-						htmx.Text("Option 3"),
-					),
-				),
-			),
-			htmx.Div(
-				htmx.ClassNames{
-					"bg-base-100": true,
-					"p-4":         true,
-				},
-				paginations.Pagination(
-					pagination.PaginationProps{},
-					paginations.Prev(
-						pagination.PaginationProps{},
-					),
-					paginations.Next(
-						pagination.PaginationProps{},
-					),
-				),
-			),
-			htmx.Div(
-				htmx.ClassNames{
-					"bg-base-100": true,
-					"p-4":         true,
-				},
-				forms.TextInput(
-					forms.TextInputProps{},
-				),
-				forms.TextInputBordered(
-					forms.TextInputProps{},
-				),
-				forms.TextInputGhost(
-					forms.TextInputProps{},
-				),
-				forms.FileInput(
-					forms.FileInputProps{},
-				),
-				forms.FileInputAccent(
-					forms.FileInputProps{},
-				),
-				forms.FileInputPrimary(
-					forms.FileInputProps{},
-				),
-				forms.FileInputSuccess(
-					forms.FileInputProps{},
-				),
-				forms.FileInputWarning(
-					forms.FileInputProps{},
-				),
-				forms.FileInputError(
-					forms.FileInputProps{},
-				),
-				forms.TextInputGhost(
-					forms.TextInputProps{},
-				),
-				forms.TextInputGhost(
-					forms.TextInputProps{},
-				),
-				forms.TextInputWithIcon(
-					forms.TextInputProps{
-						Icon: icons.Search(
-							icons.IconProps{},
+					dropdowns.DropdownMenuItem(
+						dropdowns.DropdownMenuItemProps{},
+						htmx.A(
+							htmx.Text("Item 2"),
 						),
-					},
-				),
-			),
-			htmx.Div(
-				htmx.ClassNames{
-					"bg-base-100": true,
-					"p-4":         true,
-				},
-				forms.Toggle(
-					forms.ToggleProps{},
-				),
-				forms.ToggleSuccess(
-					forms.ToggleProps{
-						Checked:  true,
-						Disabled: true,
-					},
-				),
-				forms.ToggleWarning(
-					forms.ToggleProps{
-						Checked: true,
-					},
-				),
-				forms.ToggleError(
-					forms.ToggleProps{
-						Checked: true,
-					},
-				),
-				forms.ToggleInfo(
-					forms.ToggleProps{},
-				),
-				forms.ToggleLabel(
-					forms.ToggleProps{},
-					htmx.Text("Toggle"),
+					),
 				),
 			),
 		),
-	},
-}.WithContext(&fiber.Ctx{}))
+		htmx.Div(
+			htmx.ClassNames{
+				"bg-base-100": true,
+				"p-4":         true,
+			},
+			forms.Radio(
+				forms.RadioProps{
+					Name:    "radio1",
+					Value:   "radio1",
+					Checked: true,
+				},
+			),
+			forms.Radio(
+				forms.RadioProps{
+					Name:  "radio1",
+					Value: "radio2",
+				},
+			),
+		),
+		htmx.Div(
+			htmx.ClassNames{
+				"bg-base-100": true,
+				"p-4":         true,
+			},
+			forms.Checkbox(
+				forms.CheckboxProps{
+					Name:    "checkbox1",
+					Value:   "checkbox1",
+					Checked: true,
+				},
+			),
+			forms.Checkbox(
+				forms.CheckboxProps{
+					Name:  "checkbox1",
+					Value: "checkbox1",
+				},
+			),
+			forms.CheckboxPrimary(
+				forms.CheckboxProps{
+					Name:  "checkbox1",
+					Value: "checkbox1",
+				},
+			),
+			forms.CheckboxSuccess(
+				forms.CheckboxProps{
+					Name:  "checkbox1",
+					Value: "checkbox1",
+				},
+			),
+		),
+		htmx.Div(
+			htmx.ClassNames{
+				"bg-base-100": true,
+				"p-4":         true,
+			},
+			buttons.Button(
+				buttons.ButtonProps{},
+				htmx.Text("Button"),
+			),
+			buttons.Neutral(
+				buttons.ButtonProps{},
+				htmx.Text("Button"),
+			),
+			buttons.Secondary(
+				buttons.ButtonProps{},
+				htmx.Text("Button"),
+			),
+			buttons.Accent(
+				buttons.ButtonProps{},
+				htmx.Text("Button"),
+			),
+			buttons.Ghost(
+				buttons.ButtonProps{},
+				htmx.Text("Button"),
+			),
+			buttons.Link(
+				buttons.ButtonProps{},
+				htmx.Text("Button"),
+			),
+			buttons.Outline(
+				buttons.ButtonProps{},
+				htmx.Text("Button"),
+			),
+		),
+		htmx.Div(
+			htmx.ClassNames{
+				"bg-base-100": true,
+				"p-4":         true,
+			},
+			collapsible.Collapse(
+				collapsible.CollapseProps{
+					ClassNames: htmx.ClassNames{
+						"mb-4": true,
+					},
+				},
+				collapsible.CollapseTitle(
+					collapsible.CollapseTitleProps{},
+					htmx.Text("Title"),
+				),
+				collapsible.CollapseContent(
+					collapsible.CollapseContentProps{},
+					htmx.Text("Content"),
+				),
+			),
+			collapsible.Collapse(
+				collapsible.CollapseProps{
+					ClassNames: htmx.ClassNames{
+						"mb-4": true,
+					},
+				},
+				collapsible.CollapseTitle(
+					collapsible.CollapseTitleProps{},
+					htmx.Text("Title with Checkbox"),
+				),
+				collapsible.CollapseCheckbox(
+					collapsible.CollapseCheckboxProps{},
+				),
+				collapsible.CollapseContent(
+					collapsible.CollapseContentProps{},
+					htmx.Text("Content"),
+				),
+			),
+			collapsible.CollapseArrow(
+				collapsible.CollapseProps{
+					ClassNames: htmx.ClassNames{
+						"mb-4": true,
+					},
+				},
+				collapsible.CollapseTitle(
+					collapsible.CollapseTitleProps{},
+					htmx.Text("Title with Checkbox"),
+				),
+				collapsible.CollapseCheckbox(
+					collapsible.CollapseCheckboxProps{},
+				),
+				collapsible.CollapseContent(
+					collapsible.CollapseContentProps{},
+					htmx.Text("Content"),
+				),
+			),
+		),
+		htmx.Div(
+			htmx.ClassNames{
+				"bg-base-100": true,
+				"p-4":         true,
+			},
+			avatars.AvatarRoundSmall(
+				avatars.AvatarProps{},
+				htmx.Img(
+					htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
+				),
+			),
+			avatars.AvatarRoundLarge(
+				avatars.AvatarProps{},
+				htmx.Img(
+					htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
+				),
+			),
+			avatars.AvatarRoundedLarge(
+				avatars.AvatarProps{},
+				htmx.Img(
+					htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
+				),
+			),
+			avatars.AvatarRoundedMedium(
+				avatars.AvatarProps{},
+				htmx.Img(
+					htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
+				),
+			),
+			avatars.AvatarRoundedSmall(
+				avatars.AvatarProps{},
+				htmx.Img(
+					htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
+				),
+			),
+		),
+		htmx.Div(
+			htmx.ClassNames{
+				"bg-base-100": true,
+				"p-4":         true,
+			},
+			accordions.Accordion(
+				accordions.AccordionProps{
+					ClassNames: htmx.ClassNames{
+						"mb-4": true,
+					},
+				},
+				accordions.AccordionRadio(
+					accordions.AccordionRadioProps{
+						Name: "accordion1",
+					},
+				),
+				accordions.AccordionTitle(
+					accordions.AccordionTitleProps{},
+					htmx.Text("Accordion 1"),
+				),
+				accordions.AccordionContent(
+					accordions.AccordionContentProps{},
+					htmx.Text("Content 1"),
+				),
+			),
+			accordions.Accordion(
+				accordions.AccordionProps{
+					ClassNames: htmx.ClassNames{
+						"mb-4": true,
+					},
+				},
+				accordions.AccordionRadio(
+					accordions.AccordionRadioProps{
+						Name: "accordion1",
+					},
+				),
+				accordions.AccordionTitle(
+					accordions.AccordionTitleProps{},
+					htmx.Text("Accordion 2"),
+				),
+				accordions.AccordionContent(
+					accordions.AccordionContentProps{},
+					htmx.Text("Content 2"),
+				),
+			),
+			accordions.Accordion(
+				accordions.AccordionProps{
+					ClassNames: htmx.ClassNames{
+						"mb-4": true,
+					},
+				},
+				accordions.AccordionRadio(
+					accordions.AccordionRadioProps{
+						Name: "accordion1",
+					},
+				),
+				accordions.AccordionTitle(
+					accordions.AccordionTitleProps{},
+					htmx.Text("Accordion 1"),
+				),
+				accordions.AccordionContent(
+					accordions.AccordionContentProps{},
+					htmx.Text("Content 1"),
+				),
+			),
+			accordions.AccordionArrow(
+				accordions.AccordionProps{},
+				accordions.AccordionRadio(
+					accordions.AccordionRadioProps{
+						Name: "accordion1",
+					},
+				),
+				accordions.AccordionTitle(
+					accordions.AccordionTitleProps{},
+					htmx.Text("Accordion 2"),
+				),
+				accordions.AccordionContent(
+					accordions.AccordionContentProps{},
+					htmx.Text("Content 2"),
+				),
+			),
+			accordions.AccordionArrow(
+				accordions.AccordionProps{},
+				accordions.AccordionRadio(
+					accordions.AccordionRadioProps{
+						Name: "accordion1",
+					},
+				),
+				accordions.AccordionTitle(
+					accordions.AccordionTitleProps{},
+					htmx.Text("Accordion 2"),
+				),
+				accordions.AccordionContent(
+					accordions.AccordionContentProps{},
+					htmx.Text("Content 2"),
+				),
+			),
+		),
+		htmx.Div(
+			tables.Table[DemoRow](
+				tables.TableProps[DemoRow]{
+					Columns: tables.Columns[DemoRow]{
+						{
+							ID:          "id",
+							AccessorKey: "ID",
+							Header: func(p tables.TableProps[DemoRow]) htmx.Node {
+								return htmx.Th(htmx.Text("ID"))
+							},
+							Cell: func(p tables.TableProps[DemoRow], row DemoRow) htmx.Node {
+								return htmx.Td(
+									htmx.Text(strconv.Itoa(row.ID)),
+								)
+							},
+						},
+						{
+							ID:          "name",
+							AccessorKey: "Name",
+							Header: func(p tables.TableProps[DemoRow]) htmx.Node {
+								return htmx.Th(htmx.Text("Name"))
+							},
+							Cell: func(p tables.TableProps[DemoRow], row DemoRow) htmx.Node {
+								return htmx.Td(htmx.Text(row.Name))
+							},
+						},
+					},
+					Rows: tables.NewRows[DemoRow]([]DemoRow{
+						{
+							ID:   1,
+							Name: "Name 1",
+						},
+						{
+							ID:   2,
+							Name: "Name 2",
+						},
+					}),
+				},
+				htmx.ID("data-table"),
+			),
+		),
+		htmx.Div(
+			htmx.ClassNames{
+				"bg-base-100": true,
+				"p-4":         true,
+			},
+			forms.Select(
+				forms.SelectProps{},
+				forms.Option(
+					forms.OptionProps{
+						Disabled: true,
+					},
+					htmx.Text("Option 1"),
+				),
+				forms.Option(
+					forms.OptionProps{},
+					htmx.Text("Option 2"),
+				),
+				forms.Option(
+					forms.OptionProps{
+						Selected: true,
+					},
+					htmx.Text("Option 3"),
+				),
+			),
+		),
+		htmx.Div(
+			htmx.ClassNames{
+				"bg-base-100": true,
+				"p-4":         true,
+			},
+			paginations.Pagination(
+				paginations.PaginationProps{},
+				paginations.Prev(
+					paginations.PaginationProps{},
+				),
+				paginations.Next(
+					paginations.PaginationProps{},
+				),
+			),
+		),
+		htmx.Div(
+			htmx.ClassNames{
+				"bg-base-100": true,
+				"p-4":         true,
+			},
+			forms.TextInput(
+				forms.TextInputProps{},
+			),
+			forms.TextInputBordered(
+				forms.TextInputProps{},
+			),
+			forms.TextInputGhost(
+				forms.TextInputProps{},
+			),
+			forms.FileInput(
+				forms.FileInputProps{},
+			),
+			forms.FileInputAccent(
+				forms.FileInputProps{},
+			),
+			forms.FileInputPrimary(
+				forms.FileInputProps{},
+			),
+			forms.FileInputSuccess(
+				forms.FileInputProps{},
+			),
+			forms.FileInputWarning(
+				forms.FileInputProps{},
+			),
+			forms.FileInputError(
+				forms.FileInputProps{},
+			),
+			forms.TextInputGhost(
+				forms.TextInputProps{},
+			),
+			forms.TextInputGhost(
+				forms.TextInputProps{},
+			),
+			forms.TextInputWithIcon(
+				forms.TextInputProps{
+					Icon: icons.Search(
+						icons.IconProps{},
+					),
+				},
+			),
+		),
+		htmx.Div(
+			htmx.ClassNames{
+				"bg-base-100": true,
+				"p-4":         true,
+			},
+			forms.Toggle(
+				forms.ToggleProps{},
+			),
+			forms.ToggleSuccess(
+				forms.ToggleProps{
+					Checked:  true,
+					Disabled: true,
+				},
+			),
+			forms.ToggleWarning(
+				forms.ToggleProps{
+					Checked: true,
+				},
+			),
+			forms.ToggleError(
+				forms.ToggleProps{
+					Checked: true,
+				},
+			),
+			forms.ToggleInfo(
+				forms.ToggleProps{},
+			),
+			forms.ToggleLabel(
+				forms.ToggleProps{},
+				htmx.Text("Toggle"),
+			),
+		),
+	),
+)
 
 type NavbarProps struct{}
 

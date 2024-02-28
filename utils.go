@@ -5,17 +5,17 @@ import (
 	"strings"
 )
 
-// AsBool ...
+// AsBool is a helper function that returns a boolean value based on the provided string.
 func AsBool(str string) bool {
 	return strings.EqualFold(str, "true")
 }
 
-// AsStr ...
+// AsStr is a helper function that returns a string value based on the provided boolean.
 func AsStr(v bool) string {
 	return strconv.FormatBool(v)
 }
 
-// IntAsString ...
+// IntAsString is a helper function that returns a string value based on the provided integer.
 func IntAsString(v int) string {
 	return strconv.Itoa(v)
 }

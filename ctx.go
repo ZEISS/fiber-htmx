@@ -7,7 +7,7 @@ import (
 // Ctx is a struct that contains the context of a htmx context.
 type Ctx interface {
 	// Context is the fiber.Ctx instance.
-	Context() *fiber.Ctx
+	Context(...*fiber.Ctx) *fiber.Ctx
 	// Locals ...
 	Locals(key any, value ...any) (val any)
 	// Reset ...
@@ -32,7 +32,11 @@ func (d *DefaultCtx) Locals(key any, value ...any) (val any) {
 }
 
 // Context is a method that returns the fiber.Ctx instance.
-func (d *DefaultCtx) Context() *fiber.Ctx {
+func (d *DefaultCtx) Context(c ...*fiber.Ctx) *fiber.Ctx {
+	if len(c) > 0 {
+		d.ctx = c[0]
+	}
+
 	return d.ctx
 }
 
