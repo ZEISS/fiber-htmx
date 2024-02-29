@@ -135,6 +135,11 @@ func FormElement(children ...Node) Node {
 	return Element("form", children...)
 }
 
+// Form represents an HTML form element.
+func Form(children ...Node) Node {
+	return Element("form", children...)
+}
+
 // FieldSet represents an HTML fieldset element.
 func FieldSet(children ...Node) Node {
 	return Element("fieldset", children...)

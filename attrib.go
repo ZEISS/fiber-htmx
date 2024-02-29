@@ -128,6 +128,11 @@ func HxValidate(v bool) Node {
 	return Attribute("hx-validate", AsStr(v))
 }
 
+// HxInclude sets the hx-include attribute to specify the target element for inclusion.
+func HxInclude(target string) Node {
+	return Attribute("hx-include", target)
+}
+
 // Async sets the async attribute for script elements.
 func Async() Node {
 	return Attribute("async")

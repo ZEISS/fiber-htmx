@@ -1,36 +1,194 @@
 package tables
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/forms"
 )
+
+var DefaultLimits = []int{5, 10, 25, 50}
+
+// PaginationProps is a struct that contains the properties of a pagination
+type PaginationProps struct {
+	ClassName htmx.ClassNames
+	Total     int
+	Offset    int
+	Limit     int
+	URL       string
+}
+
+// Pagination ...
+func Pagination(p PaginationProps, children ...htmx.Node) htmx.Node {
+	return htmx.Div(
+		htmx.Merge(
+			htmx.ClassNames{
+				"join": true,
+			},
+			p.ClassName,
+		),
+		htmx.Group(children...),
+	)
+}
+
+// Prev ...
+func Prev(p PaginationProps) htmx.Node {
+	return htmx.A(
+		htmx.ClassNames{
+			"join-item":   true,
+			"btn":         true,
+			"btn-outline": true,
+			"disabled":    p.Offset == 0,
+		},
+		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset-p.Limit, p.Limit)),
+		htmx.HxSwap("innerHTML"),
+		htmx.HxTarget("#data-table"),
+		htmx.Text("Prev"),
+	)
+}
+
+// Next ...
+func Next(p PaginationProps) htmx.Node {
+	return htmx.A(
+		htmx.ClassNames{
+			"join-item":   true,
+			"btn":         true,
+			"btn-outline": true,
+		},
+		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset+p.Limit, p.Limit)),
+		htmx.HxSwap("innerHTML"),
+		htmx.HxTarget("#data-table"),
+		htmx.Text("Next"),
+	)
+}
+
+// SelectProps ...
+type SelectProps struct {
+	ClassName htmx.ClassNames
+	Total     int
+	Offset    int
+	Limit     int
+	URL       string
+	Limits    []int
+}
+
+// Select ...
+func Select(p SelectProps, children ...htmx.Node) htmx.Node {
+	options := []htmx.Node{}
+
+	for _, limit := range p.Limits {
+		options = append(options, forms.Option(
+			forms.OptionProps{
+				Selected: limit == p.Limit,
+			},
+			htmx.Text(fmt.Sprintf("%d", limit)),
+			htmx.Value(fmt.Sprintf("%d", limit)),
+		))
+	}
+
+	return htmx.Div(
+		forms.Select(
+			forms.SelectProps{},
+			htmx.ID("data-options"),
+			htmx.Attribute("name", "limit"),
+			htmx.Group(options...),
+		),
+		htmx.Div(
+			htmx.HxGet(fmt.Sprintf("%s?offset=%d", p.URL, p.Offset)),
+			htmx.HxTrigger("change from:#data-options"),
+			htmx.HxInclude("[name='limit']"),
+			htmx.HxTarget("#data-table"),
+		),
+	)
+}
+
+// TableToolbarProps is a struct that contains the properties of a table toolbar
+type TableToolbarProps[R comparable] struct {
+	ClassName htmx.ClassNames
+}
+
+// TableToolbar is a component that renders a table toolbar
+func TableToolbar[R comparable](p TableToolbarProps[R], children ...htmx.Node) htmx.Node {
+	return htmx.Div(
+		htmx.Merge(
+			htmx.ClassNames{
+				"table-toolbar": true,
+			},
+			p.ClassName,
+		),
+		htmx.Group(children...),
+	)
+}
+
+// TablePaginationProps is a struct that contains the properties of a table pagination
+type TablePaginationProps[R comparable] struct {
+	ClassName  htmx.ClassNames
+	Pagination htmx.Node
+}
+
+// TablePagination is a component that renders a table pagination
+func TablePagination[R comparable](p TablePaginationProps[R], children ...htmx.Node) htmx.Node {
+	return htmx.Div(
+		htmx.Merge(
+			htmx.ClassNames{
+				"flex":            true,
+				"items-center":    true,
+				"justify-between": true,
+				"px-2":            true,
+			},
+			p.ClassName,
+		),
+		htmx.Div(
+			htmx.Merge(
+				htmx.ClassNames{
+					"flex":         true,
+					"items-center": true,
+					"space-x-6":    true,
+					"lg:space-x-8": true,
+				},
+			),
+			htmx.P(
+				htmx.Merge(
+					htmx.ClassNames{
+						"text-sm":     true,
+						"font-medium": true,
+					},
+				),
+				htmx.Text("Rows per page"),
+			),
+			p.Pagination,
+		),
+	)
+}
 
 // TableProps is a struct that contains the properties of a table
 type TableProps[R comparable] struct {
 	ClassName  htmx.ClassNames
 	Columns    Columns[R]
 	Rows       Rows[R]
-	Pagination func(TableProps[R], Rows[R]) htmx.Node
+	Toolbar    htmx.Node
+	Pagination htmx.Node
 }
 
-// Rows ...
+// Rows is a struct that contains the data of a table
 type Rows[R comparable] struct {
 	Data []R
 }
 
-// NewRows ...
+// NewRows returns a new Rows object.
 func NewRows[R comparable](data []R) Rows[R] {
 	return Rows[R]{
 		Data: data,
 	}
 }
 
-// Insert ...
+// Insert inserts a new row.
 func (r *Rows[R]) Insert(data R) {
 	r.Data = append(r.Data, data)
 }
 
-// ValueByIndex ...
+// ValueByIndex is a helper function that returns the value of a row based on the provided index.
 func (r *Rows[R]) ValueByIndex(index int) R {
 	if index >= len(r.Data) {
 		panic("Index out of range")
@@ -74,34 +232,45 @@ func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
 
 	}
 
-	return htmx.Table(
-		htmx.ClassNames{
-			"table": true,
-		}.Merge(p.ClassName),
-		htmx.Group(children...),
-		htmx.THead(
-			htmx.Tr(
-				headers...,
+	return htmx.Div(
+		htmx.Merge(
+			htmx.ClassNames{
+				"space-y-4": true,
+			},
+		),
+		htmx.Div(
+			htmx.Merge(
+				htmx.ClassNames{
+					"rounded-md": true,
+					"border":     true,
+				},
+			),
+			htmx.Table(
+				htmx.Merge(
+					htmx.ClassNames{
+						"table": true,
+					},
+					p.ClassName,
+				),
+				htmx.Group(children...),
+				htmx.THead(
+					htmx.Tr(
+						headers...,
+					),
+				),
+				htmx.TBody(
+					rows...,
+				),
 			),
 		),
-		htmx.TBody(
-			rows...,
-		),
-		// htmx.Group(p.Pagination(p, p.Rows)),
+		p.Pagination,
 	)
 }
 
-// Pagination ...
-type Pagination struct {
-	Offset int
-	Limit  int
-}
+// PaginationFromContext returns a new Pagination object based on the provided context.
+func PaginationPropsFromContext(c *fiber.Ctx) (limit int, offset int) {
+	limit = c.QueryInt("limit", 10)
+	offset = c.QueryInt("offset", 0)
 
-// PaginationFromContext is a helper function to get the pagination from the context.
-// Default values are used if the query parameters are not set.
-func PaginationFromContext(ctx *fiber.Ctx) *Pagination {
-	return &Pagination{
-		Offset: ctx.QueryInt("offset", 0),
-		Limit:  ctx.QueryInt("limit", 10),
-	}
+	return
 }

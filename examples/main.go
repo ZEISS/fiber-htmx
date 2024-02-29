@@ -14,7 +14,6 @@ import (
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
-	"github.com/zeiss/fiber-htmx/components/paginations"
 	"github.com/zeiss/fiber-htmx/components/tables"
 
 	"github.com/gofiber/fiber/v2"
@@ -49,6 +48,49 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+var demoRows = []DemoRow{
+	{
+		ID:   1,
+		Name: "Name 1",
+	},
+	{
+		ID:   2,
+		Name: "Name 2",
+	},
+	{
+		ID:   3,
+		Name: "Name 3",
+	},
+	{
+		ID:   4,
+		Name: "Name 4",
+	},
+	{
+		ID:   5,
+		Name: "Name 5",
+	},
+	{
+		ID:   6,
+		Name: "Name 6",
+	},
+	{
+		ID:   7,
+		Name: "Name 7",
+	},
+	{
+		ID:   8,
+		Name: "Name 8",
+	},
+	{
+		ID:   9,
+		Name: "Name 9",
+	},
+	{
+		ID:   10,
+		Name: "Name 10",
+	},
+}
+
 func init() {
 	rootCmd.PersistentFlags().StringVar(&cfg.Flags.Addr, "addr", ":8080", "addr")
 
@@ -72,6 +114,49 @@ func run(ctx context.Context) error {
 
 		_, err := hx.WriteHTML("<div>New Content</div>")
 		return err
+	}))
+
+	app.Get("/api/data", htmx.NewHtmxHandler(func(hx *htmx.Htmx) error {
+		if !hx.IsHxRequest() {
+			return nil
+		}
+
+		limit, offset := tables.PaginationPropsFromContext(hx.Ctx())
+
+		rows := demoRows[offset : offset+limit]
+
+		table := tables.Table[DemoRow](
+			tables.TableProps[DemoRow]{
+				Columns: tables.Columns[DemoRow]{
+					{
+						ID:          "id",
+						AccessorKey: "ID",
+						Header: func(p tables.TableProps[DemoRow]) htmx.Node {
+							return htmx.Th(htmx.Text("ID"))
+						},
+						Cell: func(p tables.TableProps[DemoRow], row DemoRow) htmx.Node {
+							return htmx.Td(
+								htmx.Text(strconv.Itoa(row.ID)),
+							)
+						},
+					},
+					{
+						ID:          "name",
+						AccessorKey: "Name",
+						Header: func(p tables.TableProps[DemoRow]) htmx.Node {
+							return htmx.Th(htmx.Text("Name"))
+						},
+						Cell: func(p tables.TableProps[DemoRow], row DemoRow) htmx.Node {
+							return htmx.Td(htmx.Text(row.Name))
+						},
+					},
+				},
+				Rows: tables.NewRows(rows),
+			},
+			htmx.ID("data-table"),
+		)
+
+		return table.Render(hx)
 	}))
 
 	err := app.Listen(cfg.Flags.Addr)
@@ -408,6 +493,26 @@ var indexPage = htmx.HTML5(
 		htmx.Div(
 			tables.Table[DemoRow](
 				tables.TableProps[DemoRow]{
+					Pagination: tables.TablePagination(
+						tables.TablePaginationProps[DemoRow]{
+							Pagination: tables.Pagination(
+								tables.PaginationProps{
+									Total:  len(demoRows),
+									Offset: 0,
+									Limit:  10,
+								},
+								tables.Select(
+									tables.SelectProps{
+										Total:  len(demoRows),
+										Offset: 0,
+										Limit:  10,
+										Limits: tables.DefaultLimits,
+										URL:    "/api/data",
+									},
+								),
+							),
+						},
+					),
 					Columns: tables.Columns[DemoRow]{
 						{
 							ID:          "id",
@@ -432,16 +537,7 @@ var indexPage = htmx.HTML5(
 							},
 						},
 					},
-					Rows: tables.NewRows[DemoRow]([]DemoRow{
-						{
-							ID:   1,
-							Name: "Name 1",
-						},
-						{
-							ID:   2,
-							Name: "Name 2",
-						},
-					}),
+					Rows: tables.NewRows(demoRows),
 				},
 				htmx.ID("data-table"),
 			),
@@ -476,13 +572,17 @@ var indexPage = htmx.HTML5(
 				"bg-base-100": true,
 				"p-4":         true,
 			},
-			paginations.Pagination(
-				paginations.PaginationProps{},
-				paginations.Prev(
-					paginations.PaginationProps{},
+			tables.Pagination(
+				tables.PaginationProps{},
+				tables.Prev(
+					tables.PaginationProps{
+						URL: "/api/data",
+					},
 				),
-				paginations.Next(
-					paginations.PaginationProps{},
+				tables.Next(
+					tables.PaginationProps{
+						URL: "/api/data",
+					},
 				),
 			),
 		),
