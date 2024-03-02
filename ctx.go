@@ -35,6 +35,24 @@ func (c *Ctx) Locals(key any, value ...any) (val any) {
 	return value[0]
 }
 
+// Locals is a method that returns the local values.
+func Locals[V any](c Context, key any, value ...V) V {
+	var v V
+	var ok bool
+
+	if len(value) == 0 {
+		v, ok = c.Locals(key).(V)
+	} else {
+		v, ok = c.Locals(key, value[0]).(V)
+	}
+
+	if !ok {
+		return v // return zero of type V
+	}
+
+	return v
+}
+
 // Context is a method that returns the fiber.Ctx instance.
 func (c *Ctx) Context(ctx ...*fiber.Ctx) *fiber.Ctx {
 	if c.ctx == nil {
