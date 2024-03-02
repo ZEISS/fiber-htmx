@@ -4,52 +4,69 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// Ctx is a struct that contains the context of a htmx context.
-type Ctx interface {
+// ContextCtx is a struct that contains the context of a htmx context.
+type Context interface {
 	// Context is the fiber.Ctx instance.
 	Context(...*fiber.Ctx) *fiber.Ctx
-	// Locals ...
+	// Locals is a method that returns the local values.
 	Locals(key any, value ...any) (val any)
-	// Reset ...
+	// Copy is a method that returns a new Ctx instance with the same properties.
+	Copy() Ctx
+	// Reset is a method that resets the local values.
 	Reset()
 }
 
-// DefaultCtx is the default implementation of the Ctx interface.
-type DefaultCtx struct {
+var _ Context = (*Ctx)(nil)
+
+// Ctx is a struct that contains the properties of a htmx context.
+type Ctx struct {
 	localValues map[any]any
 	ctx         *fiber.Ctx
 }
 
 // Locals is a method that returns the local values.
-func (d *DefaultCtx) Locals(key any, value ...any) (val any) {
-	if len(value) > 0 {
-		return d.localValues[key]
+func (c *Ctx) Locals(key any, value ...any) (val any) {
+	if len(value) == 0 {
+		return c.localValues[key]
 	}
 
-	d.localValues[key] = value[0]
+	c.localValues[key] = value[0]
 
 	return value[0]
 }
 
 // Context is a method that returns the fiber.Ctx instance.
-func (d *DefaultCtx) Context(c ...*fiber.Ctx) *fiber.Ctx {
-	if len(c) > 0 {
-		d.ctx = c[0]
+func (c *Ctx) Context(ctx ...*fiber.Ctx) *fiber.Ctx {
+	if c.ctx == nil {
+		c.ctx = &fiber.Ctx{}
 	}
 
-	return d.ctx
+	if len(ctx) == 0 {
+		return c.ctx
+	}
+
+	c.ctx = ctx[0]
+
+	return c.ctx
 }
 
 // Reset is a method that resets the local values.
-func (d *DefaultCtx) Reset() {
-	d.localValues = make(map[any]any)
-	d.ctx = nil
+func (c *Ctx) Reset() {
+	c.localValues = make(map[any]any)
+	c.ctx = nil
 }
 
-// NewDefaultCtx returns a new DefaultCtx instance.
-func NewDefaultCtx(ctx *fiber.Ctx) Ctx {
-	return &DefaultCtx{
+// Copy is a method that returns a new Ctx instance with the same properties.
+func (c *Ctx) Copy() Ctx {
+	return Ctx{
+		localValues: c.localValues,
+		ctx:         c.ctx,
+	}
+}
+
+// DefaultCtx is a function that returns a new Ctx instance.
+func DefaultCtx() Ctx {
+	return Ctx{
 		localValues: make(map[any]any),
-		ctx:         ctx,
 	}
 }
