@@ -14,6 +14,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
+	"github.com/zeiss/fiber-htmx/components/stats"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/fiber-htmx/components/toasts"
 
@@ -631,7 +632,7 @@ func indexPage() htmx.Node {
 				),
 				forms.TextInputWithIcon(
 					forms.TextInputProps{
-						Icon: icons.Search(
+						Icon: icons.SearchOutline(
 							icons.IconProps{},
 						),
 					},
@@ -684,6 +685,172 @@ func indexPage() htmx.Node {
 					),
 					toasts.ToastAlertSuccess(
 						htmx.Text("Success"),
+					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				stats.Stats(
+					stats.StatsProps{},
+					stats.Stat(
+						stats.StatProps{},
+						stats.Figure(
+							stats.FigureProps{},
+							icons.BoltSlashOutline(
+								icons.IconProps{},
+							),
+						),
+						stats.Title(
+							stats.TitleProps{},
+							htmx.Text("Total Page Views"),
+						),
+						stats.Value(
+							stats.ValueProps{},
+							htmx.Text("89,400"),
+						),
+						stats.Description(
+							stats.DescriptionProps{},
+							htmx.Text("Total page views in the last 30 days"),
+						),
+					),
+					stats.Stat(
+						stats.StatProps{},
+						stats.Figure(
+							stats.FigureProps{},
+							icons.HeartOutline(
+								icons.IconProps{},
+							),
+						),
+						stats.Title(
+							stats.TitleProps{},
+							htmx.Text("Total Likes"),
+						),
+						stats.Value(
+							stats.ValueProps{
+								ClassNames: htmx.ClassNames{
+									"text-primary": true,
+								},
+							},
+							htmx.Text("25.6K"),
+						),
+						stats.Description(
+							stats.DescriptionProps{},
+							htmx.Text("21% more than last month"),
+						),
+					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				stats.StatsVertical(
+					stats.StatsProps{},
+					stats.Stat(
+						stats.StatProps{},
+						stats.Figure(
+							stats.FigureProps{},
+							icons.BoltSlashOutline(
+								icons.IconProps{},
+							),
+						),
+						stats.Title(
+							stats.TitleProps{},
+							htmx.Text("Total Page Views"),
+						),
+						stats.Value(
+							stats.ValueProps{},
+							htmx.Text("89,400"),
+						),
+						stats.Description(
+							stats.DescriptionProps{},
+							htmx.Text("Total page views in the last 30 days"),
+						),
+					),
+					stats.Stat(
+						stats.StatProps{},
+						stats.Figure(
+							stats.FigureProps{},
+							icons.HeartOutline(
+								icons.IconProps{},
+							),
+						),
+						stats.Title(
+							stats.TitleProps{},
+							htmx.Text("Total Likes"),
+						),
+						stats.Value(
+							stats.ValueProps{
+								ClassNames: htmx.ClassNames{
+									"text-primary": true,
+								},
+							},
+							htmx.Text("25.6K"),
+						),
+						stats.Description(
+							stats.DescriptionProps{},
+							htmx.Text("21% more than last month"),
+						),
+					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				stats.Stats(
+					stats.StatsProps{},
+					stats.Stat(
+						stats.StatProps{},
+						stats.Title(
+							stats.TitleProps{},
+							htmx.Text("Account balance"),
+						),
+						stats.Value(
+							stats.ValueProps{},
+							htmx.Text("$89,400"),
+						),
+						stats.Actions(
+							stats.ActionsProps{},
+							buttons.Success(
+								buttons.ButtonProps{
+									ClassNames: htmx.ClassNames{
+										"btn-sm": true,
+									},
+								},
+								htmx.Text("Add funds"),
+							),
+						),
+					),
+					stats.Stat(
+						stats.StatProps{},
+						stats.Figure(
+							stats.FigureProps{},
+							icons.HeartOutline(
+								icons.IconProps{},
+							),
+						),
+						stats.Title(
+							stats.TitleProps{},
+							htmx.Text("Total Likes"),
+						),
+						stats.Value(
+							stats.ValueProps{
+								ClassNames: htmx.ClassNames{
+									"text-primary": true,
+								},
+							},
+							htmx.Text("25.6K"),
+						),
+						stats.Description(
+							stats.DescriptionProps{},
+							htmx.Text("21% more than last month"),
+						),
 					),
 				),
 			),
