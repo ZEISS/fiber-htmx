@@ -7,7 +7,7 @@ import (
 // Doctype represents the HTML doctype declaration.
 func Doctype(sibling Node) Node {
 	return NodeFunc(func(w io.Writer) error {
-		if _, err := w.Write([]byte("<!doctype html>")); err != nil {
+		if _, err := w.Write([]byte("<!DOCTYPE html>")); err != nil {
 			return err
 		}
 
@@ -523,4 +523,9 @@ func Var(children ...Node) Node {
 // Video represents an HTML video element.
 func Video(children ...Node) Node {
 	return Element("video", Group(children...))
+}
+
+// Template represents an HTML template element.
+func Template(children ...Node) Node {
+	return Element("template", Group(children...))
 }

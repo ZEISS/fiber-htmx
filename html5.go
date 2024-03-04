@@ -19,7 +19,8 @@ type HTML5Props struct {
 // HTML5 generates an HTML5 document based on the provided properties.
 func HTML5(p HTML5Props, body ...Node) Node {
 	return Doctype(
-		HTML(If(p.Language != "", Lang(p.Language)),
+		HTML(
+			If(p.Language != "", Lang(p.Language)),
 			Head(
 				Meta(Charset("utf-8")),
 				Meta(Name("viewport"), Content("width=device-width, initial-scale=1")),
