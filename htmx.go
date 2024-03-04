@@ -249,6 +249,10 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
 	return func(c *fiber.Ctx) error {
+		if cfg.Next != nil && cfg.Next(c) {
+			return c.Next()
+		}
+
 		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
 
 		c = ContextWithHx(c)
@@ -270,6 +274,10 @@ func NewCompHandler(n Node, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
 	return func(c *fiber.Ctx) error {
+		if cfg.Next != nil && cfg.Next(c) {
+			return c.Next()
+		}
+
 		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
 
 		err := n.Render(c)
@@ -289,6 +297,10 @@ func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
 	return func(c *fiber.Ctx) error {
+		if cfg.Next != nil && cfg.Next(c) {
+			return c.Next()
+		}
+
 		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
 
 		n, err := handler(c)
@@ -313,6 +325,10 @@ func configDefault(config ...Config) Config {
 
 	// Override default config
 	cfg := config[0]
+
+	if cfg.ErrorHandler == nil {
+		cfg.ErrorHandler = ConfigDefault.ErrorHandler
+	}
 
 	return cfg
 }
