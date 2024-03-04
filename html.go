@@ -529,3 +529,13 @@ func Video(children ...Node) Node {
 func Template(children ...Node) Node {
 	return Element("template", Group(children...))
 }
+
+// Slot represents an HTML slot element.
+func Slot(children ...Node) Node {
+	return Element("slot", Group(children...))
+}
+
+// Track represents an HTML track element.
+func Track(children ...Node) Node {
+	return Element("track", Group(children...))
+}
