@@ -510,6 +510,11 @@ func TitleElement(children ...Node) Node {
 	return Element("title", Group(children...))
 }
 
+// Title represents an HTML title element.
+func Title(children ...Node) Node {
+	return Element("title", Group(children...))
+}
+
 // U represents an HTML u element.
 func U(children ...Node) Node {
 	return Element("u", Group(children...))
