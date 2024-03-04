@@ -1,14 +1,22 @@
 package htmx
 
+// HxExtType is a type for htmx extension types.
+type HxExtType string
+
 const (
-	HxExtAlpineMorph         = "alpine-morph"
-	HxExtClassTools          = "class-tools"
-	HxExtClientSideTemplates = "client-side-templates"
-	HxExtIgnoreDebug         = "ignore:debug"
-	HxExtJSON                = "json-enc"
-	HxExtMultiSwap           = "multi-swap"
-	HxExtPathDeps            = "path-deps"
+	HxExtAlpineMorph         HxExtType = "alpine-morph"
+	HxExtClassTools          HxExtType = "class-tools"
+	HxExtClientSideTemplates HxExtType = "client-side-templates"
+	HxExtIgnoreDebug         HxExtType = "ignore:debug"
+	HxExtJSON                HxExtType = "json-enc"
+	HxExtMultiSwap           HxExtType = "multi-swap"
+	HxExtPathDeps            HxExtType = "path-deps"
 )
+
+// String returns the string representation of the htmx extension type.
+func (v HxExtType) String() string {
+	return string(v)
+}
 
 // MustacheTemplate sets the mustache-template attribute to specify the mustache template for the response.
 func MustacheTemplate(v string) Node {
