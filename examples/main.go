@@ -15,6 +15,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/fiber-htmx/components/toasts"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -666,6 +667,24 @@ func indexPage() htmx.Node {
 				forms.ToggleLabel(
 					forms.ToggleProps{},
 					htmx.Text("Toggle"),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				toasts.ToastEnd(
+					toasts.ToastProps{},
+					toasts.ToastAlertInfo(
+						htmx.Text("Info"),
+					),
+					toasts.ToastAlertError(
+						htmx.Text("Error"),
+					),
+					toasts.ToastAlertSuccess(
+						htmx.Text("Success"),
+					),
 				),
 			),
 		),
