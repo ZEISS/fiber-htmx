@@ -10,6 +10,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/accordions"
 	"github.com/zeiss/fiber-htmx/components/avatars"
 	"github.com/zeiss/fiber-htmx/components/buttons"
+	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
@@ -850,6 +851,30 @@ func indexPage() htmx.Node {
 						stats.Description(
 							stats.DescriptionProps{},
 							htmx.Text("21% more than last month"),
+						),
+					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				cards.Card(
+					cards.CardProps{},
+					cards.Body(
+						cards.BodyProps{},
+						cards.Title(
+							cards.TitleProps{},
+							htmx.Text("Card Title"),
+						),
+						htmx.Text("Card Body"),
+						cards.Actions(
+							cards.ActionsProps{},
+							buttons.Primary(
+								buttons.ButtonProps{},
+								htmx.Text("Button"),
+							),
 						),
 					),
 				),
