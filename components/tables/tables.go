@@ -36,10 +36,11 @@ func Pagination(p PaginationProps, children ...htmx.Node) htmx.Node {
 func Prev(p PaginationProps) htmx.Node {
 	return htmx.A(
 		htmx.ClassNames{
-			"join-item":   true,
-			"btn":         true,
-			"btn-outline": true,
-			"disabled":    p.Offset == 0,
+			"join-item":      true,
+			"btn":            true,
+			"btn-outline":    true,
+			"input-bordered": true,
+			"disabled":       p.Offset == 0,
 		},
 		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset-p.Limit, p.Limit)),
 		htmx.HxSwap("innerHTML"),
@@ -52,9 +53,11 @@ func Prev(p PaginationProps) htmx.Node {
 func Next(p PaginationProps) htmx.Node {
 	return htmx.A(
 		htmx.ClassNames{
-			"join-item":   true,
-			"btn":         true,
-			"btn-outline": true,
+			"join-item":      true,
+			"btn":            true,
+			"btn-outline":    true,
+			"input-bordered": true,
+			"disabled":       p.Offset+p.Limit >= p.Total,
 		},
 		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset+p.Limit, p.Limit)),
 		htmx.HxSwap("innerHTML"),
@@ -239,12 +242,7 @@ func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
 			},
 		),
 		htmx.Div(
-			htmx.Merge(
-				htmx.ClassNames{
-					"rounded-md": true,
-					"border":     true,
-				},
-			),
+			htmx.Merge(),
 			htmx.Table(
 				htmx.Merge(
 					htmx.ClassNames{

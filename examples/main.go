@@ -879,6 +879,33 @@ func indexPage() htmx.Node {
 					),
 				),
 			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				forms.Textarea(
+					forms.TextareaProps{
+						Placeholder: "Textarea",
+					},
+				),
+				forms.Textarea(
+					forms.TextareaProps{
+						Placeholder: "Textarea",
+						Disabled:    true,
+					},
+				),
+				forms.TextareaBordered(
+					forms.TextareaProps{
+						Placeholder: "Textarea",
+					},
+				),
+				forms.TextareaGhost(
+					forms.TextareaProps{
+						Placeholder: "Textarea",
+					},
+				),
+			),
 		),
 	)
 }
