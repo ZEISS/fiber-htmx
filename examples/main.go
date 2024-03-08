@@ -15,6 +15,8 @@ import (
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
+	"github.com/zeiss/fiber-htmx/components/progress"
+	"github.com/zeiss/fiber-htmx/components/skeletons"
 	"github.com/zeiss/fiber-htmx/components/stats"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/fiber-htmx/components/toasts"
@@ -903,6 +905,82 @@ func indexPage() htmx.Node {
 				forms.TextareaGhost(
 					forms.TextareaProps{
 						Placeholder: "Textarea",
+					},
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				progress.Progress(
+					progress.ProgressProps{
+						ClassNames: htmx.ClassNames{
+							"block": true,
+							"m-4":   true,
+						},
+						Max:   100,
+						Value: 50,
+					},
+				),
+				progress.ProgressPrimary(
+					progress.ProgressProps{
+						ClassNames: htmx.ClassNames{
+							"block": true,
+							"m-4":   true,
+						},
+						Max:   100,
+						Value: 50,
+					},
+				),
+				progress.ProgressSecondary(
+					progress.ProgressProps{
+						ClassNames: htmx.ClassNames{
+							"block": true,
+							"m-4":   true,
+						},
+						Max:   100,
+						Value: 50,
+					},
+				),
+				progress.ProgressSuccess(
+					progress.ProgressProps{
+						ClassNames: htmx.ClassNames{
+							"block": true,
+							"m-4":   true,
+						},
+						Max:   100,
+						Value: 50,
+					},
+				),
+				progress.ProgressInfo(
+					progress.ProgressProps{
+						ClassNames: htmx.ClassNames{
+							"block": true,
+							"m-4":   true,
+						},
+						Max:   100,
+						Value: 50,
+					},
+				),
+				progress.ProgressIntermediate(
+					progress.ProgressProps{
+						ClassNames: htmx.ClassNames{
+							"block": true,
+							"m-4":   true,
+						},
+					},
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				skeletons.Skeleton(
+					skeletons.SkeletonProps{
+						Width:  32,
+						Height: 32,
 					},
 				),
 			),
