@@ -1030,6 +1030,68 @@ func indexPage() htmx.Node {
 					),
 				),
 			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				drawers.Drawer(
+					drawers.DrawerProps{
+						ID: "drawer2",
+					},
+					drawers.DrawerContent(
+						drawers.DrawerContentProps{
+							ID: "drawer2",
+						},
+						drawers.DrawerOpenButton(
+							drawers.DrawerOpenProps{
+								ID: "drawer2",
+							},
+							htmx.Text("Open Drawer 2"),
+						),
+					),
+					drawers.DrawerSide(
+						drawers.DrawerSideProps{
+							ID: "drawer2",
+						},
+						drawers.DrawerSideMenu(
+							drawers.DrawerSideMenuProps{},
+							collapsible.CollapseArrow(
+								collapsible.CollapseProps{
+									TabIndex: 2,
+									ClassNames: htmx.ClassNames{
+										"mb-4": true,
+									},
+								},
+								collapsible.CollapseTitle(
+									collapsible.CollapseTitleProps{},
+									htmx.Text("Title with Checkbox"),
+								),
+								collapsible.CollapseContent(
+									collapsible.CollapseContentProps{},
+									htmx.Text("Content"),
+								),
+							),
+							collapsible.CollapseArrow(
+								collapsible.CollapseProps{
+									TabIndex: 3,
+									ClassNames: htmx.ClassNames{
+										"mb-4": true,
+									},
+								},
+								collapsible.CollapseTitle(
+									collapsible.CollapseTitleProps{},
+									htmx.Text("Title with Checkbox"),
+								),
+								collapsible.CollapseContent(
+									collapsible.CollapseContentProps{},
+									htmx.Text("Content"),
+								),
+							),
+						),
+					),
+				),
+			),
 		),
 	)
 }

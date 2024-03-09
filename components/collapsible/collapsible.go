@@ -21,16 +21,19 @@ func Collapse(props CollapseProps, children ...htmx.Node) htmx.Node {
 }
 
 // CollapseArrow is a component that can be expanded and collapsed.
-func CollapseArrow(props CollapseProps, children ...htmx.Node) htmx.Node {
+func CollapseArrow(p CollapseProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.Attribute("tabindex", htmx.IntAsString(props.TabIndex)),
-		htmx.ClassNames{
-			"collapse":        true,
-			"bg-base-200":     true,
-			"collapse-arrow":  true,
-			"border":          true,
-			"border-base-300": true,
-		}.Merge(props.ClassNames),
+		htmx.Attribute("tabindex", htmx.IntAsString(p.TabIndex)),
+		htmx.Merge(
+			htmx.ClassNames{
+				"collapse":        true,
+				"collapse-arrow":  true,
+				"bg-base-200":     true,
+				"border":          true,
+				"border-base-300": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -41,13 +44,16 @@ type CollapseTitleProps struct {
 }
 
 // CollapseTitle is a component that can be expanded and collapsed.
-func CollapseTitle(props CollapseTitleProps, children ...htmx.Node) htmx.Node {
+func CollapseTitle(p CollapseTitleProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"collapse-title": true,
-			"title-md":       true,
-			"font-medium":    true,
-		}.Merge(props.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"collapse-title": true,
+				"title-md":       true,
+				"font-medium":    true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
