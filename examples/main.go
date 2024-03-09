@@ -12,6 +12,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
+	"github.com/zeiss/fiber-htmx/components/drawers"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
@@ -982,6 +983,51 @@ func indexPage() htmx.Node {
 						Width:  32,
 						Height: 32,
 					},
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				drawers.Drawer(
+					drawers.DrawerProps{
+						ID: "drawer",
+					},
+					drawers.DrawerContent(
+						drawers.DrawerContentProps{
+							ID: "drawer",
+						},
+						drawers.DrawerOpenButton(
+							drawers.DrawerOpenProps{
+								ID: "drawer",
+							},
+							htmx.Text("Open Drawer"),
+						),
+					),
+					drawers.DrawerSide(
+						drawers.DrawerSideProps{
+							ID: "drawer",
+						},
+						drawers.DrawerSideMenu(
+							drawers.DrawerSideMenuProps{},
+							drawers.DrawerSideMenu(
+								drawers.DrawerSideMenuProps{},
+								drawers.DrawerSideMenuItem(
+									drawers.DrawerSideMenuItemProps{},
+									htmx.Text("Item 1"),
+								),
+								drawers.DrawerSideMenuItem(
+									drawers.DrawerSideMenuItemProps{},
+									htmx.Text("Item 2"),
+								),
+								drawers.DrawerSideMenuItem(
+									drawers.DrawerSideMenuItemProps{},
+									htmx.Text("Item 3"),
+								),
+							),
+						),
+					),
 				),
 			),
 		),
