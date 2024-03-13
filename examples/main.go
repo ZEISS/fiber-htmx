@@ -98,7 +98,7 @@ var demoRows = []DemoRow{
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVar(&cfg.Flags.Addr, "addr", ":8080", "addr")
+	rootCmd.PersistentFlags().StringVar(&cfg.Flags.Addr, "addr", ":3000", "addr")
 
 	rootCmd.SilenceUsage = true
 }
