@@ -16,6 +16,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
+	"github.com/zeiss/fiber-htmx/components/menus"
 	"github.com/zeiss/fiber-htmx/components/progress"
 	"github.com/zeiss/fiber-htmx/components/skeletons"
 	"github.com/zeiss/fiber-htmx/components/stats"
@@ -983,6 +984,36 @@ func indexPage() htmx.Node {
 						Width:  32,
 						Height: 32,
 					},
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				menus.Menu(
+					menus.MenuProps{},
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						htmx.A(
+							htmx.Attribute("href", "#"),
+							htmx.Text("Item 1"),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						htmx.A(
+							htmx.Attribute("href", "#"),
+							htmx.Text("Item 2"),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						htmx.A(
+							htmx.Attribute("href", "#"),
+							htmx.Text("Item 3"),
+						),
+					),
 				),
 			),
 			htmx.Div(
