@@ -246,6 +246,16 @@ func indexPage() htmx.Node {
 				),
 			),
 			htmx.Div(
+				htmx.ClassNames{},
+				htmx.Range(
+					htmx.Div(htmx.Text("Item 1")),
+					htmx.Div(htmx.Text("Item 2")),
+				).
+					Filter(func(int) bool { return true }).
+					Map(func(int) htmx.Node { return htmx.Div(htmx.Text("Hello")) }).
+					Group(),
+			),
+			htmx.Div(
 				htmx.ClassNames{
 					"bg-base-100": true,
 					"p-4":         true,
