@@ -195,3 +195,47 @@ func HeartOutline(p IconProps) htmx.Node {
 		),
 	)
 }
+
+// Bars2Outline ...
+func Bars2Outline(p IconProps) htmx.Node {
+	return htmx.SVG(
+		htmx.Attribute("xmlns", "http://www.w3.org/2000/svg"),
+		htmx.Attribute("fill", "none"),
+		htmx.Attribute("viewBox", "0 0 24 24"),
+		htmx.Attribute("stroke-width", "1.5"),
+		htmx.Attribute("stroke", "currentColor"),
+		htmx.Merge(
+			htmx.ClassNames{
+				"w-6 h-6": true,
+			},
+			p.ClassNames,
+		),
+		htmx.Path(
+			htmx.Attribute("stroke-linecap", "round"),
+			htmx.Attribute("stroke-linejoin", "round"),
+			htmx.Attribute("d", "M3.75 9h16.5m-16.5 6.75h16.5"),
+		),
+	)
+}
+
+// Bars3Outline ...
+func Bars3Outline(p IconProps) htmx.Node {
+	return htmx.SVG(
+		htmx.Attribute("xmlns", "http://www.w3.org/2000/svg"),
+		htmx.Attribute("fill", "none"),
+		htmx.Attribute("viewBox", "0 0 24 24"),
+		htmx.Attribute("stroke-width", "1.5"),
+		htmx.Attribute("stroke", "currentColor"),
+		htmx.Merge(
+			htmx.ClassNames{
+				"w-6 h-6": true,
+			},
+			p.ClassNames,
+		),
+		htmx.Path(
+			htmx.Attribute("stroke-linecap", "round"),
+			htmx.Attribute("stroke-linejoin", "round"),
+			htmx.Attribute("d", "M3.75 5.25h16.5m-16.5 6.75h16.5m-16.5 6.75h16.5"),
+		),
+	)
+}

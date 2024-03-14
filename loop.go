@@ -1,11 +1,5 @@
 package htmx
 
-import (
-	"io"
-)
-
-var _ Node = (*rangeLoop)(nil)
-
 // RangeLoop is a loop control structure.
 type RangeLoop interface {
 	// Filter loops and filters the content.
@@ -14,8 +8,6 @@ type RangeLoop interface {
 	Map(f func(int) Node) RangeLoop
 	// Group returns the nodes as a group.
 	Group() Node
-
-	Node
 }
 
 type rangeLoop struct {
@@ -51,16 +43,6 @@ func (r *rangeLoop) Map(f func(int) Node) RangeLoop {
 	}
 
 	return r
-}
-
-// String is a node that renders a group of nodes.
-func (c *rangeLoop) String() string {
-	panic("cannot render group directly")
-}
-
-// Render is a node that renders a group of nodes.
-func (c *rangeLoop) Render(io.Writer) error {
-	panic("cannot render children directly")
 }
 
 // Filter loops and filters the content.
