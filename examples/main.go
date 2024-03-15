@@ -260,6 +260,142 @@ func indexPage() htmx.Node {
 					"bg-base-100": true,
 					"p-4":         true,
 				},
+				menus.Menu(
+					menus.MenuProps{},
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						htmx.A(
+							htmx.Attribute("href", "#"),
+							htmx.Text("Item 1"),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						htmx.A(
+							htmx.Attribute("href", "#"),
+							htmx.Text("Item 2"),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						htmx.A(
+							htmx.Attribute("href", "#"),
+							htmx.Text("Item 3"),
+						),
+					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				menus.Menu(
+					menus.MenuProps{},
+					menus.MenuTitle(
+						menus.MenuTitleProps{},
+						htmx.Text("Title"),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						htmx.A(
+							htmx.Attribute("href", "#"),
+							htmx.Text("Item 1"),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						htmx.A(
+							htmx.Attribute("href", "#"),
+							htmx.Text("Item 2"),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						htmx.A(
+							htmx.Attribute("href", "#"),
+							htmx.Text("Item 3"),
+						),
+					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				menus.Menu(
+					menus.MenuProps{},
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						htmx.A(
+							htmx.Attribute("href", "#"),
+							htmx.Text("Item 1"),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						menus.MenuCollapsible(
+							menus.MenuCollapsibleProps{
+								Open: true,
+							},
+							menus.MenuCollapsibleSummary(
+								menus.MenuCollapsibleSummaryProps{},
+								htmx.Text("Collapsible"),
+							),
+							menus.MenuItem(
+								menus.MenuItemProps{},
+								htmx.A(
+									htmx.Attribute("href", "#"),
+									htmx.Text("Item 1"),
+								),
+								htmx.A(
+									htmx.Attribute("href", "#"),
+									htmx.Text("Item 2"),
+								),
+								htmx.A(
+									htmx.Attribute("href", "#"),
+									htmx.Text("Item 3"),
+								),
+							),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						menus.MenuLink(
+							menus.MenuLinkProps{
+								Href:   "#",
+								Active: true,
+							},
+							htmx.Text("Item 1"),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						menus.MenuLink(
+							menus.MenuLinkProps{
+								Href: "#",
+							},
+							icons.UserOutline(
+								icons.IconProps{},
+							),
+							htmx.Text("Item 2"),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						htmx.A(
+							htmx.Attribute("href", "#"),
+							htmx.Text("Item 3"),
+						),
+					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
 				forms.Checkbox(
 					forms.CheckboxProps{
 						Name:    "checkbox1",
