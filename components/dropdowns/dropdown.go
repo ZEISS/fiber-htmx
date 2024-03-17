@@ -9,10 +9,13 @@ type DropdownProps struct {
 
 // Dropdown generates a dropdown element based on the provided properties.
 func Dropdown(p DropdownProps, children ...htmx.Node) htmx.Node {
-	return htmx.Details(
-		htmx.ClassNames{
-			"dropdown": true,
-		}.Merge(p.ClassNames),
+	return htmx.Div(
+		htmx.Merge(
+			htmx.ClassNames{
+				"dropdown": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -20,15 +23,20 @@ func Dropdown(p DropdownProps, children ...htmx.Node) htmx.Node {
 // DropdownButtonProps represents the properties for a dropdown summary element.
 type DropdownButtonProps struct {
 	ClassNames htmx.ClassNames // The class names for the dropdown summary element.
+	TabIndex   int
 }
 
 // DropdownButton generates a dropdown summary element based on the provided properties.
 func DropdownButton(p DropdownButtonProps, children ...htmx.Node) htmx.Node {
-	return htmx.Summary(
-		htmx.ClassNames{
-			"m-1": true,
-			"btn": true,
-		}.Merge(p.ClassNames),
+	return htmx.Div(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn": true,
+				"m-1": true,
+			},
+			p.ClassNames,
+		),
+		htmx.Attribute("tabindex", htmx.IntAsString(p.TabIndex)),
 		htmx.Group(children...),
 	)
 }
