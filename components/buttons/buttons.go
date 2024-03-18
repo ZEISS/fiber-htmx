@@ -10,230 +10,320 @@ type ButtonProps struct {
 }
 
 // Button generates a button element based on the provided properties.
-func Button(p ButtonProps, children ...htmx.Node) htmx.Node {
+func Button(props ButtonProps, children ...htmx.Node) htmx.Node {
 	return htmx.Button(
-		htmx.ClassNames{
-			"btn": true,
-		}.Merge(p.ClassNames),
-		htmx.Attribute("type", p.Type),
-		htmx.If(p.Disabled, htmx.Disabled()),
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
 
 // Primary generates a primary button element based on the provided properties.
-func Primary(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-primary": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Primary(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":         true,
+				"btn-primary": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // Neutral generates a neutral button element based on the provided properties.
-func Neutral(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-neutral": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Neutral(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":         true,
+				"btn-neutral": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // Secondary generates a secondary button element based on the provided properties.
-func Secondary(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-secondary": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Secondary(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":           true,
+				"btn-secondary": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // Accent generates an accent button element based on the provided properties.
-func Accent(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-accent": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Accent(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":        true,
+				"btn-accent": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // Ghost generates a ghost button element based on the provided properties.
-func Ghost(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-ghost": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Ghost(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":       true,
+				"btn-ghost": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // Link generates a link button element based on the provided properties.
-func Link(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-link": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Link(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":      true,
+				"btn-link": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // Info generates an info button element based on the provided properties.
-func Info(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-info": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Info(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":      true,
+				"btn-info": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // Success generates a success button element based on the provided properties.
-func Success(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-success": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Success(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":         true,
+				"btn-success": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // Warning generates a warning button element based on the provided properties.
-func Warning(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-warning": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Warning(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":         true,
+				"btn-warning": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // Error generates an error button element based on the provided properties.
-func Error(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-error": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Error(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":       true,
+				"btn-error": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // Outline generates an outline button element based on the provided properties.
-func Outline(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-outline": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Outline(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":         true,
+				"btn-outline": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // OutlinePrimary generates an outline primary button element based on the provided properties.
-func OutlinePrimary(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-outline": true,
-		"btn-primary": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func OutlinePrimary(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn-outline": true,
+				"btn-primary": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // OutlineSecondary generates an outline secondary button element based on the provided properties.
-func OutlineSecondary(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-outline":   true,
-		"btn-secondary": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func OutlineSecondary(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn-outline":   true,
+				"btn-secondary": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // OutlineAccent generates an outline accent button element based on the provided properties.
-func OutlineAccent(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-outline": true,
-		"btn-accent":  true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func OutlineAccent(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn-outline": true,
+				"btn-accent":  true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // OutlineInfo generates an outline info button element based on the provided properties.
-func OutlineInfo(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-outline": true,
-		"btn-info":    true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func OutlineInfo(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn-outline": true,
+				"btn-info":    true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // OutlineSuccess generates an outline success button element based on the provided properties.
-func OutlineSuccess(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-outline": true,
-		"btn-success": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func OutlineSuccess(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn-outline": true,
+				"btn-success": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // OutlineWarning generates an outline warning button element based on the provided properties.
-func OutlineWarning(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-outline": true,
-		"btn-warning": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func OutlineWarning(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn-outline": true,
+				"btn-warning": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // OutlineError generates an outline error button element based on the provided properties.
-func OutlineError(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn-outline": true,
-		"btn-error":   true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func OutlineError(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn-outline": true,
+				"btn-error":   true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
 
 // Glass generates a glass button element based on the provided properties.
-func Glass(p ButtonProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"btn":   true,
-		"glass": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
-
-	return Button(p, children...)
+func Glass(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn-outline": true,
+				"glass":       true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
 }
