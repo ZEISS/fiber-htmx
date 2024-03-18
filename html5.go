@@ -12,21 +12,19 @@ type HTML5Props struct {
 	Description string // The description of the HTML document.
 	Language    string // The language of the HTML document.
 	Head        []Node // The nodes to be included in the head section of the HTML document.
-
-	Ctx
 }
 
 // HTML5 generates an HTML5 document based on the provided properties.
-func HTML5(p HTML5Props, body ...Node) Node {
+func HTML5(ctx Context, props HTML5Props, body ...Node) Node {
 	return Doctype(
 		HTML(
-			If(p.Language != "", Lang(p.Language)),
+			If(props.Language != "", Lang(props.Language)),
 			Head(
 				Meta(Charset("utf-8")),
 				Meta(Name("viewport"), Content("width=device-width, initial-scale=1")),
-				TitleElement(Text(p.Title)),
-				If(p.Description != "", Meta(Name("description"), Content(p.Description))),
-				Group(p.Head...),
+				TitleElement(Text(props.Title)),
+				If(props.Description != "", Meta(Name("description"), Content(props.Description))),
+				Group(props.Head...),
 			),
 			Group(body...),
 		),

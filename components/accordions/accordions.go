@@ -11,10 +11,13 @@ type AccordionProps struct {
 // Accordion is a component that can be expanded and collapsed.
 func Accordion(props AccordionProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"collapse":    true,
-			"bg-base-200": true,
-		}.Merge(props.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"collapse":    true,
+				"bg-base-200": true,
+			},
+			props.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -22,10 +25,13 @@ func Accordion(props AccordionProps, children ...htmx.Node) htmx.Node {
 // AccordionArrow is a component that can be expanded and collapsed.
 func AccordionArrow(props AccordionProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"collapse":       true,
-			"collapse-arrow": true,
-		}.Merge(props.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"collapse":       true,
+				"collapse-arrow": true,
+			},
+			props.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -38,11 +44,13 @@ type AccordionTitleProps struct {
 // AccordionTitle is a component that can be expanded and collapsed.
 func AccordionTitle(props AccordionTitleProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"collapse-title": true,
-			"title-md":       true,
-			"font-medium":    true,
-		}.Merge(props.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"collapse-title": true,
+				"title-md":       true,
+				"font-medium":    true,
+			},
+		),
 		htmx.Group(children...),
 	)
 }
@@ -55,9 +63,12 @@ type AccordionContentProps struct {
 // AccordionContent is a component that can be expanded and collapsed.
 func AccordionContent(props AccordionContentProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"collapse-content": true,
-		}.Merge(props.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"collapse-content": true,
+			},
+			props.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }

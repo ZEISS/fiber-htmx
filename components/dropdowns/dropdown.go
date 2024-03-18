@@ -36,7 +36,10 @@ func DropdownButton(p DropdownButtonProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
-		htmx.Attribute("tabindex", htmx.IntAsString(p.TabIndex)),
+		htmx.Attribute(
+			"tabindex",
+			htmx.IntAsString(p.TabIndex),
+		),
 		htmx.Group(children...),
 	)
 }

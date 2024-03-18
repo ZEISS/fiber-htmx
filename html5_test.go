@@ -9,6 +9,8 @@ import (
 )
 
 func Benchmark_HTML5_Render(b *testing.B) {
+	ctx := htmx.DefaultCtx()
+
 	nodes := []htmx.Node{}
 
 	for i := 0; i < 10000; i++ {
@@ -16,16 +18,18 @@ func Benchmark_HTML5_Render(b *testing.B) {
 	}
 
 	for i := 0; i < b.N; i++ {
-		err := htmx.HTML5(htmx.HTML5Props{
-			Title:       "Hello, World!",
-			Description: "An example of an HTML5 document.",
-			Language:    "en",
-			Head: []htmx.Node{
-				htmx.Meta(htmx.Charset("utf-8")),
-				htmx.Meta(htmx.Name("viewport"), htmx.Content("width=device-width, initial-scale=1")),
-				htmx.TitleElement(htmx.Text("Hello, World!")),
-			},
-		}, nodes...).Render(io.Discard)
+		err := htmx.HTML5(
+			ctx,
+			htmx.HTML5Props{
+				Title:       "Hello, World!",
+				Description: "An example of an HTML5 document.",
+				Language:    "en",
+				Head: []htmx.Node{
+					htmx.Meta(htmx.Charset("utf-8")),
+					htmx.Meta(htmx.Name("viewport"), htmx.Content("width=device-width, initial-scale=1")),
+					htmx.TitleElement(htmx.Text("Hello, World!")),
+				},
+			}, nodes...).Render(io.Discard)
 		assert.NoError(b, err)
 	}
 }

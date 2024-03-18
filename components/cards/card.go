@@ -5,8 +5,6 @@ import htmx "github.com/zeiss/fiber-htmx"
 // CardProps contains the properties for the card component.
 type CardProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Card is a component for the htmx card extension.
@@ -28,8 +26,6 @@ func Card(p CardProps, children ...htmx.Node) htmx.Node {
 // BodyProps contains the properties for the card body component.
 type BodyProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Body is a component for the htmx card extension.
@@ -48,8 +44,6 @@ func Body(p BodyProps, children ...htmx.Node) htmx.Node {
 // ActionsProps contains the properties for the card actions component.
 type ActionsProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Actions is a component for the htmx card extension.
@@ -69,8 +63,6 @@ func Actions(p ActionsProps, children ...htmx.Node) htmx.Node {
 // TitleProps contains the properties for the card title component.
 type TitleProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Title is a component for the htmx card extension.

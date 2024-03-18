@@ -6,8 +6,6 @@ import htmx "github.com/zeiss/fiber-htmx"
 type DrawerOpenProps struct {
 	ID         string
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // DrawerOpenButton is a component that renders a drawer open button
@@ -30,8 +28,6 @@ func DrawerOpenButton(p DrawerOpenProps, children ...htmx.Node) htmx.Node {
 type DrawerSideProps struct {
 	ID         string
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // DrawerSide is a component that renders a drawer side
@@ -58,8 +54,6 @@ func DrawerSide(p DrawerSideProps, children ...htmx.Node) htmx.Node {
 type DrawerSideMenuProps struct {
 	ID         string
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // DrawerSideMenu is a component that renders a drawer side menu
@@ -84,8 +78,6 @@ func DrawerSideMenu(p DrawerSideMenuProps, children ...htmx.Node) htmx.Node {
 type DrawerSideMenuItemProps struct {
 	ID         string
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // DrawerSideMenuItem is a component that renders a drawer side menu item
@@ -103,8 +95,6 @@ func DrawerSideMenuItem(p DrawerSideMenuItemProps, children ...htmx.Node) htmx.N
 type DrawerContentProps struct {
 	ID         string
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // DrawerContent is a component that renders a drawer content
@@ -125,8 +115,6 @@ type DrawerProps struct {
 	ID         string
 	ClassNames htmx.ClassNames
 	DrawerSide []htmx.Node
-
-	htmx.Ctx
 }
 
 // Drawer is a component that renders a drawer

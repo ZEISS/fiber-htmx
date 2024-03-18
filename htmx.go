@@ -269,6 +269,8 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 	}
 }
 
+// NewCompFuncHandler returns a new comp handler.
+
 // NewCompHandler returns a new comp handler.
 func NewCompHandler(n Node, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)

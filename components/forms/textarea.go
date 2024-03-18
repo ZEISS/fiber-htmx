@@ -7,8 +7,6 @@ type TextareaProps struct {
 	ClassNames  htmx.ClassNames
 	Placeholder string
 	Disabled    bool
-
-	htmx.Ctx
 }
 
 // Textarea is a textarea component

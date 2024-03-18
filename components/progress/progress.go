@@ -7,8 +7,6 @@ type ProgressProps struct {
 	ClassNames htmx.ClassNames
 	Value      int
 	Max        int
-
-	htmx.Ctx
 }
 
 // Progress is a component that renders a progress element

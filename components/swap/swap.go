@@ -5,8 +5,6 @@ import htmx "github.com/zeiss/fiber-htmx"
 // SwapProps contains the properties for the swap component.
 type SwapProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // SwapOn is a component for the on state of the swap component.

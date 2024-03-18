@@ -45,8 +45,6 @@ func MenuItem(p MenuItemProps, children ...htmx.Node) htmx.Node {
 // MenuTitleProps is the struct for the menu title props
 type MenuTitleProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // MenuTitle is the component for the menu title
@@ -66,8 +64,6 @@ func MenuTitle(p MenuTitleProps, children ...htmx.Node) htmx.Node {
 type MenuCollapsibleProps struct {
 	ClassNames htmx.ClassNames
 	Open       bool
-
-	htmx.Ctx
 }
 
 // MenuCollapsible is the component for the menu collapse
@@ -84,8 +80,6 @@ func MenuCollapsible(p MenuCollapsibleProps, children ...htmx.Node) htmx.Node {
 // MenuCollapsibleSummaryProps is the struct for the menu collapse summary props
 type MenuCollapsibleSummaryProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // MenuCollapsibleSummary is the component for the menu collapse summary
@@ -103,8 +97,6 @@ type MenuLinkProps struct {
 	ClassNames htmx.ClassNames
 	Href       string
 	Active     bool
-
-	htmx.Ctx
 }
 
 // MenuLink is the component for the menu link

@@ -5,8 +5,6 @@ import htmx "github.com/zeiss/fiber-htmx"
 // StatsProps contains the properties for the stats component.
 type StatsProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Stats is a component for the htmx stats extension.
@@ -41,8 +39,6 @@ func StatsVertical(p StatsProps, children ...htmx.Node) htmx.Node {
 // StatProps contains the properties for the stat component.
 type StatProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Stat is a component for the htmx stats extension.
@@ -61,8 +57,6 @@ func Stat(p StatProps, children ...htmx.Node) htmx.Node {
 // TitleProps contains the properties for the title component.
 type TitleProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Title is a component for the htmx stats extension.
@@ -81,8 +75,6 @@ func Title(p TitleProps, children ...htmx.Node) htmx.Node {
 // ValueProps contains the properties for the value component.
 type ValueProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Value is a component for the htmx stats extension.
@@ -101,8 +93,6 @@ func Value(p ValueProps, children ...htmx.Node) htmx.Node {
 // DescriptionProps contains the properties for the description component.
 type DescriptionProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Description is a component for the htmx stats extension.
@@ -121,8 +111,6 @@ func Description(p DescriptionProps, children ...htmx.Node) htmx.Node {
 // FigureProps contains the properties for the figure component.
 type FigureProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Figure is a component for the htmx stats extension.
@@ -141,8 +129,6 @@ func Figure(p FigureProps, children ...htmx.Node) htmx.Node {
 // ActiosnProps contains the properties for the action component.
 type ActionsProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Actions is a component for the htmx stats extension.

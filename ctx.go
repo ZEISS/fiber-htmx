@@ -1,6 +1,9 @@
 package htmx
 
 import (
+	"context"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -16,12 +19,37 @@ type Context interface {
 	Reset()
 }
 
-var _ Context = (*Ctx)(nil)
+var (
+	_ Context         = (*Ctx)(nil)
+	_ context.Context = (*Ctx)(nil)
+)
 
 // Ctx is a struct that contains the properties of a htmx context.
 type Ctx struct {
 	localValues map[any]any
 	ctx         *fiber.Ctx
+	err         error
+	done        chan struct{}
+}
+
+// Value is a method that returns the value of the provided key.
+func (c *Ctx) Value(key interface{}) interface{} {
+	return c.Locals(key)
+}
+
+// Deadline is a method that returns the deadline of the context.
+func (c *Ctx) Deadline() (deadline time.Time, ok bool) {
+	return time.Time{}, false
+}
+
+// Done is a method that returns a channel that is closed when the context is done.
+func (c *Ctx) Done() <-chan struct{} {
+	return c.done
+}
+
+// Err is a method that returns the error of the context.
+func (c *Ctx) Err() error {
+	return c.err
 }
 
 // Locals is a method that returns the local values.
@@ -83,8 +111,8 @@ func (c *Ctx) Copy() Ctx {
 }
 
 // DefaultCtx is a function that returns a new Ctx instance.
-func DefaultCtx() Ctx {
-	return Ctx{
+func DefaultCtx() *Ctx {
+	return &Ctx{
 		localValues: make(map[any]any),
 	}
 }

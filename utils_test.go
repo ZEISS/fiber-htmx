@@ -1,11 +1,14 @@
 package htmx_test
 
 import (
+	"context"
 	"testing"
+	"time"
 
 	htmx "github.com/zeiss/fiber-htmx"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAsBool(t *testing.T) {
@@ -46,4 +49,20 @@ func TestMerge(t *testing.T) {
 			assert.Equal(t, tt.out, htmx.Merge(tt.in...))
 		})
 	}
+}
+
+func TestFromContext(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	resolver := func(ctx context.Context) (interface{}, interface{}, error) {
+		return "key", "value", nil
+	}
+
+	c, err := htmx.FromContext(ctx, resolver)
+	require.NoError(t, err)
+	assert.NotNil(t, c)
+
+	value := c.Locals("key")
+	assert.Equal(t, "value", value)
 }

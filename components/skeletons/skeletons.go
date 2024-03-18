@@ -11,8 +11,6 @@ type SkeletonProps struct {
 	ClassNames htmx.ClassNames
 	Width      int
 	Height     int
-
-	htmx.Ctx
 }
 
 // Skeleton is a component that renders a skeleton element

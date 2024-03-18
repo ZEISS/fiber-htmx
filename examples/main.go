@@ -112,7 +112,7 @@ func run(ctx context.Context) error {
 	app.Use(requestid.New())
 	app.Use(logger.New())
 
-	app.Get("/", htmx.NewCompHandler(indexPage()))
+	app.Get("/", htmx.NewCompFuncHandler(indexPage))
 
 	app.Post("/api/respond", htmx.NewHtmxHandler(func(hx *htmx.Htmx) error {
 		if !hx.IsHxRequest() {
@@ -180,11 +180,12 @@ func main() {
 	}
 }
 
-func indexPage() htmx.Node {
-	root := htmx.DefaultCtx()
-	root.Locals("title", "index")
+func indexPage(c *fiber.Ctx) (htmx.Node, error) {
+	ctx := htmx.DefaultCtx()
+	ctx.Locals("title", "index")
 
 	return htmx.HTML5(
+		ctx,
 		htmx.HTML5Props{
 			Title:    "index",
 			Language: "en",
@@ -193,15 +194,21 @@ func indexPage() htmx.Node {
 				htmx.Script(htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.10"), htmx.Attribute("type", "application/javascript")),
 				htmx.Script(htmx.Attribute("src", "https://cdn.tailwindcss.com"), htmx.Attribute("type", "application/javascript")),
 			},
-			Ctx: root,
 		},
 		htmx.Div(
 			htmx.ClassNames{
 				"bg-base-100": true,
 			},
-			Navbar(NavbarProps{
-				Ctx: root,
-			}), htmx.Button(htmx.Text("Button"), htmx.HxPost("/api/respond"), htmx.HxSwap("outerHTML"), htmx.ClassNames{"btn": true}),
+			Navbar(
+				ctx,
+				NavbarProps{},
+			),
+			htmx.Button(
+				htmx.Text("Button"),
+				htmx.HxPost("/api/respond"),
+				htmx.HxSwap("outerHTML"),
+				htmx.ClassNames{"btn": true},
+			),
 			htmx.Div(
 				dropdowns.Dropdown(
 					dropdowns.DropdownProps{},
@@ -1270,20 +1277,18 @@ func indexPage() htmx.Node {
 				),
 			),
 		),
-	)
+	), nil
 }
 
-type NavbarProps struct {
-	htmx.Ctx
-}
+type NavbarProps struct{}
 
-func Navbar(p NavbarProps) htmx.Node {
+func Navbar(ctx htmx.Context, props NavbarProps, children ...htmx.Node) htmx.Node {
 	return htmx.Nav(
 		htmx.ClassNames{"bg-base-100": true, "navbar": true},
 		htmx.Div(
 			htmx.H3(
 				htmx.ClassNames{"text-lg font-bold": true},
-				htmx.Text(p.Locals("title").(string)),
+				htmx.Text(ctx.Locals("title").(string)),
 			),
 		),
 		htmx.Div(htmx.ClassNames{"flex-none": true},

@@ -1,6 +1,7 @@
 package htmx
 
 import (
+	"context"
 	"strconv"
 	"strings"
 )
@@ -31,4 +32,23 @@ func Merge(classNames ...ClassNames) ClassNames {
 	}
 
 	return merged
+}
+
+// ResolverFunc is a function that resolves a value with a context and returns the value and any additional arguments.
+type ResolverFunc func(ctx context.Context) (any, any, error)
+
+// FromContext is creating a new context from the provided context and resolver functions.
+func FromContext(ctx context.Context, resolver ...ResolverFunc) (Context, error) {
+	c := DefaultCtx()
+
+	for _, r := range resolver {
+		k, arg, err := r(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		c.Locals(k, arg)
+	}
+
+	return c, nil
 }
