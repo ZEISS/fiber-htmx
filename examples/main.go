@@ -18,6 +18,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/kbds"
 	"github.com/zeiss/fiber-htmx/components/menus"
+	"github.com/zeiss/fiber-htmx/components/modals"
 	"github.com/zeiss/fiber-htmx/components/progress"
 	"github.com/zeiss/fiber-htmx/components/skeletons"
 	"github.com/zeiss/fiber-htmx/components/stats"
@@ -1186,6 +1187,28 @@ func indexPage(c *fiber.Ctx) (htmx.Node, error) {
 				kbds.Kbd(
 					kbds.KbdProps{},
 					htmx.Text("Shift"),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				buttons.Button(
+					buttons.ButtonProps{},
+					htmx.Text("Open Modal"),
+					htmx.OnClick("my_modal_1.showModal()"),
+				),
+				modals.Modal(
+					modals.ModalProps{
+						ID: "my_modal_1",
+					},
+					modals.ModalAction(
+						modals.ModalActionProps{},
+						modals.ModalCloseButton(
+							modals.ModalCloseButtonProps{},
+						),
+					),
 				),
 			),
 			htmx.Div(

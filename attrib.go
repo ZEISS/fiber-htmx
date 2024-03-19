@@ -422,3 +422,8 @@ func Width(v string) Node {
 func EncType(v string) Node {
 	return Attribute("enctype", v)
 }
+
+// OnClick sets the onclick attribute for elements.
+func OnClick(v string) Node {
+	return Attribute("onclick", v)
+}
