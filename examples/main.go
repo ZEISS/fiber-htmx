@@ -16,6 +16,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
+	"github.com/zeiss/fiber-htmx/components/kbds"
 	"github.com/zeiss/fiber-htmx/components/menus"
 	"github.com/zeiss/fiber-htmx/components/progress"
 	"github.com/zeiss/fiber-htmx/components/skeletons"
@@ -1167,6 +1168,24 @@ func indexPage(c *fiber.Ctx) (htmx.Node, error) {
 							htmx.Text("Item 3"),
 						),
 					),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+					"p-4":         true,
+				},
+				kbds.Kbd(
+					kbds.KbdProps{},
+					htmx.Text("Ctrl"),
+				),
+				kbds.Kbd(
+					kbds.KbdProps{},
+					htmx.Text("Alt"),
+				),
+				kbds.Kbd(
+					kbds.KbdProps{},
+					htmx.Text("Shift"),
 				),
 			),
 			htmx.Div(
