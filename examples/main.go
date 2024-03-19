@@ -181,7 +181,7 @@ func main() {
 }
 
 func indexPage(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.DefaultCtx()
+	ctx := htmx.FromContext(c)
 	ctx.Locals("title", "index")
 
 	return htmx.HTML5(

@@ -10,7 +10,7 @@ import (
 // ContextCtx is a struct that contains the context of a htmx context.
 type Context interface {
 	// Context is the fiber.Ctx instance.
-	Context(...*fiber.Ctx) *fiber.Ctx
+	Context() *fiber.Ctx
 	// Locals is a method that returns the local values.
 	Locals(key any, value ...any) (val any)
 	// Copy is a method that returns a new Ctx instance with the same properties.
@@ -82,17 +82,7 @@ func Locals[V any](c Context, key any, value ...V) V {
 }
 
 // Context is a method that returns the fiber.Ctx instance.
-func (c *Ctx) Context(ctx ...*fiber.Ctx) *fiber.Ctx {
-	if c.ctx == nil {
-		c.ctx = &fiber.Ctx{}
-	}
-
-	if len(ctx) == 0 {
-		return c.ctx
-	}
-
-	c.ctx = ctx[0]
-
+func (c *Ctx) Context() *fiber.Ctx {
 	return c.ctx
 }
 
@@ -110,9 +100,10 @@ func (c *Ctx) Copy() Ctx {
 	}
 }
 
-// DefaultCtx is a function that returns a new Ctx instance.
-func DefaultCtx() *Ctx {
+// FromContext is a function that returns the Ctx instance from the provided context.
+func FromContext(c *fiber.Ctx) *Ctx {
 	return &Ctx{
 		localValues: make(map[any]any),
+		ctx:         c,
 	}
 }

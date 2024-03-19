@@ -4,9 +4,9 @@ import htmx "github.com/zeiss/fiber-htmx"
 
 // ButtonProps represents the properties for a button element.
 type ButtonProps struct {
-	ClassNames map[string]bool // The class names for the button element.
-	Type       string          // The type of the button element.
-	Disabled   bool            // Whether the button element is disabled.
+	ClassNames htmx.ClassNames
+	Type       string // The type of the button element.
+	Disabled   bool   // Whether the button element is disabled.
 }
 
 // Button generates a button element based on the provided properties.
