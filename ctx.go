@@ -2,10 +2,13 @@ package htmx
 
 import (
 	"context"
-	"time"
+	"fmt"
+	"sync"
 
 	"github.com/gofiber/fiber/v2"
 )
+
+type token struct{}
 
 // ContextCtx is a struct that contains the context of a htmx context.
 type Context interface {
@@ -19,32 +22,21 @@ type Context interface {
 	Reset()
 }
 
-var (
-	_ Context         = (*Ctx)(nil)
-	_ context.Context = (*Ctx)(nil)
-)
+var _ Context = (*Ctx)(nil)
 
 // Ctx is a struct that contains the properties of a htmx context.
 type Ctx struct {
 	localValues map[any]any
 	ctx         *fiber.Ctx
-	err         error
-	done        chan struct{}
-}
 
-// Value is a method that returns the value of the provided key.
-func (c *Ctx) Value(key interface{}) interface{} {
-	return c.Locals(key)
-}
+	wg      sync.WaitGroup
+	errOnce sync.Once
+	err     error
+	cancel  func(error)
 
-// Deadline is a method that returns the deadline of the context.
-func (c *Ctx) Deadline() (deadline time.Time, ok bool) {
-	return time.Time{}, false
-}
+	sem chan token
 
-// Done is a method that returns a channel that is closed when the context is done.
-func (c *Ctx) Done() <-chan struct{} {
-	return c.done
+	sync.RWMutex
 }
 
 // Err is a method that returns the error of the context.
@@ -52,8 +44,73 @@ func (c *Ctx) Err() error {
 	return c.err
 }
 
+// Error ...
+type Error struct {
+	Err error
+}
+
+// Error ...
+func (s *Error) Error() string { return fmt.Sprintf("server: %s", s.Err) }
+
+// Unwrap ...
+func (s *Error) Unwrap() error { return s.Err }
+
+// NewError returns a new error.
+func NewError(err error) *Error {
+	return &Error{Err: err}
+}
+
+// Wait is waiting for all reservers to finish.
+func (c *Ctx) Wait() error {
+	c.wg.Wait()
+
+	if c.cancel != nil {
+		c.cancel(c.err)
+	}
+
+	return c.err
+}
+
+// ResolveFunc is a function that resolves locals for the context.
+type ResolveFunc func(c context.Context) (interface{}, interface{}, error)
+
+// Resolve is a method that resolves locals for the context.
+func (c *Ctx) Resolve(f ResolveFunc) {
+	if c.sem != nil {
+		c.sem <- token{}
+	}
+
+	c.wg.Add(1)
+	go func() {
+		defer c.done()
+
+		k, v, err := f(c.ctx.Context())
+		if err != nil {
+			c.errOnce.Do(func() {
+				c.err = err
+				if c.cancel != nil {
+					c.cancel(c.err)
+				}
+			})
+		}
+
+		c.Locals(k, v)
+	}()
+}
+
+func (c *Ctx) done() {
+	if c.sem != nil {
+		<-c.sem
+	}
+
+	c.wg.Done()
+}
+
 // Locals is a method that returns the local values.
 func (c *Ctx) Locals(key any, value ...any) (val any) {
+	c.Lock()
+	defer c.Unlock()
+
 	if len(value) == 0 {
 		return c.localValues[key]
 	}
@@ -88,6 +145,9 @@ func (c *Ctx) Context() *fiber.Ctx {
 
 // Reset is a method that resets the local values.
 func (c *Ctx) Reset() {
+	c.Lock()
+	defer c.Unlock()
+
 	c.localValues = make(map[any]any)
 	c.ctx = nil
 }

@@ -5,8 +5,6 @@ import htmx "github.com/zeiss/fiber-htmx"
 // ToastProps contains the properties for the toast component.
 type ToastProps struct {
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
 }
 
 // Toast is a component for the htmx toast extension.
