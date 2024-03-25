@@ -10,10 +10,50 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+var _ Ctx = (*Htmx)(nil)
+
+// Ctx is the component context.
+type Ctx interface {
+	// Values is a helper function to get the values from the context.
+	Values(key any, value ...any) (val any)
+	// ValuesString is a helper function to get the values as a string from the context.
+	ValuesString(key any, value ...any) (val string)
+	// ValuesInt is a helper function to get the values as an int from the context.
+	ValuesInt(key any, value ...any) (val int)
+	// ValuesBool is a helper function to get the values as a bool from the context.
+	ValuesBool(key any, value ...any) (val bool)
+}
+
+// UnimplementedContext is a helper type for unimplemented contexts.
+type UnimplementedContext struct{}
+
+// Values is a helper function to get the values from the context.
+func (u *UnimplementedContext) Values(key any, value ...any) (val any) {
+	return nil
+}
+
+// ValuesString is a helper function to get the values as a string from the context.
+func (u *UnimplementedContext) ValuesString(key any, value ...any) (val string) {
+	return ""
+}
+
+// ValuesInt is a helper function to get the values as an int from the context.
+func (u *UnimplementedContext) ValuesInt(key any, value ...any) (val int) {
+	return 0
+}
+
+// ValuesBool is a helper function to get the values as a bool from the context.
+func (u *UnimplementedContext) ValuesBool(key any, value ...any) (val bool) {
+	return false
+}
+
 const (
 	// StatusStopPolling is a helper status code to stop polling.
 	StatusStopPolling = 286
 )
+
+// ResolveFunc is a function that resolves locals for the context.
+type ResolveFunc func(c context.Context) (interface{}, interface{}, error)
 
 // HxRequestHeader is a helper type for htmx request headers.
 type HxRequestHeader string
@@ -118,6 +158,9 @@ type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	Next func(c *fiber.Ctx) bool
 
+	// Resolvers is a list of resolvers that resolve locals for the context.
+	Resolvers []ResolveFunc
+
 	// ErrorHandler is executed when an error is returned from fiber.Handler.
 	//
 	// Optional. Default: DefaultErrorHandler
@@ -127,6 +170,7 @@ type Config struct {
 // ConfigDefault is the default config.
 var ConfigDefault = Config{
 	ErrorHandler: defaultErrorHandler,
+	Resolvers:    []ResolveFunc{},
 }
 
 // default ErrorHandler that process return error from fiber.Handler
@@ -202,6 +246,26 @@ func (h *Htmx) Locals(key any, value ...any) (val any) {
 	return value[0]
 }
 
+// Values is a method that returns the local values.
+func (h *Htmx) Values(key any, value ...any) (val any) {
+	return h.Locals(key, value...)
+}
+
+// ValuesString is a method that returns the local values.
+func (h *Htmx) ValuesString(key any, value ...any) (val string) {
+	return h.Locals(key, value...).(string)
+}
+
+// ValuesInt is a method that returns the local values.
+func (h *Htmx) ValuesInt(key any, value ...any) (val int) {
+	return h.Locals(key, value...).(int)
+}
+
+// ValuesBool is a method that returns the local values.
+func (h *Htmx) ValuesBool(key any, value ...any) (val bool) {
+	return h.Locals(key, value...).(bool)
+}
+
 // Reset is a method that resets the local values.
 func (h *Htmx) Reset() {
 	h.Lock()
@@ -209,11 +273,6 @@ func (h *Htmx) Reset() {
 
 	h.localValues = make(map[any]any)
 	h.ctx = nil
-}
-
-// Copy is a method that returns a new Ctx instance with the same properties.
-func (h *Htmx) Copy() Context {
-	return nil
 }
 
 // Context is a method that returns the fiber context.
@@ -244,7 +303,7 @@ func (h *Htmx) IsHxHistoryRestoreRequest() bool {
 	return h.request.HxHistoryRestoreRequest
 }
 
-// RenderPartial reutrns true if the request is an htmx request.
+// RenderPartial returns true if the request is an htmx request.
 func (h *Htmx) RenderPartial() bool {
 	return (h.request.HxRequest || h.request.HxBoosted) && !h.request.HxHistoryRestoreRequest
 }
@@ -265,6 +324,8 @@ func (h *Htmx) WriteJSON(data any) (n int, err error) {
 	if err != nil {
 		return 0, err
 	}
+
+	h.ctx.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
 	return h.Write(payload)
 }
@@ -342,7 +403,12 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 			ctx:         c,
 		}
 
-		err := handler(h)
+		err := h.Resolve(c.Context(), cfg.Resolvers...)
+		if err != nil {
+			return cfg.ErrorHandler(c, err)
+		}
+
+		err = handler(h)
 		if err != nil {
 			return cfg.ErrorHandler(c, err)
 		}
@@ -350,8 +416,6 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 		return nil
 	}
 }
-
-// NewCompFuncHandler returns a new comp handler.
 
 // NewCompHandler returns a new comp handler.
 func NewCompHandler(n Node, config ...Config) fiber.Handler {
@@ -412,6 +476,10 @@ func configDefault(config ...Config) Config {
 
 	if cfg.ErrorHandler == nil {
 		cfg.ErrorHandler = ConfigDefault.ErrorHandler
+	}
+
+	if cfg.Resolvers == nil {
+		cfg.Resolvers = ConfigDefault.Resolvers
 	}
 
 	return cfg

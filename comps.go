@@ -242,6 +242,3 @@ func If(condition bool, n Node) Node {
 
 	return nil
 }
-
-// Hoc is the type for a higher-order component.
-type HOC[P any] func(ctx Context, props P, children ...Node) Node

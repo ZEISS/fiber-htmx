@@ -4,13 +4,12 @@ import (
 	"io"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
 func Benchmark_HTML5_Render(b *testing.B) {
-	ctx := htmx.FromContext(&fiber.Ctx{})
+	ctx := &htmx.UnimplementedContext{}
 
 	nodes := []htmx.Node{}
 
