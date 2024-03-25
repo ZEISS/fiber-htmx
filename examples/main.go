@@ -114,7 +114,7 @@ func run(ctx context.Context) error {
 	app.Use(requestid.New())
 	app.Use(logger.New())
 
-	app.Get("/", htmx.NewCompFuncHandler(indexPage))
+	app.Get("/", htmx.NewHtmxHandler(indexPage))
 
 	app.Post("/api/respond", htmx.NewHtmxHandler(func(hx *htmx.Htmx) error {
 		if !hx.IsHxRequest() {
@@ -182,20 +182,16 @@ func main() {
 	}
 }
 
-func indexPage(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.FromContext(c)
-
-	ctx.Resolve(func(c context.Context) (interface{}, interface{}, error) {
-		return "title", "index", nil
+func indexPage(hx *htmx.Htmx) error {
+	err := hx.Resolve(hx.Ctx().Context(), func(c context.Context) (interface{}, interface{}, error) {
+		return "title", "Example Page 2", nil
 	})
-
-	err := ctx.Wait()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return htmx.HTML5(
-		ctx,
+	doc := htmx.HTML5(
+		hx,
 		htmx.HTML5Props{
 			Title:    "index",
 			Language: "en",
@@ -210,7 +206,7 @@ func indexPage(c *fiber.Ctx) (htmx.Node, error) {
 				"bg-base-100": true,
 			},
 			Navbar(
-				ctx,
+				hx,
 				NavbarProps{},
 			),
 			htmx.Button(
@@ -1327,7 +1323,9 @@ func indexPage(c *fiber.Ctx) (htmx.Node, error) {
 				),
 			),
 		),
-	), nil
+	)
+
+	return doc.Render(hx)
 }
 
 type NavbarProps struct{}

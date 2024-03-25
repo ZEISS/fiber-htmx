@@ -16,8 +16,6 @@ type Context interface {
 	Context() *fiber.Ctx
 	// Locals is a method that returns the local values.
 	Locals(key any, value ...any) (val any)
-	// Copy is a method that returns a new Ctx instance with the same properties.
-	Copy() Ctx
 	// Reset is a method that resets the local values.
 	Reset()
 }

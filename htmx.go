@@ -1,9 +1,11 @@
 package htmx
 
 import (
+	"context"
 	"encoding/json"
 	"html/template"
 	"net/http"
+	"sync"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -147,8 +149,84 @@ func New(config ...Config) fiber.Handler {
 
 // Htmx is a helper struct for htmx requests.
 type Htmx struct {
+	localValues map[any]any
+
 	request *Hx
 	ctx     *fiber.Ctx
+
+	sync.RWMutex
+}
+
+// Resolve is a method that resolves locals for the context.
+func (h *Htmx) Resolve(ctx context.Context, funcs ...ResolveFunc) error {
+	var wg sync.WaitGroup
+	var errOnce sync.Once
+	var err error
+
+	ctx, cancel := context.WithCancelCause(ctx)
+
+	for _, f := range funcs {
+		f := f
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			k, v, err := f(ctx)
+			if err != nil {
+				errOnce.Do(func() {
+					cancel(err)
+				})
+			}
+
+			h.Locals(k, v)
+		}()
+	}
+
+	wg.Wait()
+
+	return err
+}
+
+// Locals is a method that returns the local values.
+func (h *Htmx) Locals(key any, value ...any) (val any) {
+	h.Lock()
+	defer h.Unlock()
+
+	if len(value) == 0 {
+		return h.localValues[key]
+	}
+
+	h.localValues[key] = value[0]
+
+	return value[0]
+}
+
+// Reset is a method that resets the local values.
+func (h *Htmx) Reset() {
+	h.Lock()
+	defer h.Unlock()
+
+	h.localValues = make(map[any]any)
+	h.ctx = nil
+}
+
+// Copy is a method that returns a new Ctx instance with the same properties.
+func (h *Htmx) Copy() Context {
+	return nil
+}
+
+// Context is a method that returns the fiber context.
+func (h *Htmx) Context() *fiber.Ctx {
+	return h.ctx
+}
+
+// HtmxFromContext is a helper function to get the htmx from the context.
+func HtmxFromContext(c *fiber.Ctx) *Htmx {
+	return &Htmx{
+		localValues: make(map[any]any),
+		ctx:         c,
+	}
 }
 
 // IsHxRequest returns true if the request is an htmx request.
@@ -258,7 +336,11 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 		c = ContextWithHx(c)
 		hx := HxFromContext(c)
 
-		h := &Htmx{hx, c}
+		h := &Htmx{
+			localValues: make(map[any]any),
+			request:     hx,
+			ctx:         c,
+		}
 
 		err := handler(h)
 		if err != nil {
