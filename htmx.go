@@ -465,6 +465,61 @@ func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 	}
 }
 
+// NewHxControllerHandler returns a new htmx controller handler.
+func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
+	cfg := configDefault(config...)
+
+	return func(c *fiber.Ctx) error {
+		if cfg.Next != nil && cfg.Next(c) {
+			return c.Next()
+		}
+
+		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
+
+		c = ContextWithHx(c)
+		hx := HxFromContext(c)
+
+		h := &Htmx{
+			localValues: make(map[any]any),
+			request:     hx,
+			ctx:         c,
+		}
+
+		err := ctrl.Init(h)
+		if err != nil {
+			return cfg.ErrorHandler(c, err)
+		}
+
+		err = ctrl.Prepare()
+		if err != nil {
+			return cfg.ErrorHandler(c, err)
+		}
+
+		switch c.Method() {
+		case fiber.MethodGet:
+			err = ctrl.Get()
+		case fiber.MethodPost:
+			err = ctrl.Post()
+		case fiber.MethodPut:
+			err = ctrl.Put()
+		case fiber.MethodPatch:
+			err = ctrl.Patch()
+		case fiber.MethodDelete:
+			err = ctrl.Delete()
+		case fiber.MethodOptions:
+			err = ctrl.Options()
+		default:
+			err = fiber.ErrMethodNotAllowed
+		}
+
+		if err != nil {
+			return cfg.ErrorHandler(c, err)
+		}
+
+		return nil
+	}
+}
+
 // Helper function to set default values
 func configDefault(config ...Config) Config {
 	if len(config) < 1 {

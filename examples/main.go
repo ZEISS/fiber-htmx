@@ -106,6 +106,33 @@ func init() {
 	rootCmd.SilenceUsage = true
 }
 
+type exampleController struct {
+	htmx.UnimplementedController
+}
+
+func (c *exampleController) Get() error {
+	return c.Hx.RenderComp(
+		htmx.HTML5(
+			c.Hx,
+			htmx.HTML5Props{
+				Title:    "index",
+				Language: "en",
+				Head: []htmx.Node{
+					htmx.Link(htmx.Attribute("href", "https://cdn.jsdelivr.net/npm/daisyui@4.7.0/dist/full.min.css"), htmx.Attribute("rel", "stylesheet"), htmx.Attribute("type", "text/css")),
+					htmx.Script(htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.10"), htmx.Attribute("type", "application/javascript")),
+					htmx.Script(htmx.Attribute("src", "https://cdn.tailwindcss.com"), htmx.Attribute("type", "application/javascript")),
+				},
+			},
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+				},
+				htmx.Text("Hello World"),
+			),
+		),
+	)
+}
+
 func run(ctx context.Context) error {
 	log.SetFlags(0)
 	log.SetOutput(os.Stderr)
@@ -175,6 +202,9 @@ func run(ctx context.Context) error {
 
 		return table.Render(hx)
 	}))
+
+	app.Get("/ctrl", htmx.NewHxControllerHandler(&exampleController{}))
+	app.Post("/ctrl", htmx.NewHxControllerHandler(&exampleController{}))
 
 	err := app.Listen(cfg.Flags.Addr)
 	if err != nil {
