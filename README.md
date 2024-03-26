@@ -31,6 +31,36 @@ htmx.Button(
 )
 ```
 
+There is also the option to use `htmx.Controller` to encapsulate the logic of the components.
+
+```go
+type HelloWorldController struct {
+    htmx.UnimplementedController
+}
+
+func (c *HelloWorldController) Get() error {
+    return c.Hx.RenderComp(
+        htmx.HTML5(
+            c.Hx,
+            htmx.HTML5Props{
+                Title:    "index",
+                Language: "en",
+                Head: []htmx.Node{},
+            },
+            htmx.Div(
+                htmx.ClassNames{},
+                htmx.Text("Hello World"),
+            ),
+        ),
+    )    
+}
+
+app := fiber.New()
+app.Get("/", htmx.ControllerHandler(&HelloWorldController{}))
+
+app.Listen(":3000")
+```
+
 ## Examples
 
 See [examples](https://github.com/zeiss/fiber-htmx/tree/master/examples) to understand the provided interfaces.

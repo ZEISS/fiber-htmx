@@ -208,6 +208,7 @@ func (h *Htmx) Resolve(ctx context.Context, funcs ...ResolveFunc) error {
 	var err error
 
 	ctx, cancel := context.WithCancelCause(ctx)
+	defer cancel(nil)
 
 	for _, f := range funcs {
 		f := f
@@ -512,6 +513,11 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 			err = fiber.ErrMethodNotAllowed
 		}
 
+		if err != nil {
+			return cfg.ErrorHandler(c, err)
+		}
+
+		err = ctrl.Finalize()
 		if err != nil {
 			return cfg.ErrorHandler(c, err)
 		}
