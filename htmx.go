@@ -22,6 +22,8 @@ type Ctx interface {
 	ValuesInt(key any, value ...any) (val int)
 	// ValuesBool is a helper function to get the values as a bool from the context.
 	ValuesBool(key any, value ...any) (val bool)
+	// Path is a helper function to get the path from the context.
+	Path() string
 }
 
 // UnimplementedContext is a helper type for unimplemented contexts.
@@ -45,6 +47,11 @@ func (u *UnimplementedContext) ValuesInt(key any, value ...any) (val int) {
 // ValuesBool is a helper function to get the values as a bool from the context.
 func (u *UnimplementedContext) ValuesBool(key any, value ...any) (val bool) {
 	return false
+}
+
+// Path is a helper function to get the path from the context.
+func (u *UnimplementedContext) Path() string {
+	return ""
 }
 
 const (
@@ -279,6 +286,11 @@ func (h *Htmx) Reset() {
 // Context is a method that returns the fiber context.
 func (h *Htmx) Context() *fiber.Ctx {
 	return h.ctx
+}
+
+// Path is a method that returns the path.
+func (h *Htmx) Path() string {
+	return h.ctx.Path()
 }
 
 // HtmxFromContext is a helper function to get the htmx from the context.
