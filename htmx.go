@@ -1,7 +1,6 @@
 package htmx
 
 import (
-	"context"
 	"encoding/json"
 	"html/template"
 	"net/http"
@@ -60,7 +59,7 @@ const (
 )
 
 // ResolveFunc is a function that resolves locals for the context.
-type ResolveFunc func(c context.Context) (interface{}, interface{}, error)
+type ResolveFunc func(c *fiber.Ctx) (interface{}, interface{}, error)
 
 // HxRequestHeader is a helper type for htmx request headers.
 type HxRequestHeader string
@@ -209,13 +208,10 @@ type Htmx struct {
 }
 
 // Resolve is a method that resolves locals for the context.
-func (h *Htmx) Resolve(ctx context.Context, funcs ...ResolveFunc) error {
+func (h *Htmx) Resolve(ctx *fiber.Ctx, funcs ...ResolveFunc) error {
 	var wg sync.WaitGroup
 	var errOnce sync.Once
 	var err error
-
-	ctx, cancel := context.WithCancelCause(ctx)
-	defer cancel(nil)
 
 	for _, f := range funcs {
 		f := f
@@ -224,10 +220,10 @@ func (h *Htmx) Resolve(ctx context.Context, funcs ...ResolveFunc) error {
 		go func() {
 			defer wg.Done()
 
-			k, v, err := f(ctx)
-			if err != nil {
+			k, v, errr := f(ctx)
+			if errr != nil {
 				errOnce.Do(func() {
-					cancel(err)
+					err = errr
 				})
 			}
 
@@ -416,7 +412,7 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 			ctx:         c,
 		}
 
-		err := h.Resolve(c.Context(), cfg.Resolvers...)
+		err := h.Resolve(c, cfg.Resolvers...)
 		if err != nil {
 			return cfg.ErrorHandler(c, err)
 		}

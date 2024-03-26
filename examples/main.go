@@ -141,7 +141,7 @@ func run(ctx context.Context) error {
 	app.Use(requestid.New())
 	app.Use(logger.New())
 
-	r := func(c context.Context) (interface{}, interface{}, error) {
+	r := func(c *fiber.Ctx) (interface{}, interface{}, error) {
 		return "title", "Example Page", nil
 	}
 
