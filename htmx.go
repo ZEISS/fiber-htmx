@@ -467,6 +467,7 @@ func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 }
 
 // NewHxControllerHandler returns a new htmx controller handler.
+// nolint:gocyclo
 func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
