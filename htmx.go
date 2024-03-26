@@ -495,7 +495,12 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 			ctx:         c,
 		}
 
-		err := ctrl.Init(h)
+		err := h.Resolve(c, cfg.Resolvers...)
+		if err != nil {
+			return cfg.ErrorHandler(c, err)
+		}
+
+		err = ctrl.Init(h)
 		if err != nil {
 			return cfg.ErrorHandler(c, err)
 		}
