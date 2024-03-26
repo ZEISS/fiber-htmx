@@ -111,9 +111,9 @@ type exampleController struct {
 }
 
 func (c *exampleController) Get() error {
-	return c.Hx.RenderComp(
+	return c.Hx().RenderComp(
 		htmx.HTML5(
-			c.Hx,
+			c.Hx(),
 			htmx.HTML5Props{
 				Title:    "index",
 				Language: "en",

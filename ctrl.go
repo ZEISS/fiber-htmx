@@ -28,12 +28,17 @@ var _ Controller = (*UnimplementedController)(nil)
 
 // UnimplementedController is the default controller implementation.
 type UnimplementedController struct {
-	Hx *Htmx
+	hx *Htmx
+}
+
+// Hx returns the htmx instance.
+func (c *UnimplementedController) Hx() *Htmx {
+	return c.hx
 }
 
 // Init is called when the controller is initialized.
 func (c *UnimplementedController) Init(hx *Htmx) error {
-	c.Hx = hx
+	c.hx = hx
 
 	return nil
 }
@@ -50,30 +55,30 @@ func (c *UnimplementedController) Finalize() error {
 
 // Get is called when the controller is executed with the GET method.
 func (c *UnimplementedController) Get() error {
-	return c.Hx.Ctx().SendStatus(fiber.StatusNotImplemented)
+	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
 }
 
 // Post is called when the controller is executed with the POST method.
 func (c *UnimplementedController) Post() error {
-	return c.Hx.Ctx().SendStatus(fiber.StatusNotImplemented)
+	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
 }
 
 // Put is called when the controller is executed with the PUT method.
 func (c *UnimplementedController) Put() error {
-	return c.Hx.Ctx().SendStatus(fiber.StatusNotImplemented)
+	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
 }
 
 // Patch is called when the controller is executed with the PATCH method.
 func (c *UnimplementedController) Patch() error {
-	return c.Hx.Ctx().SendStatus(fiber.StatusNotImplemented)
+	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
 }
 
 // Delete is called when the controller is executed with the DELETE method.
 func (c *UnimplementedController) Delete() error {
-	return c.Hx.Ctx().SendStatus(fiber.StatusNotImplemented)
+	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
 }
 
 // Options is called when the controller is executed with the OPTIONS method.
 func (c *UnimplementedController) Options() error {
-	return c.Hx.Ctx().SendStatus(fiber.StatusNotImplemented)
+	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
 }
