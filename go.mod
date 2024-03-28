@@ -3,7 +3,7 @@ module github.com/zeiss/fiber-htmx
 go 1.21.6
 
 require (
-	github.com/gofiber/fiber/v2 v2.52.3
+	github.com/gofiber/fiber/v2 v2.52.4
 	github.com/golang/mock v1.7.0-rc.1
 	github.com/golangci/golangci-lint v1.57.1
 	github.com/spf13/cobra v1.8.0
