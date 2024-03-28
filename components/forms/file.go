@@ -11,7 +11,7 @@ type FileInputProps struct {
 // File generates a file input element based on the provided properties.
 func FileInput(p FileInputProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
-		htmx.Attribute("name", "file"),
+		htmx.Type("file"),
 		htmx.Merge(
 			htmx.ClassNames{
 				"file-input": true,
@@ -28,7 +28,7 @@ func FileInput(p FileInputProps, children ...htmx.Node) htmx.Node {
 // FileInputBordered is a component that displays a bordered file input.
 func FileInputBordered(p FileInputProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
-		htmx.Attribute("name", "file"),
+		htmx.Type("file"),
 		htmx.Merge(
 			htmx.ClassNames{
 				"file-input":          true,
@@ -46,7 +46,7 @@ func FileInputBordered(p FileInputProps, children ...htmx.Node) htmx.Node {
 // FileInputGhost is a component that displays a ghost file input.
 func FileInputGhost(p FileInputProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
-		htmx.Attribute("name", "file"),
+		htmx.Type("file"),
 		htmx.Merge(
 			htmx.ClassNames{
 				"file-input":       true,
@@ -64,7 +64,7 @@ func FileInputGhost(p FileInputProps, children ...htmx.Node) htmx.Node {
 // FileInputPrimary is a component that displays a primary file input.
 func FileInputPrimary(p FileInputProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
-		htmx.Attribute("name", "file"),
+		htmx.Type("file"),
 		htmx.Merge(
 			htmx.ClassNames{
 				"file-input":          true,
@@ -83,7 +83,7 @@ func FileInputPrimary(p FileInputProps, children ...htmx.Node) htmx.Node {
 // FileInputSecondary is a component that displays a secondary file input.
 func FileInputSecondary(p FileInputProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
-		htmx.Attribute("name", "file"),
+		htmx.Type("file"),
 		htmx.Merge(
 			htmx.ClassNames{
 				"file-input":           true,
@@ -102,7 +102,7 @@ func FileInputSecondary(p FileInputProps, children ...htmx.Node) htmx.Node {
 // FileInputAccent is a component that displays an accent file input.
 func FileInputAccent(p FileInputProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
-		htmx.Attribute("name", "file"),
+		htmx.Type("file"),
 		htmx.Merge(
 			htmx.ClassNames{
 				"file-input":          true,
@@ -121,7 +121,7 @@ func FileInputAccent(p FileInputProps, children ...htmx.Node) htmx.Node {
 // FileInputInfo is a component that displays an info file input.
 func FileInputInfo(p FileInputProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
-		htmx.Attribute("name", "file"),
+		htmx.Type("file"),
 		htmx.Merge(
 			htmx.ClassNames{
 				"file-input":          true,
@@ -140,7 +140,7 @@ func FileInputInfo(p FileInputProps, children ...htmx.Node) htmx.Node {
 // FileInputSuccess is a component that displays a success file input.
 func FileInputSuccess(p FileInputProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
-		htmx.Attribute("name", "file"),
+		htmx.Type("file"),
 		htmx.Merge(
 			htmx.ClassNames{
 				"file-input":          true,
@@ -159,7 +159,7 @@ func FileInputSuccess(p FileInputProps, children ...htmx.Node) htmx.Node {
 // FileInputWarning is a component that displays a warning file input.
 func FileInputWarning(p FileInputProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
-		htmx.Attribute("name", "file"),
+		htmx.Type("file"),
 		htmx.Merge(
 			htmx.ClassNames{
 				"file-input":          true,
@@ -178,7 +178,7 @@ func FileInputWarning(p FileInputProps, children ...htmx.Node) htmx.Node {
 // FileInputError is a component that displays an error file input.
 func FileInputError(p FileInputProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
-		htmx.Attribute("name", "file"),
+		htmx.Type("file"),
 		htmx.Merge(
 			htmx.ClassNames{
 				"file-input":          true,
