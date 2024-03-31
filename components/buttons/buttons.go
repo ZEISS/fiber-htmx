@@ -205,6 +205,7 @@ func OutlinePrimary(props ButtonProps, children ...htmx.Node) htmx.Node {
 	return htmx.Button(
 		htmx.Merge(
 			htmx.ClassNames{
+				"btn":         true,
 				"btn-outline": true,
 				"btn-primary": true,
 			},
@@ -221,6 +222,7 @@ func OutlineSecondary(props ButtonProps, children ...htmx.Node) htmx.Node {
 	return htmx.Button(
 		htmx.Merge(
 			htmx.ClassNames{
+				"btn":           true,
 				"btn-outline":   true,
 				"btn-secondary": true,
 			},
@@ -237,6 +239,7 @@ func OutlineAccent(props ButtonProps, children ...htmx.Node) htmx.Node {
 	return htmx.Button(
 		htmx.Merge(
 			htmx.ClassNames{
+				"btn":         true,
 				"btn-outline": true,
 				"btn-accent":  true,
 			},
@@ -253,6 +256,7 @@ func OutlineInfo(props ButtonProps, children ...htmx.Node) htmx.Node {
 	return htmx.Button(
 		htmx.Merge(
 			htmx.ClassNames{
+				"btn":         true,
 				"btn-outline": true,
 				"btn-info":    true,
 			},
@@ -269,6 +273,7 @@ func OutlineSuccess(props ButtonProps, children ...htmx.Node) htmx.Node {
 	return htmx.Button(
 		htmx.Merge(
 			htmx.ClassNames{
+				"btn":         true,
 				"btn-outline": true,
 				"btn-success": true,
 			},
@@ -285,6 +290,7 @@ func OutlineWarning(props ButtonProps, children ...htmx.Node) htmx.Node {
 	return htmx.Button(
 		htmx.Merge(
 			htmx.ClassNames{
+				"btn":         true,
 				"btn-outline": true,
 				"btn-warning": true,
 			},
@@ -301,6 +307,7 @@ func OutlineError(props ButtonProps, children ...htmx.Node) htmx.Node {
 	return htmx.Button(
 		htmx.Merge(
 			htmx.ClassNames{
+				"btn":         true,
 				"btn-outline": true,
 				"btn-error":   true,
 			},
@@ -317,6 +324,7 @@ func Glass(props ButtonProps, children ...htmx.Node) htmx.Node {
 	return htmx.Button(
 		htmx.Merge(
 			htmx.ClassNames{
+				"btn":         true,
 				"btn-outline": true,
 				"glass":       true,
 			},
