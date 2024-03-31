@@ -16,13 +16,26 @@ func FormControl(p FormControlProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
-		htmx.Label(
+		htmx.Group(children...),
+	)
+}
+
+// FormControlLabelProps represents the properties for a form control label element.
+type FormControlLabelProps struct {
+	ClassNames htmx.ClassNames // The class names for the form control label element.
+}
+
+// FormControlLabel generates a form control label element based on the provided properties.
+func FormControlLabel(p FormControlLabelProps, children ...htmx.Node) htmx.Node {
+	return htmx.Label(
+		htmx.Merge(
 			htmx.ClassNames{
 				"label":          true,
 				"cursor-pointer": true,
 			},
-			htmx.Group(children...),
+			p.ClassNames,
 		),
+		htmx.Group(children...),
 	)
 }
 
