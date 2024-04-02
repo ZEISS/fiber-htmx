@@ -37,3 +37,8 @@ func NunjucksTemplate(v string) Node {
 func XSLTTemplat(v string) Node {
 	return Attribute("xslt-template", v)
 }
+
+// HyperScript sets the _ attribute to specify the hyperscript for the response.
+func HyperScript(v string) Node {
+	return Attribute("_", v)
+}

@@ -7,6 +7,8 @@ type TextareaProps struct {
 	ClassNames  htmx.ClassNames
 	Placeholder string
 	Disabled    bool
+	Name        string
+	Value       string
 }
 
 // Textarea is a textarea component
@@ -21,6 +23,14 @@ func Textarea(p TextareaProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute(
 			"placeholder",
 			p.Placeholder,
+		),
+		htmx.Attribute(
+			"name",
+			p.Name,
+		),
+		htmx.Attribute(
+			"value",
+			p.Value,
 		),
 		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
@@ -41,6 +51,14 @@ func TextareaBordered(p TextareaProps, children ...htmx.Node) htmx.Node {
 			"placeholder",
 			p.Placeholder,
 		),
+		htmx.Attribute(
+			"name",
+			p.Name,
+		),
+		htmx.Attribute(
+			"value",
+			p.Value,
+		),
 		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
@@ -59,6 +77,14 @@ func TextareaGhost(p TextareaProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute(
 			"placeholder",
 			p.Placeholder,
+		),
+		htmx.Attribute(
+			"name",
+			p.Name,
+		),
+		htmx.Attribute(
+			"value",
+			p.Value,
 		),
 		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
@@ -79,6 +105,14 @@ func TextareaPrimary(p TextareaProps, children ...htmx.Node) htmx.Node {
 			"placeholder",
 			p.Placeholder,
 		),
+		htmx.Attribute(
+			"name",
+			p.Name,
+		),
+		htmx.Attribute(
+			"value",
+			p.Value,
+		),
 		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
@@ -97,6 +131,14 @@ func TextareaSecondary(p TextareaProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute(
 			"placeholder",
 			p.Placeholder,
+		),
+		htmx.Attribute(
+			"name",
+			p.Name,
+		),
+		htmx.Attribute(
+			"value",
+			p.Value,
 		),
 		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
@@ -117,6 +159,14 @@ func TextareaSuccess(p TextareaProps, children ...htmx.Node) htmx.Node {
 			"placeholder",
 			p.Placeholder,
 		),
+		htmx.Attribute(
+			"name",
+			p.Name,
+		),
+		htmx.Attribute(
+			"value",
+			p.Value,
+		),
 		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
@@ -136,6 +186,14 @@ func TextareaWarning(p TextareaProps, children ...htmx.Node) htmx.Node {
 			"placeholder",
 			p.Placeholder,
 		),
+		htmx.Attribute(
+			"name",
+			p.Name,
+		),
+		htmx.Attribute(
+			"value",
+			p.Value,
+		),
 		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
@@ -154,6 +212,14 @@ func TextareaError(p TextareaProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute(
 			"placeholder",
 			p.Placeholder,
+		),
+		htmx.Attribute(
+			"name",
+			p.Name,
+		),
+		htmx.Attribute(
+			"value",
+			p.Value,
 		),
 		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
