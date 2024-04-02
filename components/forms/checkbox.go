@@ -63,6 +63,7 @@ type CheckboxProps struct {
 	Name       string          // The name of the checkbox element.
 	Value      string          // The value of the checkbox element.
 	Checked    bool            // Whether the checkbox element is checked.
+	Disabled   bool            // Whether the checkbox element is disabled.
 }
 
 // Checkbox generates a checkbox element based on the provided properties.
@@ -78,6 +79,7 @@ func Checkbox(p CheckboxProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),
 		htmx.If(p.Checked, htmx.Checked()),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
