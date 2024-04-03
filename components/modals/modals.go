@@ -60,6 +60,7 @@ func ModalCloseButton(p ModalCloseButtonProps, children ...htmx.Node) htmx.Node 
 				htmx.ClassNames{
 					"btn": true,
 				},
+				p.ClassNames,
 			),
 			htmx.Text("Close"),
 		),
