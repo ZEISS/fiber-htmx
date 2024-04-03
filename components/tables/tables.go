@@ -9,14 +9,16 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 )
 
+// DefaultLimits is a list of default limits
 var DefaultLimits = []int{5, 10, 25, 50}
 
 // PaginationProps is a struct that contains the properties of a pagination
 type PaginationProps struct {
 	ClassName htmx.ClassNames
-	Total     int
-	Offset    int
 	Limit     int
+	Offset    int
+	Target    string
+	Total     int
 	URL       string
 }
 
@@ -47,7 +49,7 @@ func Prev(p PaginationProps) htmx.Node {
 		htmx.If(p.Offset-p.Limit < 0, htmx.Disabled()),
 		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset-p.Limit, p.Limit)),
 		htmx.HxSwap("innerHTML"),
-		htmx.HxTarget("#data-table"),
+		htmx.HxTarget(p.Target),
 		htmx.Text("Prev"),
 	)
 }
@@ -66,7 +68,7 @@ func Next(p PaginationProps) htmx.Node {
 		htmx.If(p.Total < p.Limit, htmx.Disabled()),
 		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset+p.Limit, p.Limit)),
 		htmx.HxSwap("innerHTML"),
-		htmx.HxTarget("#data-table"),
+		htmx.HxTarget(p.Target),
 		htmx.Text("Next"),
 	)
 }
@@ -174,9 +176,10 @@ func TablePagination[R comparable](p TablePaginationProps[R], children ...htmx.N
 type TableProps[R comparable] struct {
 	ClassName  htmx.ClassNames
 	Columns    Columns[R]
+	ID         string
+	Pagination htmx.Node
 	Rows       Rows[R]
 	Toolbar    htmx.Node
-	Pagination htmx.Node
 }
 
 // Rows is a struct that contains the data of a table
@@ -241,6 +244,7 @@ func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
 	}
 
 	return htmx.Div(
+		htmx.ID(p.ID),
 		htmx.Merge(
 			htmx.ClassNames{
 				"space-y-4": true,
