@@ -48,7 +48,7 @@ func Prev(p PaginationProps) htmx.Node {
 		},
 		htmx.If(p.Offset-p.Limit < 0, htmx.Disabled()),
 		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset-p.Limit, p.Limit)),
-		htmx.HxSwap("innerHTML"),
+		htmx.HxSwap("outerHTML"),
 		htmx.HxTarget(p.Target),
 		htmx.Text("Prev"),
 	)
@@ -67,7 +67,7 @@ func Next(p PaginationProps) htmx.Node {
 		},
 		htmx.If(p.Total < p.Limit, htmx.Disabled()),
 		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset+p.Limit, p.Limit)),
-		htmx.HxSwap("innerHTML"),
+		htmx.HxSwap("outerHTML"),
 		htmx.HxTarget(p.Target),
 		htmx.Text("Next"),
 	)
