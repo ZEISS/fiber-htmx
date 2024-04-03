@@ -514,7 +514,7 @@ func indexPage(hx *htmx.Htmx) error {
 						},
 						collapsible.CollapseTitle(
 							collapsible.CollapseTitleProps{},
-							htmx.Text("Title"),
+							htmx.Text("Collapsible"),
 						),
 						collapsible.CollapseContent(
 							collapsible.CollapseContentProps{},
