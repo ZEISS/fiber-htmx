@@ -75,13 +75,13 @@ func Next(p PaginationProps) htmx.Node {
 
 // SelectProps ...
 type SelectProps struct {
-	ClassName htmx.ClassNames
-	Limit     int
-	Limits    []int
-	Offset    int
-	Target    string
-	Total     int
-	URL       string
+	ClassNames htmx.ClassNames
+	Limit      int
+	Limits     []int
+	Offset     int
+	Target     string
+	Total      int
+	URL        string
 }
 
 // Select ...
@@ -100,7 +100,15 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 
 	return htmx.Div(
 		forms.Select(
-			forms.SelectProps{},
+			forms.SelectProps{
+				ClassName: htmx.Merge(
+					htmx.ClassNames{
+						"join-item":      true,
+						"input-bordered": true,
+					},
+					p.ClassNames,
+				),
+			},
 			htmx.ID("data-options"),
 			htmx.Attribute("name", "limit"),
 			htmx.Group(options...),
