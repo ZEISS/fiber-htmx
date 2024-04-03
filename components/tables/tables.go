@@ -63,7 +63,7 @@ func Next(p PaginationProps) htmx.Node {
 				"input-bordered": true,
 			},
 		},
-		htmx.If(p.Total <= p.Limit, htmx.Disabled()),
+		htmx.If(p.Total < p.Limit, htmx.Disabled()),
 		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset+p.Limit, p.Limit)),
 		htmx.HxSwap("innerHTML"),
 		htmx.HxTarget("#data-table"),
