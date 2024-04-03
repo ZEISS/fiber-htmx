@@ -38,7 +38,7 @@ func Prev(p PaginationProps) htmx.Node {
 			"join-item":   true,
 			"btn":         true,
 			"btn-outline": true,
-			"disabled":    p.Offset == 0,
+			"disabled":    p.Offset-p.Limit <= 0,
 		},
 		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset-p.Limit, p.Limit)),
 		htmx.HxSwap("innerHTML"),
