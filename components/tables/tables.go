@@ -76,11 +76,12 @@ func Next(p PaginationProps) htmx.Node {
 // SelectProps ...
 type SelectProps struct {
 	ClassName htmx.ClassNames
-	Total     int
-	Offset    int
 	Limit     int
-	URL       string
 	Limits    []int
+	Offset    int
+	Target    string
+	Total     int
+	URL       string
 }
 
 // Select ...
@@ -105,10 +106,10 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 			htmx.Group(options...),
 		),
 		htmx.Div(
-			htmx.HxGet(fmt.Sprintf("%s?offset=%d", p.URL, p.Offset)),
+			htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset, p.Limit)),
 			htmx.HxTrigger("change from:#data-options"),
 			htmx.HxInclude("[name='limit']"),
-			htmx.HxTarget("#data-table"),
+			htmx.HxTarget(p.Target),
 		),
 	)
 }
