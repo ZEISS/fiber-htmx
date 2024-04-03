@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
 )
 
@@ -34,14 +35,16 @@ func Pagination(p PaginationProps, children ...htmx.Node) htmx.Node {
 
 // Prev ...
 func Prev(p PaginationProps) htmx.Node {
-	return htmx.A(
-		htmx.ClassNames{
-			"join-item":      true,
-			"btn":            true,
-			"btn-outline":    true,
-			"input-bordered": true,
-			"disabled":       p.Offset == 0,
+	return buttons.Button(
+		buttons.ButtonProps{
+			ClassNames: htmx.ClassNames{
+				"join-item":      true,
+				"btn":            true,
+				"btn-outline":    true,
+				"input-bordered": true,
+			},
 		},
+		htmx.If(p.Offset-p.Limit <= 0, htmx.Disabled()),
 		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset-p.Limit, p.Limit)),
 		htmx.HxSwap("innerHTML"),
 		htmx.HxTarget("#data-table"),
@@ -51,13 +54,14 @@ func Prev(p PaginationProps) htmx.Node {
 
 // Next ...
 func Next(p PaginationProps) htmx.Node {
-	return htmx.A(
-		htmx.ClassNames{
-			"join-item":      true,
-			"btn":            true,
-			"btn-outline":    true,
-			"input-bordered": true,
-			"disabled":       p.Offset+p.Limit >= p.Total,
+	return buttons.Button(
+		buttons.ButtonProps{
+			ClassNames: htmx.ClassNames{
+				"join-item":      true,
+				"btn":            true,
+				"btn-outline":    true,
+				"input-bordered": true,
+			},
 		},
 		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset+p.Limit, p.Limit)),
 		htmx.HxSwap("innerHTML"),
