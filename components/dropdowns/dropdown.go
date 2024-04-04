@@ -1,6 +1,8 @@
 package dropdowns
 
-import htmx "github.com/zeiss/fiber-htmx"
+import (
+	htmx "github.com/zeiss/fiber-htmx"
+)
 
 // DropdownProps represents the properties for a dropdown element.
 type DropdownProps struct {
@@ -29,6 +31,8 @@ type DropdownButtonProps struct {
 // DropdownButton generates a dropdown summary element based on the provided properties.
 func DropdownButton(p DropdownButtonProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
+		htmx.TabIndex(htmx.IntAsString(p.TabIndex)),
+		htmx.Role("button"),
 		htmx.Merge(
 			htmx.ClassNames{
 				"btn": true,
@@ -36,10 +40,7 @@ func DropdownButton(p DropdownButtonProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
-		htmx.Attribute(
-			"tabindex",
-			htmx.IntAsString(p.TabIndex),
-		),
+
 		htmx.Group(children...),
 	)
 }
@@ -47,21 +48,26 @@ func DropdownButton(p DropdownButtonProps, children ...htmx.Node) htmx.Node {
 // DropdownMenuItemsProps represents the properties for a dropdown menu items element.
 type DropdownMenuItemsProps struct {
 	ClassNames htmx.ClassNames // The class names for the dropdown menu items element.
+	TabIndex   int
 }
 
 // DropdownMenuItems generates a dropdown menu items element based on the provided properties.
 func DropdownMenuItems(p DropdownMenuItemsProps, children ...htmx.Node) htmx.Node {
 	return htmx.Ul(
-		htmx.ClassNames{
-			"bg-base-100":      true,
-			"dropdown-content": true,
-			"menu":             true,
-			"p-2":              true,
-			"rounded-box":      true,
-			"shadow":           true,
-			"w-52":             true,
-			"z-[1]":            true,
-		}.Merge(p.ClassNames),
+		htmx.TabIndex(htmx.IntAsString(p.TabIndex)),
+		htmx.Merge(
+			htmx.ClassNames{
+				"bg-base-100":      true,
+				"dropdown-content": true,
+				"menu":             true,
+				"p-2":              true,
+				"rounded-box":      true,
+				"shadow":           true,
+				"w-52":             true,
+				"z-[1]":            true,
+			},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -74,7 +80,7 @@ type DropdownMenuItemProps struct {
 // DropdownMenuItem generates a dropdown items element based on the provided properties.
 func DropdownMenuItem(p DropdownMenuItemProps, children ...htmx.Node) htmx.Node {
 	return htmx.Li(
-		htmx.ClassNames{}.Merge(p.ClassNames),
+		htmx.Merge(p.ClassNames),
 		htmx.Group(children...),
 	)
 }
