@@ -9,10 +9,11 @@ type FormControlProps struct {
 
 // FormControl generates a form control element based on the provided properties.
 func FormControl(p FormControlProps, children ...htmx.Node) htmx.Node {
-	return htmx.Div(
+	return htmx.Label(
 		htmx.Merge(
 			htmx.ClassNames{
-				"form-control": true,
+				"form-control":    true,
+				"w-full max-w-xs": true,
 			},
 			p.ClassNames,
 		),
@@ -26,32 +27,49 @@ type FormControlLabelProps struct {
 }
 
 // FormControlLabel generates a form control label element based on the provided properties.
-func FormControlLabel(p FormControlLabelProps, children ...htmx.Node) htmx.Node {
-	return htmx.Label(
+func FormControlLabel(props FormControlLabelProps, children ...htmx.Node) htmx.Node {
+	return htmx.Div(
 		htmx.Merge(
 			htmx.ClassNames{
-				"label":          true,
-				"cursor-pointer": true,
+				"label": true,
 			},
-			p.ClassNames,
+			props.ClassNames,
 		),
 		htmx.Group(children...),
 	)
 }
 
-// FormControlLabelProps represents the properties for a form control label element.
+// FormControlLabelTextProps represents the properties for a form control label text element.
 type FormControlLabelTextProps struct {
-	ClassNames htmx.ClassNames // The class names for the form control label element.
+	ClassNames htmx.ClassNames // The class names for the form control label text element.
 }
 
-// FormControlLabel generates a form control label element based on the provided properties.
-func FormControlLabelText(p FormControlLabelTextProps, children ...htmx.Node) htmx.Node {
+// FormControlLabelText generates a form control label text element based on the provided properties.
+func FormControlLabelText(props FormControlLabelTextProps, children ...htmx.Node) htmx.Node {
 	return htmx.Span(
 		htmx.Merge(
 			htmx.ClassNames{
 				"label-text": true,
 			},
-			p.ClassNames,
+			props.ClassNames,
+		),
+		htmx.Group(children...),
+	)
+}
+
+// FormControlLabelAltTextProps represents the properties for a form control label alt text element.
+type FormControlLabelAltTextProps struct {
+	ClassNames htmx.ClassNames // The class names for the form control label alt text element.
+}
+
+// FormControlLabelAltText generates a form control label alt text element based on the provided properties.
+func FormControlLabelAltText(props FormControlLabelAltTextProps, children ...htmx.Node) htmx.Node {
+	return htmx.Span(
+		htmx.Merge(
+			htmx.ClassNames{
+				"label-text-all": true,
+			},
+			props.ClassNames,
 		),
 		htmx.Group(children...),
 	)
