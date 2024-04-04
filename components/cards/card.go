@@ -13,9 +13,23 @@ func Card(p CardProps, children ...htmx.Node) htmx.Node {
 		htmx.Merge(
 			htmx.ClassNames{
 				"card":        true,
-				"w-96":        true,
 				"bg-base-100": true,
 				"shadow-xl":   true,
+			},
+			p.ClassNames,
+		),
+		htmx.Group(children...),
+	)
+}
+
+// CardBordered is a component for the htmx card extension.
+func CardBordered(p CardProps, children ...htmx.Node) htmx.Node {
+	return htmx.Div(
+		htmx.Merge(
+			htmx.ClassNames{
+				"card":          true,
+				"card-bordered": true,
+				"bg-base-100":   true,
 			},
 			p.ClassNames,
 		),
