@@ -12,8 +12,8 @@ func FormControl(p FormControlProps, children ...htmx.Node) htmx.Node {
 	return htmx.Label(
 		htmx.Merge(
 			htmx.ClassNames{
-				"form-control":    true,
-				"w-full max-w-xs": true,
+				"form-control": true,
+				"w-full":       true,
 			},
 			p.ClassNames,
 		),
