@@ -123,9 +123,9 @@ func HxDisable() Node {
 	return Attribute("hx-disable")
 }
 
-// HxDisableElt sets the hx-disable-elt attribute to disable the target element.
-func HxDisableElt(target string) Node {
-	return Attribute("hx-disable-elt", target)
+// HxDisabledElt sets the hx-disable-elt attribute to disable the target element.
+func HxDisabledElt(target string) Node {
+	return Attribute("hx-disabled-elt", target)
 }
 
 // HxValidate sets the hx-validate attribute to enable or disable form validation.
