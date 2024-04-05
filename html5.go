@@ -12,6 +12,7 @@ type HTML5Props struct {
 	Description string // The description of the HTML document.
 	Language    string // The language of the HTML document.
 	Head        []Node // The nodes to be included in the head section of the HTML document.
+	Attributes  []Node // The attributes to be included in the HTML document.
 }
 
 // HTML5 generates an HTML5 document based on the provided properties.
@@ -19,6 +20,7 @@ func HTML5(ctx Ctx, props HTML5Props, body ...Node) Node {
 	return Doctype(
 		HTML(
 			If(props.Language != "", Lang(props.Language)),
+			Group(props.Attributes...),
 			Head(
 				Meta(Charset("utf-8")),
 				Meta(Name("viewport"), Content("width=device-width, initial-scale=1")),
