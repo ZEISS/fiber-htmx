@@ -3,10 +3,12 @@ package tables
 import (
 	"fmt"
 
-	"github.com/gofiber/fiber/v2"
-	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/utils"
+
+	"github.com/gofiber/fiber/v2"
+	htmx "github.com/zeiss/fiber-htmx"
 )
 
 // DefaultLimits is a list of default limits
@@ -37,39 +39,65 @@ func Pagination(p PaginationProps, children ...htmx.Node) htmx.Node {
 
 // Prev ...
 func Prev(p PaginationProps) htmx.Node {
-	return buttons.Button(
-		buttons.ButtonProps{
-			ClassNames: htmx.ClassNames{
-				"join-item":      true,
-				"btn":            true,
-				"btn-outline":    true,
-				"input-bordered": true,
+	return htmx.Form(
+		htmx.Method("GET"),
+		htmx.Action(p.URL),
+		htmx.HxTrigger("change from:#data-options"),
+		htmx.Input(
+			htmx.Type("hidden"),
+			htmx.Name("offset"),
+			htmx.Value(fmt.Sprintf("%d", p.Offset-p.Limit)),
+		),
+		htmx.Input(
+			htmx.Type("hidden"),
+			htmx.Name("limit"),
+			htmx.Value(fmt.Sprintf("%d", p.Limit)),
+		),
+		htmx.HxBoost(true),
+		buttons.Button(
+			buttons.ButtonProps{
+				ClassNames: htmx.ClassNames{
+					"join-item":      true,
+					"btn":            true,
+					"btn-outline":    true,
+					"input-bordered": true,
+				},
 			},
-		},
-		htmx.If(p.Offset-p.Limit < 0, htmx.Disabled()),
-		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset-p.Limit, p.Limit)),
-		htmx.HxSwap("outerHTML"),
-		htmx.HxTarget(p.Target),
-		htmx.Text("Prev"),
+			htmx.If(p.Offset-p.Limit < 0, htmx.Disabled()),
+			htmx.Text("Prev"),
+		),
 	)
 }
 
 // Next ...
 func Next(p PaginationProps) htmx.Node {
-	return buttons.Button(
-		buttons.ButtonProps{
-			ClassNames: htmx.ClassNames{
-				"join-item":      true,
-				"btn":            true,
-				"btn-outline":    true,
-				"input-bordered": true,
+	return htmx.Form(
+		htmx.Method("GET"),
+		htmx.Action(p.URL),
+		htmx.HxTrigger("change from:#data-options"),
+		htmx.Input(
+			htmx.Type("hidden"),
+			htmx.Name("offset"),
+			htmx.Value(fmt.Sprintf("%d", p.Offset+p.Limit)),
+		),
+		htmx.Input(
+			htmx.Type("hidden"),
+			htmx.Name("limit"),
+			htmx.Value(fmt.Sprintf("%d", p.Limit)),
+		),
+		htmx.HxBoost(true),
+		buttons.Button(
+			buttons.ButtonProps{
+				ClassNames: htmx.ClassNames{
+					"join-item":      true,
+					"btn":            true,
+					"btn-outline":    true,
+					"input-bordered": true,
+				},
 			},
-		},
-		htmx.If(p.Total < p.Limit, htmx.Disabled()),
-		htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset+p.Limit, p.Limit)),
-		htmx.HxSwap("outerHTML"),
-		htmx.HxTarget(p.Target),
-		htmx.Text("Next"),
+			htmx.If(p.Total < p.Limit, htmx.Disabled()),
+			htmx.Text("Next"),
+		),
 	)
 }
 
@@ -86,19 +114,16 @@ type SelectProps struct {
 
 // Select ...
 func Select(p SelectProps, children ...htmx.Node) htmx.Node {
-	options := []htmx.Node{}
-
-	for _, limit := range p.Limits {
-		options = append(options, forms.Option(
-			forms.OptionProps{
-				Selected: limit == p.Limit,
-			},
-			htmx.Text(fmt.Sprintf("%d", limit)),
-			htmx.Value(fmt.Sprintf("%d", limit)),
-		))
-	}
-
-	return htmx.Div(
+	return htmx.Form(
+		htmx.Method("GET"),
+		htmx.Action(p.URL),
+		htmx.HxTrigger("change from:#data-options"),
+		htmx.Input(
+			htmx.Type("hidden"),
+			htmx.Name("offset"),
+			htmx.Value(fmt.Sprintf("%d", p.Offset)),
+		),
+		htmx.HxBoost(true),
 		forms.Select(
 			forms.SelectProps{
 				ClassName: htmx.Merge(
@@ -111,13 +136,15 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			htmx.ID("data-options"),
 			htmx.Attribute("name", "limit"),
-			htmx.Group(options...),
-		),
-		htmx.Div(
-			htmx.HxGet(fmt.Sprintf("%s?offset=%d&limit=%d", p.URL, p.Offset, p.Limit)),
-			htmx.HxTrigger("change from:#data-options"),
-			htmx.HxInclude("[name='limit']"),
-			htmx.HxTarget(p.Target),
+			utils.Map(func(limit int) htmx.Node {
+				return forms.Option(
+					forms.OptionProps{
+						Selected: limit == p.Limit,
+					},
+					htmx.Text(fmt.Sprintf("%d", limit)),
+					htmx.Value(fmt.Sprintf("%d", limit)),
+				)
+			}, p.Limits...),
 		),
 	)
 }

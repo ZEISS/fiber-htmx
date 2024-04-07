@@ -28,7 +28,7 @@ func HTML5(ctx Ctx, props HTML5Props, body ...Node) Node {
 				If(props.Description != "", Meta(Name("description"), Content(props.Description))),
 				Group(props.Head...),
 			),
-			Group(body...),
+			Body(body...),
 		),
 	)
 }
