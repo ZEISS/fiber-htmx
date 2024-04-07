@@ -42,7 +42,6 @@ func Prev(p PaginationProps) htmx.Node {
 	return htmx.Form(
 		htmx.Method("GET"),
 		htmx.Action(p.URL),
-		htmx.HxTrigger("change from:#data-options"),
 		htmx.Input(
 			htmx.Type("hidden"),
 			htmx.Name("offset"),
@@ -63,6 +62,7 @@ func Prev(p PaginationProps) htmx.Node {
 					"input-bordered": true,
 				},
 			},
+			htmx.Type("submit"),
 			htmx.If(p.Offset-p.Limit < 0, htmx.Disabled()),
 			htmx.Text("Prev"),
 		),
@@ -74,7 +74,6 @@ func Next(p PaginationProps) htmx.Node {
 	return htmx.Form(
 		htmx.Method("GET"),
 		htmx.Action(p.URL),
-		htmx.HxTrigger("change from:#data-options"),
 		htmx.Input(
 			htmx.Type("hidden"),
 			htmx.Name("offset"),
@@ -95,6 +94,7 @@ func Next(p PaginationProps) htmx.Node {
 					"input-bordered": true,
 				},
 			},
+			htmx.Type("submit"),
 			htmx.If(p.Total < p.Limit, htmx.Disabled()),
 			htmx.Text("Next"),
 		),
@@ -117,7 +117,7 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 	return htmx.Form(
 		htmx.Method("GET"),
 		htmx.Action(p.URL),
-		htmx.HxTrigger("change from:#data-options"),
+		htmx.HxTrigger("change from:#select-table-options"),
 		htmx.Input(
 			htmx.Type("hidden"),
 			htmx.Name("offset"),
@@ -134,7 +134,7 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 					p.ClassNames,
 				),
 			},
-			htmx.ID("data-options"),
+			htmx.ID("select-table-options"),
 			htmx.Attribute("name", "limit"),
 			utils.Map(func(limit int) htmx.Node {
 				return forms.Option(
