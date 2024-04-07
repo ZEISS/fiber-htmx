@@ -95,7 +95,7 @@ func Next(p PaginationProps) htmx.Node {
 				},
 				Type: "submit",
 			},
-			htmx.If(p.Total < p.Limit, htmx.Disabled()),
+			htmx.If(p.Offset+p.Limit > p.Total, htmx.Disabled()),
 			htmx.Text("Next"),
 		),
 	)
