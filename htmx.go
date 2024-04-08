@@ -478,7 +478,6 @@ func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 // nolint:gocyclo
 func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
-	cfg.ErrorHandler = ControllerErrorHandler(ctrl)
 
 	return func(c *fiber.Ctx) error {
 		if cfg.Next != nil && cfg.Next(c) {
