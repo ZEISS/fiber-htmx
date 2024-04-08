@@ -478,6 +478,7 @@ func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 // nolint:gocyclo
 func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
+	cfg.ErrorHandler = ControllerErrorHandler(ctrl)
 
 	return func(c *fiber.Ctx) error {
 		if cfg.Next != nil && cfg.Next(c) {
@@ -537,6 +538,13 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 		}
 
 		return nil
+	}
+}
+
+// ControllerErrorHandler is a helper type for controller error handlers.
+func ControllerErrorHandler(ctrl Controller) fiber.ErrorHandler {
+	return func(c *fiber.Ctx, err error) error {
+		return ctrl.Error(err)
 	}
 }
 

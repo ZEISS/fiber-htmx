@@ -22,6 +22,8 @@ type Controller interface {
 	Delete() error
 	// Options is called when the controller is executed with the OPTIONS method.
 	Options() error
+	// Error is called when an error occurs.
+	Error(err error) error
 }
 
 var _ Controller = (*UnimplementedController)(nil)
@@ -81,4 +83,9 @@ func (c *UnimplementedController) Delete() error {
 // Options is called when the controller is executed with the OPTIONS method.
 func (c *UnimplementedController) Options() error {
 	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
+}
+
+// Error is called when an error occurs.
+func (c *UnimplementedController) Error(err error) error {
+	return c.Hx().Ctx().SendStatus(fiber.StatusInternalServerError)
 }
