@@ -544,3 +544,14 @@ func Slot(children ...Node) Node {
 func Track(children ...Node) Node {
 	return Element("track", Group(children...))
 }
+
+// Comment represents an HTML comment.
+func Comment(comment string) Node {
+	return NodeFunc(func(w io.Writer) error {
+		if _, err := w.Write([]byte("<!-- " + comment + " -->")); err != nil {
+			return err
+		}
+
+		return nil
+	})
+}
