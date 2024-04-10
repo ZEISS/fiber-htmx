@@ -432,3 +432,8 @@ func EncType(v string) Node {
 func OnClick(v string) Node {
 	return Attribute("onclick", v)
 }
+
+// Is sets the is attribute for custom elements.
+func Is(v string) Node {
+	return Attribute("is", v)
+}

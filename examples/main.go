@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
 
@@ -26,6 +27,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/toasts"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/spf13/cobra"
@@ -118,9 +120,15 @@ func (c *exampleController) Get() error {
 				Title:    "index",
 				Language: "en",
 				Head: []htmx.Node{
-					htmx.Link(htmx.Attribute("href", "https://cdn.jsdelivr.net/npm/daisyui@4.7.0/dist/full.min.css"), htmx.Attribute("rel", "stylesheet"), htmx.Attribute("type", "text/css")),
-					htmx.Script(htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.10"), htmx.Attribute("type", "application/javascript")),
-					htmx.Script(htmx.Attribute("src", "https://cdn.tailwindcss.com"), htmx.Attribute("type", "application/javascript")),
+					htmx.Link(
+						htmx.Attribute("href", "/static/output.css"),
+						htmx.Attribute("rel", "stylesheet"),
+						htmx.Attribute("type", "text/css"),
+					),
+					htmx.Script(
+						htmx.Attribute("src", "/static/main.js"),
+						htmx.Attribute("type", "application/javascript"),
+					),
 				},
 			},
 			htmx.Div(
@@ -133,13 +141,17 @@ func (c *exampleController) Get() error {
 	)
 }
 
-func run(ctx context.Context) error {
+func run(_ context.Context) error {
 	log.SetFlags(0)
 	log.SetOutput(os.Stderr)
 
 	app := fiber.New()
 	app.Use(requestid.New())
 	app.Use(logger.New())
+
+	app.Use("/static", filesystem.New(filesystem.Config{
+		Root: http.FS(htmx.Static()),
+	}))
 
 	r := func(c *fiber.Ctx) (interface{}, interface{}, error) {
 		return "title", "Example Page", nil
@@ -228,9 +240,15 @@ func indexPage(hx *htmx.Htmx) error {
 				Title:    "index",
 				Language: "en",
 				Head: []htmx.Node{
-					htmx.Link(htmx.Attribute("href", "https://cdn.jsdelivr.net/npm/daisyui@4.7.0/dist/full.min.css"), htmx.Attribute("rel", "stylesheet"), htmx.Attribute("type", "text/css")),
-					htmx.Script(htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.10"), htmx.Attribute("type", "application/javascript")),
-					htmx.Script(htmx.Attribute("src", "https://cdn.tailwindcss.com"), htmx.Attribute("type", "application/javascript")),
+					htmx.Link(
+						htmx.Attribute("href", "/static/output.css"),
+						htmx.Attribute("rel", "stylesheet"),
+						htmx.Attribute("type", "text/css"),
+					),
+					htmx.Script(
+						htmx.Attribute("src", "/static/main.js"),
+						htmx.Attribute("type", "application/javascript"),
+					),
 				},
 			},
 			htmx.Div(
