@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -232,6 +233,18 @@ func main() {
 	}
 }
 
+func ErrorBoundary(children ...htmx.Node) (out htmx.Node) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered in f", r)
+		}
+	}()
+
+	out = htmx.Group(children...)
+
+	return
+}
+
 func indexPage(hx *htmx.Htmx) error {
 	return hx.RenderComp(
 		htmx.HTML5(
@@ -310,13 +323,13 @@ func indexPage(hx *htmx.Htmx) error {
 				),
 				htmx.Div(
 					htmx.ClassNames{},
-					htmx.Range(
-						htmx.Div(htmx.Text("Item 1")),
-						htmx.Div(htmx.Text("Item 2")),
-					).
-						Filter(func(int) bool { return true }).
-						Map(func(int) htmx.Node { return htmx.Div(htmx.Text("Hello")) }).
-						Group(),
+					// htmx.Range(
+					// 	htmx.Div(htmx.Text("Item 1")),
+					// 	htmx.Div(htmx.Text("Item 2")),
+					// ).
+					// 	Filter(func(int) bool { return true }).
+					// 	Map(func(int) htmx.Node { return htmx.Div(htmx.Text("Hello")) }).
+					// 	Group(),
 				),
 				htmx.Div(
 					htmx.ClassNames{
@@ -721,15 +734,15 @@ func indexPage(hx *htmx.Htmx) error {
 											Offset: 0,
 											Limit:  10,
 										},
-										tables.Select(
-											tables.SelectProps{
-												Total:  len(demoRows),
-												Offset: 0,
-												Limit:  10,
-												Limits: tables.DefaultLimits,
-												URL:    "/api/data",
-											},
-										),
+										// tables.Select(
+										// 	tables.SelectProps{
+										// 		Total:  len(demoRows),
+										// 		Offset: 0,
+										// 		Limit:  10,
+										// 		Limits: tables.DefaultLimits,
+										// 		URL:    "/api/data",
+										// 	},
+										// ),
 									),
 								},
 							),

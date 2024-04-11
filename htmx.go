@@ -523,6 +523,8 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 			err = ctrl.Delete()
 		case fiber.MethodOptions:
 			err = ctrl.Options()
+		case fiber.MethodTrace:
+			err = ctrl.Trace()
 		default:
 			err = fiber.ErrMethodNotAllowed
 		}

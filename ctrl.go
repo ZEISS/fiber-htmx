@@ -1,6 +1,10 @@
 package htmx
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"sync"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 // Controller is the interface for the htmx controller.
 type Controller interface {
@@ -22,6 +26,8 @@ type Controller interface {
 	Delete() error
 	// Options is called when the controller is executed with the OPTIONS method.
 	Options() error
+	// Trace is called when the controller is executed with the TRACE method.
+	Trace() error
 	// Error is called when an error occurs.
 	Error(err error) error
 }
@@ -31,6 +37,8 @@ var _ Controller = (*UnimplementedController)(nil)
 // UnimplementedController is the default controller implementation.
 type UnimplementedController struct {
 	hx *Htmx
+
+	sync.RWMutex
 }
 
 // Hx returns the htmx instance.
@@ -88,4 +96,9 @@ func (c *UnimplementedController) Options() error {
 // Error is called when an error occurs.
 func (c *UnimplementedController) Error(err error) error {
 	return c.Hx().Ctx().SendStatus(fiber.StatusInternalServerError)
+}
+
+// Trace is called when the controller is executed with the TRACE method.
+func (c *UnimplementedController) Trace() error {
+	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
 }

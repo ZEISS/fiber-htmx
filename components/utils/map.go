@@ -7,10 +7,10 @@ type Transformer[T any] func(el T) htmx.Node
 
 // Map is a function that maps a transformer to a list of htmx.Node.
 func Map[T any](transformer Transformer[T], elems ...T) htmx.Node {
-	nodes := []htmx.Node{}
+	nodes := make([]htmx.Node, 0, len(elems))
 
-	for _, n := range elems {
-		nodes = append(nodes, transformer(n))
+	for i, n := range elems {
+		nodes[i] = transformer(n)
 	}
 
 	return htmx.Group(nodes...)
