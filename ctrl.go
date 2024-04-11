@@ -32,73 +32,82 @@ type Controller interface {
 	Error(err error) error
 }
 
-var _ Controller = (*UnimplementedController)(nil)
+var _ Controller = (*DefaultController)(nil)
+
+// UnimplementedController is not to be used anymore.
+// Deprecated: Use DefaultController instead.
+type UnimplementedController = DefaultController
+
+// NewDefaultController returns a new default controller.
+func NewDefaultController() *DefaultController {
+	return &DefaultController{}
+}
 
 // UnimplementedController is the default controller implementation.
-type UnimplementedController struct {
+type DefaultController struct {
 	hx *Htmx
 
 	sync.RWMutex
 }
 
 // Hx returns the htmx instance.
-func (c *UnimplementedController) Hx() *Htmx {
+func (c *DefaultController) Hx() *Htmx {
 	return c.hx
 }
 
 // Init is called when the controller is initialized.
-func (c *UnimplementedController) Init(hx *Htmx) error {
+func (c *DefaultController) Init(hx *Htmx) error {
 	c.hx = hx
 
 	return nil
 }
 
 // Prepare is called before the controller is executed.
-func (c *UnimplementedController) Prepare() error {
+func (c *DefaultController) Prepare() error {
 	return nil
 }
 
 // Finalize is called after the controller is executed.
-func (c *UnimplementedController) Finalize() error {
+func (c *DefaultController) Finalize() error {
 	return nil
 }
 
 // Get is called when the controller is executed with the GET method.
-func (c *UnimplementedController) Get() error {
-	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
+func (c *DefaultController) Get() error {
+	return fiber.NewError(fiber.StatusNotImplemented)
 }
 
 // Post is called when the controller is executed with the POST method.
-func (c *UnimplementedController) Post() error {
-	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
+func (c *DefaultController) Post() error {
+	return fiber.NewError(fiber.StatusNotImplemented)
 }
 
 // Put is called when the controller is executed with the PUT method.
-func (c *UnimplementedController) Put() error {
-	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
+func (c *DefaultController) Put() error {
+	return fiber.NewError(fiber.StatusNotImplemented)
 }
 
 // Patch is called when the controller is executed with the PATCH method.
-func (c *UnimplementedController) Patch() error {
-	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
+func (c *DefaultController) Patch() error {
+	return fiber.NewError(fiber.StatusNotImplemented)
 }
 
 // Delete is called when the controller is executed with the DELETE method.
-func (c *UnimplementedController) Delete() error {
-	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
+func (c *DefaultController) Delete() error {
+	return fiber.NewError(fiber.StatusNotImplemented)
 }
 
 // Options is called when the controller is executed with the OPTIONS method.
-func (c *UnimplementedController) Options() error {
-	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
+func (c *DefaultController) Options() error {
+	return fiber.NewError(fiber.StatusNotImplemented)
 }
 
 // Error is called when an error occurs.
-func (c *UnimplementedController) Error(err error) error {
-	return c.Hx().Ctx().SendStatus(fiber.StatusInternalServerError)
+func (c *DefaultController) Error(err error) error {
+	return fiber.NewError(fiber.StatusInternalServerError)
 }
 
 // Trace is called when the controller is executed with the TRACE method.
-func (c *UnimplementedController) Trace() error {
-	return c.Hx().Ctx().SendStatus(fiber.StatusNotImplemented)
+func (c *DefaultController) Trace() error {
+	return fiber.NewError(fiber.StatusNotImplemented)
 }

@@ -2,13 +2,11 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 
-	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/accordions"
 	"github.com/zeiss/fiber-htmx/components/avatars"
 	"github.com/zeiss/fiber-htmx/components/buttons"
@@ -30,8 +28,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/spf13/cobra"
+	htmx "github.com/zeiss/fiber-htmx"
 )
 
 // Config ...
@@ -113,6 +113,26 @@ type exampleController struct {
 	htmx.UnimplementedController
 }
 
+func (c *exampleController) Error(err error) error {
+	return c.Hx().RenderComp(
+		htmx.HTML5(
+			c.Hx(),
+			htmx.HTML5Props{
+				Title:    "error",
+				Language: "en",
+				Head:     []htmx.Node{},
+			},
+			htmx.Div(
+				htmx.ClassNames{
+					"bg-base-100": true,
+				},
+				htmx.Text(err.Error()),
+			),
+		),
+		htmx.RenderStatusCode(err),
+	)
+}
+
 func (c *exampleController) Get() error {
 	return c.Hx().RenderComp(
 		htmx.HTML5(
@@ -149,6 +169,7 @@ func run(_ context.Context) error {
 	app := fiber.New()
 	app.Use(requestid.New())
 	app.Use(logger.New())
+	app.Use(recover.New())
 
 	app.Use("/static", filesystem.New(filesystem.Config{
 		Root: http.FS(htmx.Static()),
@@ -216,8 +237,7 @@ func run(_ context.Context) error {
 		return table.Render(hx)
 	}))
 
-	app.Get("/ctrl", htmx.NewHxControllerHandler(&exampleController{}))
-	app.Post("/ctrl", htmx.NewHxControllerHandler(&exampleController{}))
+	app.All("/ctrl", htmx.NewHxControllerHandler(&exampleController{}))
 
 	err := app.Listen(cfg.Flags.Addr)
 	if err != nil {
@@ -231,18 +251,6 @@ func main() {
 	if err := rootCmd.Execute(); err != nil {
 		panic(err)
 	}
-}
-
-func ErrorBoundary(children ...htmx.Node) (out htmx.Node) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Recovered in f", r)
-		}
-	}()
-
-	out = htmx.Group(children...)
-
-	return
 }
 
 func indexPage(hx *htmx.Htmx) error {

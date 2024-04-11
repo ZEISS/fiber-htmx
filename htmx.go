@@ -2,6 +2,8 @@ package htmx
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"html/template"
 	"net/http"
 	"sync"
@@ -339,8 +341,28 @@ func (h *Htmx) WriteJSON(data any) (n int, err error) {
 	return h.Write(payload)
 }
 
+// RenderOpt is helper function to configure the render.
+type RenderOpt func(h *Htmx)
+
+// RenderStatusCode is a helper function to set the status code.
+func RenderStatusCode(err error) RenderOpt {
+	return func(h *Htmx) {
+		var e *fiber.Error
+		ok := errors.As(err, &e)
+		if !ok {
+			e = fiber.NewError(fiber.StatusInternalServerError, fmt.Sprint("%w", err))
+		}
+
+		h.Ctx().Status(e.Code)
+	}
+}
+
 // RenderComp is a helper function to render a component.
-func (h *Htmx) RenderComp(n Node) error {
+func (h *Htmx) RenderComp(n Node, opt ...RenderOpt) error {
+	for _, o := range opt {
+		o(h)
+	}
+
 	return n.Render(h)
 }
 
@@ -479,10 +501,21 @@ func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
-	return func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) (err error) {
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
 		}
+
+		defer func() {
+			if r := recover(); r != nil {
+				var ok bool
+				err, ok = r.(error)
+				if !ok {
+					err = fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("%v", r))
+				}
+				err = ctrl.Error(err)
+			}
+		}()
 
 		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
 
@@ -495,19 +528,19 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 			ctx:         c,
 		}
 
-		err := h.Resolve(c, cfg.Resolvers...)
+		err = h.Resolve(c, cfg.Resolvers...)
 		if err != nil {
-			return cfg.ErrorHandler(c, err)
+			return ctrl.Error(err)
 		}
 
 		err = ctrl.Init(h)
 		if err != nil {
-			return cfg.ErrorHandler(c, err)
+			return ctrl.Error(err)
 		}
 
 		err = ctrl.Prepare()
 		if err != nil {
-			return cfg.ErrorHandler(c, err)
+			return ctrl.Error(err)
 		}
 
 		switch c.Method() {
@@ -530,12 +563,12 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 		}
 
 		if err != nil {
-			return cfg.ErrorHandler(c, err)
+			return ctrl.Error(err)
 		}
 
 		err = ctrl.Finalize()
 		if err != nil {
-			return cfg.ErrorHandler(c, err)
+			return ctrl.Error(err)
 		}
 
 		return nil
