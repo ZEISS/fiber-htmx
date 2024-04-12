@@ -169,6 +169,9 @@ type Config struct {
 	// Resolvers is a list of resolvers that resolve locals for the context.
 	Resolvers []ResolveFunc
 
+	// Filters is a list of filters that filter the context.
+	Filters []HtmxHandlerFunc
+
 	// ErrorHandler is executed when an error is returned from fiber.Handler.
 	//
 	// Optional. Default: DefaultErrorHandler
@@ -179,6 +182,7 @@ type Config struct {
 var ConfigDefault = Config{
 	ErrorHandler: defaultErrorHandler,
 	Resolvers:    []ResolveFunc{},
+	Filters:      []HtmxHandlerFunc{},
 }
 
 // default ErrorHandler that process return error from fiber.Handler
@@ -528,6 +532,13 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 			ctx:         c,
 		}
 
+		for _, f := range cfg.Filters {
+			err = f(h)
+			if err != nil {
+				return ctrl.Error(err)
+			}
+		}
+
 		err = h.Resolve(c, cfg.Resolvers...)
 		if err != nil {
 			return ctrl.Error(err)
@@ -558,6 +569,8 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 			err = ctrl.Options()
 		case fiber.MethodTrace:
 			err = ctrl.Trace()
+		case fiber.MethodHead:
+			err = ctrl.Head()
 		default:
 			err = fiber.ErrMethodNotAllowed
 		}
@@ -597,6 +610,10 @@ func configDefault(config ...Config) Config {
 
 	if cfg.Resolvers == nil {
 		cfg.Resolvers = ConfigDefault.Resolvers
+	}
+
+	if cfg.Filters == nil {
+		cfg.Filters = ConfigDefault.Filters
 	}
 
 	return cfg

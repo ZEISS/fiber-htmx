@@ -11,6 +11,7 @@ type token struct{}
 // DataLoader is creating go routines to load data.
 type DataLoader struct {
 	cancel func(error)
+	ctx    context.Context
 
 	wg  sync.WaitGroup
 	sem chan token
@@ -30,12 +31,58 @@ func (l *DataLoader) done() {
 func WithContext(ctx context.Context) (*DataLoader, context.Context) {
 	ctx, cancel := context.WithCancelCause(ctx)
 
-	return &DataLoader{cancel: cancel}, ctx
+	return &DataLoader{cancel: cancel, ctx: ctx}, ctx
 }
 
+// LoaderOpts is a configuration for a DataLoader.
+type LoaderOpts struct {
+	// Limit is the number of records to load concurrently.
+	Limit int
+	// Offset is the number of records to skip.
+	Offset int
+	// OrderBy is the order of the records.
+	OrderBy string
+	// Order is the order of the records.
+	Order string
+	// Filter is the filter of the records.
+	Filter string
+	// Search is the search of the records.
+	Search string
+}
+
+// NewLoaderOpts returns a new LoaderOpts.
+func NewLoaderOpts() *LoaderOpts {
+	return &LoaderOpts{}
+}
+
+// Configure is a configuration for a DataLoader Options.
+func (o *LoaderOpts) Configure(opts ...LoaderOpt) *LoaderOpts {
+	for _, opt := range opts {
+		opt(o)
+	}
+
+	return o
+}
+
+// LoaderOpt is an option for a DataLoader.
+type LoaderOpt func(*LoaderOpts)
+
+// LoaderFunc is a function that loads data.
+//
+//	func LoadUsers(opts ...LoaderOpt) LoaderFunc {
+//	   	opts := &LoaderOpts{}
+//		opts.Configure(opts)
+//
+//	    return func(ctx context.Context) error {
+//	        # Load users
+//	        return nil
+//		}
+//	}
+type LoaderFunc func(ctx context.Context) error
+
 // Load loads data.
-func (l *DataLoader) Load(f func() error) {
-	if l.sem == nil {
+func (l *DataLoader) Load(f LoaderFunc) {
+	if l.sem != nil {
 		l.sem <- token{}
 	}
 
@@ -43,7 +90,7 @@ func (l *DataLoader) Load(f func() error) {
 	go func() {
 		defer l.done()
 
-		if err := f(); err != nil {
+		if err := f(l.ctx); err != nil {
 			l.errOnce.Do(func() {
 				l.err = err
 				if l.cancel != nil {
@@ -57,6 +104,7 @@ func (l *DataLoader) Load(f func() error) {
 // Wait waits for all data loading to complete.
 func (l *DataLoader) Wait() error {
 	l.wg.Wait()
+
 	if l.cancel != nil {
 		l.cancel(l.err)
 	}

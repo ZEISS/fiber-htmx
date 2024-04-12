@@ -28,6 +28,8 @@ type Controller interface {
 	Options() error
 	// Trace is called when the controller is executed with the TRACE method.
 	Trace() error
+	// Head  is called when the controller is executed with the HEAD method.
+	Head() error
 	// Error is called when an error occurs.
 	Error(err error) error
 }
@@ -107,7 +109,29 @@ func (c *DefaultController) Error(err error) error {
 	return fiber.NewError(fiber.StatusInternalServerError)
 }
 
+// Head is called when the controller is executed with the HEAD method.
+func (c *DefaultController) Head() error {
+	return fiber.NewError(fiber.StatusNotImplemented)
+}
+
 // Trace is called when the controller is executed with the TRACE method.
 func (c *DefaultController) Trace() error {
 	return fiber.NewError(fiber.StatusNotImplemented)
 }
+
+// BindForm binds the form to the given struct.
+func (c *DefaultController) BindBody(obj interface{}) error {
+	return c.Hx().Ctx().BodyParser(obj)
+}
+
+// BindParams binds the params to the given struct.
+func (c *DefaultController) BindParams(obj interface{}) error {
+	return c.Hx().Ctx().ParamsParser(obj)
+}
+
+// BindQuery binds the query to the given struct.
+func (c *DefaultController) BindQuery(obj interface{}) error {
+	return c.Hx().Ctx().QueryParser(obj)
+}
+
+//
