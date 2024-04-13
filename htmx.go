@@ -43,6 +43,7 @@ type ContextFunc func(ctx context.Context) (any, any, error)
 // NewDefaultContext returns a new default context.
 func NewDefaultContext(ctx *fiber.Ctx, funcs ...ContextFunc) (*DefaultContext, error) {
 	c := new(DefaultContext)
+	c.localValues = make(map[any]any)
 	c.path = ctx.Path()
 
 	var wg sync.WaitGroup
