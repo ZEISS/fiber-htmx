@@ -9,8 +9,8 @@ type Transformer[T any] func(el T) htmx.Node
 func Map[T any](transformer Transformer[T], elems ...T) htmx.Node {
 	nodes := make([]htmx.Node, 0, len(elems))
 
-	for i, n := range elems {
-		nodes[i] = transformer(n)
+	for _, n := range elems {
+		nodes = append(nodes, transformer(n))
 	}
 
 	return htmx.Group(nodes...)
