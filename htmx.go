@@ -1,6 +1,7 @@
 package htmx
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/katallaxie/pkg/utils"
 )
 
 var _ Ctx = (*Htmx)(nil)
@@ -25,6 +27,125 @@ type Ctx interface {
 	ValuesBool(key any, value ...any) (val bool)
 	// Path is a helper function to get the path from the context.
 	Path() string
+}
+
+var _ Ctx = (*DefaultContext)(nil)
+
+// DefaultContext is a helper type for default contexts.
+type DefaultContext struct {
+	localValues map[any]any
+	path        string
+
+	sync.RWMutex
+}
+
+// ContextFunc is a function that returns a context.
+type ContextFunc func(ctx context.Context) (any, any, error)
+
+// NewDefaultContext returns a new default context.
+func NewDefaultContext(ctx *fiber.Ctx, funcs ...ContextFunc) (*DefaultContext, error) {
+	c := new(DefaultContext)
+	c.path = ctx.Path()
+
+	var wg sync.WaitGroup
+	var errOnce sync.Once
+	var err error
+
+	rctx, cancel := context.WithCancelCause(ctx.Context())
+	defer cancel(err)
+
+	for _, f := range funcs {
+		f := f
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			k, v, errr := f(rctx)
+			if errr != nil {
+				errOnce.Do(func() {
+					err = errr
+					cancel(err)
+				})
+			}
+
+			if errr == nil {
+				c.Locals(k, v)
+			}
+		}()
+	}
+
+	wg.Wait()
+
+	return c, err
+}
+
+// Locals is a method that returns the local values.
+func (c *DefaultContext) Locals(key any, value ...any) (val any) {
+	c.Lock()
+	defer c.Unlock()
+
+	if len(value) == 0 {
+		return c.localValues[key]
+	}
+
+	c.localValues[key] = value[0]
+
+	return value[0]
+}
+
+// Values is a method that returns the local values.
+func (c *DefaultContext) Values(key any, value ...any) (val any) {
+	return c.Locals(key, value...)
+}
+
+// ValuesString is a method that returns the local values.
+func (c *DefaultContext) ValuesString(key any, value ...any) (val string) {
+	return c.Locals(key, value...).(string)
+}
+
+// ValuesInt is a method that returns the local values.
+func (c *DefaultContext) ValuesInt(key any, value ...any) (val int) {
+	return c.Locals(key, value...).(int)
+}
+
+// ValuesBool is a method that returns the local values.
+func (c *DefaultContext) ValuesBool(key any, value ...any) (val bool) {
+	return c.Locals(key, value...).(bool)
+}
+
+// Path is a method that returns the path.
+func (c *DefaultContext) Path() string {
+	c.Lock()
+	defer c.Unlock()
+
+	return c.path
+}
+
+// Locals is a method that returns the local values.
+func Locals[V any](c Ctx, key any, value ...V) V {
+	var v V
+	var ok bool
+
+	if len(value) == 0 {
+		v, ok = c.Values(key).(V)
+	} else {
+		v, ok = c.Values(key, value[0]).(V)
+	}
+
+	if !ok {
+		return utils.Zero[V]()
+	}
+
+	return v
+}
+
+// Reset is a method that resets the local values.
+func (c *DefaultContext) Reset() {
+	c.Lock()
+	defer c.Unlock()
+
+	c.localValues = make(map[any]any)
 }
 
 // UnimplementedContext is a helper type for unimplemented contexts.

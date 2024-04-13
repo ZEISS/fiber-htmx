@@ -6,6 +6,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.4
 	github.com/golang/mock v1.7.0-rc.1
 	github.com/golangci/golangci-lint v1.57.2
+	github.com/katallaxie/pkg v0.5.12
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.9.0
 	github.com/zeiss/fiber-authz v1.0.13
