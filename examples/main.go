@@ -114,9 +114,14 @@ type exampleController struct {
 }
 
 func (c *exampleController) Error(err error) error {
+	ctx, err := htmx.NewDefaultContext(c.Hx().Ctx())
+	if err != nil {
+		return err
+	}
+
 	return c.Hx().RenderComp(
 		htmx.HTML5(
-			c.Hx(),
+			ctx,
 			htmx.HTML5Props{
 				Title:    "error",
 				Language: "en",
@@ -134,9 +139,14 @@ func (c *exampleController) Error(err error) error {
 }
 
 func (c *exampleController) Get() error {
+	ctx, err := htmx.NewDefaultContext(c.Hx().Ctx())
+	if err != nil {
+		return err
+	}
+
 	return c.Hx().RenderComp(
 		htmx.HTML5(
-			c.Hx(),
+			ctx,
 			htmx.HTML5Props{
 				Title:    "index",
 				Language: "en",
@@ -175,13 +185,7 @@ func run(_ context.Context) error {
 		Root: http.FS(htmx.Static()),
 	}))
 
-	r := func(c *fiber.Ctx) (interface{}, interface{}, error) {
-		return "title", "Example Page", nil
-	}
-
-	config := htmx.Config{
-		Resolvers: []htmx.ResolveFunc{r},
-	}
+	config := htmx.Config{}
 
 	app.Get("/", htmx.NewHtmxHandler(indexPage, config))
 
@@ -254,9 +258,14 @@ func main() {
 }
 
 func indexPage(hx *htmx.Htmx) error {
+	ctx, err := htmx.NewDefaultContext(hx.Ctx())
+	if err != nil {
+		return err
+	}
+
 	return hx.RenderComp(
 		htmx.HTML5(
-			hx,
+			ctx,
 			htmx.HTML5Props{
 				Title:    "index",
 				Language: "en",
@@ -277,7 +286,7 @@ func indexPage(hx *htmx.Htmx) error {
 					"bg-base-100": true,
 				},
 				Navbar(
-					hx,
+					ctx,
 					NavbarProps{},
 				),
 				htmx.Button(
