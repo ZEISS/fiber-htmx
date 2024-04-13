@@ -161,6 +161,9 @@ const (
 	htmxContext contextKey = iota
 )
 
+// FilterFunc is a function that filters the context.
+type FilterFunc func(h *Htmx) error
+
 // Config ...
 type Config struct {
 	// Next defines a function to skip this middleware when returned true.
@@ -170,7 +173,7 @@ type Config struct {
 	Resolvers []ResolveFunc
 
 	// Filters is a list of filters that filter the context.
-	Filters []HtmxHandlerFunc
+	Filters []FilterFunc
 
 	// ErrorHandler is executed when an error is returned from fiber.Handler.
 	//
@@ -182,7 +185,7 @@ type Config struct {
 var ConfigDefault = Config{
 	ErrorHandler: defaultErrorHandler,
 	Resolvers:    []ResolveFunc{},
-	Filters:      []HtmxHandlerFunc{},
+	Filters:      []FilterFunc{},
 }
 
 // default ErrorHandler that process return error from fiber.Handler

@@ -133,5 +133,3 @@ func (c *DefaultController) BindParams(obj interface{}) error {
 func (c *DefaultController) BindQuery(obj interface{}) error {
 	return c.Hx().Ctx().QueryParser(obj)
 }
-
-//
