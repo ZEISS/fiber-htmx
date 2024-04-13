@@ -13,8 +13,6 @@ import (
 	"github.com/katallaxie/pkg/utils"
 )
 
-var _ Ctx = (*Htmx)(nil)
-
 // Ctx is the component context.
 type Ctx interface {
 	// Values is a helper function to get the values from the context.
@@ -181,9 +179,6 @@ const (
 	StatusStopPolling = 286
 )
 
-// ResolveFunc is a function that resolves locals for the context.
-type ResolveFunc func(c *fiber.Ctx) (interface{}, interface{}, error)
-
 // HxRequestHeader is a helper type for htmx request headers.
 type HxRequestHeader string
 
@@ -290,9 +285,6 @@ type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	Next func(c *fiber.Ctx) bool
 
-	// Resolvers is a list of resolvers that resolve locals for the context.
-	Resolvers []ResolveFunc
-
 	// Filters is a list of filters that filter the context.
 	Filters []FilterFunc
 
@@ -305,7 +297,6 @@ type Config struct {
 // ConfigDefault is the default config.
 var ConfigDefault = Config{
 	ErrorHandler: defaultErrorHandler,
-	Resolvers:    []ResolveFunc{},
 	Filters:      []FilterFunc{},
 }
 
@@ -329,102 +320,15 @@ func New(config ...Config) fiber.Handler {
 
 // Htmx is a helper struct for htmx requests.
 type Htmx struct {
-	localValues map[any]any
-
 	request *Hx
 	ctx     *fiber.Ctx
 
 	sync.RWMutex
 }
 
-// Resolve is a method that resolves locals for the context.
-func (h *Htmx) Resolve(ctx *fiber.Ctx, funcs ...ResolveFunc) error {
-	var wg sync.WaitGroup
-	var errOnce sync.Once
-	var err error
-
-	for _, f := range funcs {
-		f := f
-
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-
-			k, v, errr := f(ctx)
-			if errr != nil {
-				errOnce.Do(func() {
-					err = errr
-				})
-			}
-
-			h.Locals(k, v)
-		}()
-	}
-
-	wg.Wait()
-
-	return err
-}
-
-// Locals is a method that returns the local values.
-func (h *Htmx) Locals(key any, value ...any) (val any) {
-	h.Lock()
-	defer h.Unlock()
-
-	if len(value) == 0 {
-		return h.localValues[key]
-	}
-
-	h.localValues[key] = value[0]
-
-	return value[0]
-}
-
-// Values is a method that returns the local values.
-func (h *Htmx) Values(key any, value ...any) (val any) {
-	return h.Locals(key, value...)
-}
-
-// ValuesString is a method that returns the local values.
-func (h *Htmx) ValuesString(key any, value ...any) (val string) {
-	return h.Locals(key, value...).(string)
-}
-
-// ValuesInt is a method that returns the local values.
-func (h *Htmx) ValuesInt(key any, value ...any) (val int) {
-	return h.Locals(key, value...).(int)
-}
-
-// ValuesBool is a method that returns the local values.
-func (h *Htmx) ValuesBool(key any, value ...any) (val bool) {
-	return h.Locals(key, value...).(bool)
-}
-
-// Reset is a method that resets the local values.
-func (h *Htmx) Reset() {
-	h.Lock()
-	defer h.Unlock()
-
-	h.localValues = make(map[any]any)
-	h.ctx = nil
-}
-
 // Context is a method that returns the fiber context.
 func (h *Htmx) Context() *fiber.Ctx {
 	return h.ctx
-}
-
-// Path is a method that returns the path.
-func (h *Htmx) Path() string {
-	return h.ctx.Path()
-}
-
-// HtmxFromContext is a helper function to get the htmx from the context.
-func HtmxFromContext(c *fiber.Ctx) *Htmx {
-	return &Htmx{
-		localValues: make(map[any]any),
-		ctx:         c,
-	}
 }
 
 // IsHxRequest returns true if the request is an htmx request.
@@ -557,17 +461,11 @@ func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
 		hx := HxFromContext(c)
 
 		h := &Htmx{
-			localValues: make(map[any]any),
-			request:     hx,
-			ctx:         c,
+			request: hx,
+			ctx:     c,
 		}
 
-		err := h.Resolve(c, cfg.Resolvers...)
-		if err != nil {
-			return cfg.ErrorHandler(c, err)
-		}
-
-		err = handler(h)
+		err := handler(h)
 		if err != nil {
 			return cfg.ErrorHandler(c, err)
 		}
@@ -651,9 +549,8 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 		hx := HxFromContext(c)
 
 		h := &Htmx{
-			localValues: make(map[any]any),
-			request:     hx,
-			ctx:         c,
+			request: hx,
+			ctx:     c,
 		}
 
 		for _, f := range cfg.Filters {
@@ -661,11 +558,6 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 			if err != nil {
 				return ctrl.Error(err)
 			}
-		}
-
-		err = h.Resolve(c, cfg.Resolvers...)
-		if err != nil {
-			return ctrl.Error(err)
 		}
 
 		err = ctrl.Init(h)
@@ -730,10 +622,6 @@ func configDefault(config ...Config) Config {
 
 	if cfg.ErrorHandler == nil {
 		cfg.ErrorHandler = ConfigDefault.ErrorHandler
-	}
-
-	if cfg.Resolvers == nil {
-		cfg.Resolvers = ConfigDefault.Resolvers
 	}
 
 	if cfg.Filters == nil {
