@@ -34,7 +34,10 @@ type Controller interface {
 	Error(err error) error
 }
 
-var _ Controller = (*DefaultController)(nil)
+var (
+	_ Controller = (*DefaultController)(nil)
+	_ Ctx        = (*DefaultController)(nil)
+)
 
 // UnimplementedController is not to be used anymore.
 // Deprecated: Use DefaultController instead.
@@ -47,7 +50,9 @@ func NewDefaultController() *DefaultController {
 
 // UnimplementedController is the default controller implementation.
 type DefaultController struct {
-	hx *Htmx
+	hx      *Htmx
+	ctx     *DefaultContext
+	ctxOnce sync.Once
 
 	sync.RWMutex
 }
@@ -132,4 +137,42 @@ func (c *DefaultController) BindParams(obj interface{}) error {
 // BindQuery binds the query to the given struct.
 func (c *DefaultController) BindQuery(obj interface{}) error {
 	return c.Hx().Ctx().QueryParser(obj)
+}
+
+// Values is a helper function to get the values from the context.
+func (c *DefaultController) Values(key any, value ...any) (val any) {
+	return c.ctx.Values(key, value...)
+}
+
+// ValuesString is a helper function to get the values as a string from the context.
+func (c *DefaultController) ValuesString(key any, value ...any) (val string) {
+	return c.ctx.ValuesString(key, value...)
+}
+
+// ValuesInt is a helper function to get the values as an int from the context.
+func (c *DefaultController) ValuesInt(key any, value ...any) (val int) {
+	return c.ctx.ValuesInt(key, value...)
+}
+
+// ValuesBool is a helper function to get the values as a bool from the context.
+func (c *DefaultController) ValuesBool(key any, value ...any) (val bool) {
+	return c.ctx.ValuesBool(key, value...)
+}
+
+// Path is a helper function to get the path from the context.
+func (c *DefaultController) Path() string {
+	return c.ctx.Path()
+}
+
+// Ctx returns the context.
+func (c *DefaultController) Ctx(funcs ...ContextFunc) (Ctx, error) {
+	c.Lock()
+	defer c.Unlock()
+
+	var err error
+	c.ctxOnce.Do(func() {
+		c.ctx, err = NewDefaultContext(c.Hx().Ctx(), funcs...)
+	})
+
+	return c.ctx, err
 }
