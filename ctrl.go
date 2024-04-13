@@ -66,6 +66,12 @@ func (c *DefaultController) Hx() *Htmx {
 func (c *DefaultController) Init(hx *Htmx) error {
 	c.hx = hx
 
+	ctx, err := NewDefaultContext(hx.Ctx())
+	if err != nil {
+		return err
+	}
+	c.ctx = ctx
+
 	return nil
 }
 
