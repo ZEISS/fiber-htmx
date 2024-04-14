@@ -1,7 +1,6 @@
 package htmx
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -38,45 +37,14 @@ type DefaultContext struct {
 }
 
 // ContextFunc is a function that returns a context.
-type ContextFunc func(ctx context.Context) (any, any, error)
+type ContextFunc func(ctx *fiber.Ctx) (any, any, error)
 
 // NewDefaultContext returns a new default context.
-func NewDefaultContext(ctx *fiber.Ctx, funcs ...ContextFunc) (*DefaultContext, error) {
+func NewDefaultContext() *DefaultContext {
 	c := new(DefaultContext)
 	c.localValues = make(map[any]any)
-	c.path = ctx.Path()
 
-	var wg sync.WaitGroup
-	var errOnce sync.Once
-	var err error
-
-	rctx, cancel := context.WithCancelCause(ctx.Context())
-	defer cancel(err)
-
-	for _, f := range funcs {
-		f := f
-
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-
-			k, v, errr := f(rctx)
-			if errr != nil {
-				errOnce.Do(func() {
-					err = errr
-					cancel(err)
-				})
-			}
-
-			if errr == nil {
-				c.Locals(k, v)
-			}
-		}()
-	}
-
-	wg.Wait()
-
-	return c, err
+	return c
 }
 
 // Locals is a method that returns the local values.
@@ -119,6 +87,37 @@ func (c *DefaultContext) Path() string {
 	defer c.Unlock()
 
 	return c.path
+}
+
+// BindValues is a helper function to bind values to the context.
+func (c *DefaultContext) BindValues(ctx *fiber.Ctx, funcs ...ContextFunc) error {
+	var wg sync.WaitGroup
+	var errOnce sync.Once
+	var err error
+
+	for _, f := range funcs {
+		f := f
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			k, v, errr := f(ctx)
+			if errr != nil {
+				errOnce.Do(func() {
+					err = errr
+				})
+			}
+
+			if errr == nil {
+				c.Locals(k, v)
+			}
+		}()
+	}
+
+	wg.Wait()
+
+	return err
 }
 
 // Locals is a method that returns the local values.

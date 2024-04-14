@@ -65,12 +65,7 @@ func (c *DefaultController) Hx() *Htmx {
 // Init is called when the controller is initialized.
 func (c *DefaultController) Init(hx *Htmx) error {
 	c.hx = hx
-
-	ctx, err := NewDefaultContext(hx.Ctx())
-	if err != nil {
-		return err
-	}
-	c.ctx = ctx
+	c.ctx = NewDefaultContext()
 
 	return nil
 }
@@ -175,10 +170,10 @@ func (c *DefaultController) Ctx(funcs ...ContextFunc) (Ctx, error) {
 	c.Lock()
 	defer c.Unlock()
 
-	var err error
-	c.ctxOnce.Do(func() {
-		c.ctx, err = NewDefaultContext(c.Hx().Ctx(), funcs...)
-	})
+	err := c.ctx.BindValues(c.Hx().Ctx(), funcs...)
+	if err != nil {
+		return nil, err
+	}
 
-	return c.ctx, err
+	return c.ctx, nil
 }
