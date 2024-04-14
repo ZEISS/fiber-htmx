@@ -114,14 +114,9 @@ type exampleController struct {
 }
 
 func (c *exampleController) Error(err error) error {
-	ctx, err := htmx.NewDefaultContext(c.Hx().Ctx())
-	if err != nil {
-		return err
-	}
-
 	return c.Hx().RenderComp(
 		htmx.HTML5(
-			ctx,
+			c.DefaultCtx(),
 			htmx.HTML5Props{
 				Title:    "error",
 				Language: "en",
@@ -139,14 +134,9 @@ func (c *exampleController) Error(err error) error {
 }
 
 func (c *exampleController) Get() error {
-	ctx, err := htmx.NewDefaultContext(c.Hx().Ctx())
-	if err != nil {
-		return err
-	}
-
 	return c.Hx().RenderComp(
 		htmx.HTML5(
-			ctx,
+			c.DefaultCtx(),
 			htmx.HTML5Props{
 				Title:    "index",
 				Language: "en",
@@ -258,10 +248,7 @@ func main() {
 }
 
 func indexPage(hx *htmx.Htmx) error {
-	ctx, err := htmx.NewDefaultContext(hx.Ctx())
-	if err != nil {
-		return err
-	}
+	ctx := htmx.NewDefaultContext()
 
 	return hx.RenderComp(
 		htmx.HTML5(

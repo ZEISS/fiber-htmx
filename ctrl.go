@@ -50,9 +50,8 @@ func NewDefaultController() *DefaultController {
 
 // UnimplementedController is the default controller implementation.
 type DefaultController struct {
-	hx      *Htmx
-	ctx     *DefaultContext
-	ctxOnce sync.Once
+	hx  *Htmx
+	ctx *DefaultContext
 
 	sync.RWMutex
 }
@@ -165,15 +164,15 @@ func (c *DefaultController) Path() string {
 	return c.ctx.Path()
 }
 
-// Ctx returns the context.
-func (c *DefaultController) Ctx(funcs ...ContextFunc) (Ctx, error) {
+// DefaultCtx returns the context.
+func (c *DefaultController) DefaultCtx() Ctx {
 	c.Lock()
 	defer c.Unlock()
 
-	err := c.ctx.BindValues(c.Hx().Ctx(), funcs...)
-	if err != nil {
-		return nil, err
-	}
+	return c.ctx
+}
 
-	return c.ctx, nil
+// BindValues binds the values to the context.
+func (c *DefaultController) BindValues(funcs ...ContextFunc) error {
+	return c.ctx.BindValues(c.Hx().Ctx(), funcs...)
 }
