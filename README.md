@@ -35,7 +35,7 @@ There is also the option to use `htmx.Controller` to encapsulate the logic of th
 
 ```go
 type HelloWorldController struct {
-    htmx.UnimplementedController
+    htmx.DefaultController
 }
 
 func (c *HelloWorldController) Get() error {
