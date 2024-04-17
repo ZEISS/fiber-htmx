@@ -437,3 +437,13 @@ func OnClick(v string) Node {
 func Is(v string) Node {
 	return Attribute("is", v)
 }
+
+// Integrity sets the integrity attribute for elements.
+func Integrity(v string) Node {
+	return Attribute("integrity", v)
+}
+
+// CrossOrigin sets the crossorigin attribute for elements.
+func CrossOrigin(v string) Node {
+	return Attribute("crossorigin", v)
+}
