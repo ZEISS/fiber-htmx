@@ -4,7 +4,32 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/katallaxie/pkg/utils"
 )
+
+// ValuePtr is a helper function that returns a pointer to the provided value.
+func ValuePtr[V any](v V) *V {
+	return &v
+}
+
+// PtrValue is a helper function that returns the value of the provided pointer.
+func PtrValue[V any](v *V) V {
+	if v == nil {
+		return utils.Zero[V]()
+	}
+
+	return *v
+}
+
+// AsValue is a helper function that returns a value based on the provided pointer.
+func AsValue[T any](v any) T {
+	if v == nil {
+		return utils.Zero[T]()
+	}
+
+	return v.(T)
+}
 
 // AsBool is a helper function that returns a boolean value based on the provided string.
 func AsBool(str string) bool {
