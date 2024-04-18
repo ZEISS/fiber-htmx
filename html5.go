@@ -16,7 +16,7 @@ type HTML5Props struct {
 }
 
 // HTML5 generates an HTML5 document based on the provided properties.
-func HTML5(ctx Ctx, props HTML5Props, body ...Node) Node {
+func HTML5(props HTML5Props, body ...Node) Node {
 	return Doctype(
 		HTML(
 			If(props.Language != "", Lang(props.Language)),

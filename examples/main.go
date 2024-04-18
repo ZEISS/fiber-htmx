@@ -116,7 +116,6 @@ type exampleController struct {
 func (c *exampleController) Error(err error) error {
 	return c.Hx().RenderComp(
 		htmx.HTML5(
-			c.DefaultCtx(),
 			htmx.HTML5Props{
 				Title:    "error",
 				Language: "en",
@@ -136,123 +135,6 @@ func (c *exampleController) Error(err error) error {
 func (c *exampleController) Get() error {
 	return c.Hx().RenderComp(
 		htmx.HTML5(
-			c.DefaultCtx(),
-			htmx.HTML5Props{
-				Title:    "index",
-				Language: "en",
-				Head: []htmx.Node{
-					htmx.Link(
-						htmx.Attribute("href", "/static/output.css"),
-						htmx.Attribute("rel", "stylesheet"),
-						htmx.Attribute("type", "text/css"),
-					),
-					htmx.Script(
-						htmx.Attribute("src", "/static/main.js"),
-						htmx.Attribute("type", "application/javascript"),
-					),
-				},
-			},
-			htmx.Div(
-				htmx.ClassNames{
-					"bg-base-100": true,
-				},
-				htmx.Text("Hello World"),
-			),
-		),
-	)
-}
-
-func run(_ context.Context) error {
-	log.SetFlags(0)
-	log.SetOutput(os.Stderr)
-
-	app := fiber.New()
-	app.Use(requestid.New())
-	app.Use(logger.New())
-	app.Use(recover.New())
-
-	app.Use("/static", filesystem.New(filesystem.Config{
-		Root: http.FS(htmx.Static()),
-	}))
-
-	config := htmx.Config{}
-
-	app.Get("/", htmx.NewHtmxHandler(indexPage, config))
-
-	app.Post("/api/respond", htmx.NewHtmxHandler(func(hx *htmx.Htmx) error {
-		if !hx.IsHxRequest() {
-			return nil
-		}
-
-		_, err := hx.WriteHTML("<div>New Content</div>")
-		return err
-	}))
-
-	app.Get("/api/data", htmx.NewHtmxHandler(func(hx *htmx.Htmx) error {
-		if !hx.IsHxRequest() {
-			return nil
-		}
-
-		limit, offset := tables.PaginationPropsFromContext(hx.Ctx())
-
-		rows := demoRows[offset : offset+limit]
-
-		table := tables.Table[DemoRow](
-			tables.TableProps[DemoRow]{
-				Columns: tables.Columns[DemoRow]{
-					{
-						ID:          "id",
-						AccessorKey: "ID",
-						Header: func(p tables.TableProps[DemoRow]) htmx.Node {
-							return htmx.Th(htmx.Text("ID"))
-						},
-						Cell: func(p tables.TableProps[DemoRow], row DemoRow) htmx.Node {
-							return htmx.Td(
-								htmx.Text(strconv.Itoa(row.ID)),
-							)
-						},
-					},
-					{
-						ID:          "name",
-						AccessorKey: "Name",
-						Header: func(p tables.TableProps[DemoRow]) htmx.Node {
-							return htmx.Th(htmx.Text("Name"))
-						},
-						Cell: func(p tables.TableProps[DemoRow], row DemoRow) htmx.Node {
-							return htmx.Td(htmx.Text(row.Name))
-						},
-					},
-				},
-				Rows: tables.NewRows(rows),
-			},
-			htmx.ID("data-table"),
-		)
-
-		return table.Render(hx)
-	}))
-
-	app.All("/ctrl", htmx.NewHxControllerHandler(&exampleController{}))
-
-	err := app.Listen(cfg.Flags.Addr)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return nil
-}
-
-func main() {
-	if err := rootCmd.Execute(); err != nil {
-		panic(err)
-	}
-}
-
-func indexPage(hx *htmx.Htmx) error {
-	ctx := htmx.NewDefaultContext()
-
-	return hx.RenderComp(
-		htmx.HTML5(
-			ctx,
 			htmx.HTML5Props{
 				Title:    "index",
 				Language: "en",
@@ -273,8 +155,9 @@ func indexPage(hx *htmx.Htmx) error {
 					"bg-base-100": true,
 				},
 				Navbar(
-					ctx,
-					NavbarProps{},
+					NavbarProps{
+						Title: "Navbar",
+					},
 				),
 				htmx.Button(
 					htmx.Text("Button"),
@@ -1394,15 +1277,46 @@ func indexPage(hx *htmx.Htmx) error {
 	)
 }
 
-type NavbarProps struct{}
+func run(_ context.Context) error {
+	log.SetFlags(0)
+	log.SetOutput(os.Stderr)
 
-func Navbar(ctx htmx.Ctx, props NavbarProps, children ...htmx.Node) htmx.Node {
+	app := fiber.New()
+	app.Use(requestid.New())
+	app.Use(logger.New())
+	app.Use(recover.New())
+
+	app.Use("/static", filesystem.New(filesystem.Config{
+		Root: http.FS(htmx.Static()),
+	}))
+
+	app.All("/", htmx.NewHxControllerHandler(&exampleController{}))
+
+	err := app.Listen(cfg.Flags.Addr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return nil
+}
+
+func main() {
+	if err := rootCmd.Execute(); err != nil {
+		panic(err)
+	}
+}
+
+type NavbarProps struct {
+	Title string
+}
+
+func Navbar(props NavbarProps, children ...htmx.Node) htmx.Node {
 	return htmx.Nav(
 		htmx.ClassNames{"bg-base-100": true, "navbar": true},
 		htmx.Div(
 			htmx.H3(
 				htmx.ClassNames{"text-lg font-bold": true},
-				htmx.Text(ctx.ValuesString("title")),
+				htmx.Text(props.Title),
 			),
 		),
 		htmx.Div(htmx.ClassNames{"flex-none": true},

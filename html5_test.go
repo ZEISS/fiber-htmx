@@ -9,8 +9,6 @@ import (
 )
 
 func Benchmark_HTML5_Render(b *testing.B) {
-	ctx := &htmx.UnimplementedContext{}
-
 	nodes := []htmx.Node{}
 
 	for i := 0; i < 10000; i++ {
@@ -19,7 +17,6 @@ func Benchmark_HTML5_Render(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		err := htmx.HTML5(
-			ctx,
 			htmx.HTML5Props{
 				Title:       "Hello, World!",
 				Description: "An example of an HTML5 document.",

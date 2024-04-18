@@ -9,7 +9,7 @@ import (
 // Controller is the interface for the htmx controller.
 type Controller interface {
 	// Init is called when the controller is initialized.
-	Init(hx *Htmx) error
+	Init(ctx *fiber.Ctx) error
 	// Prepare is called before the controller is executed.
 	Prepare() error
 	// Finalize is called after the controller is executed.
@@ -34,10 +34,7 @@ type Controller interface {
 	Error(err error) error
 }
 
-var (
-	_ Controller = (*DefaultController)(nil)
-	_ Ctx        = (*DefaultController)(nil)
-)
+var _ Controller = (*DefaultController)(nil)
 
 // UnimplementedController is not to be used anymore.
 // Deprecated: Use DefaultController instead.
@@ -50,21 +47,16 @@ func NewDefaultController() *DefaultController {
 
 // UnimplementedController is the default controller implementation.
 type DefaultController struct {
-	hx  *Htmx
-	ctx *DefaultContext
-
-	sync.RWMutex
+	ctx *fiber.Ctx
 }
 
-// Hx returns the htmx instance.
-func (c *DefaultController) Hx() *Htmx {
-	return c.hx
-}
+// BindFunc is a function that returns a context.
+type BindFunc func(ctx *fiber.Ctx) (any, any, error)
 
 // Init is called when the controller is initialized.
-func (c *DefaultController) Init(hx *Htmx) error {
-	c.hx = hx
-	c.ctx = NewDefaultContext()
+func (c *DefaultController) Init(ctx *fiber.Ctx) error {
+	c.Reset()
+	c.ctx = ctx
 
 	return nil
 }
@@ -126,37 +118,37 @@ func (c *DefaultController) Trace() error {
 
 // BindForm binds the form to the given struct.
 func (c *DefaultController) BindBody(obj interface{}) error {
-	return c.Hx().Ctx().BodyParser(obj)
+	return c.ctx.BodyParser(obj)
 }
 
 // BindParams binds the params to the given struct.
 func (c *DefaultController) BindParams(obj interface{}) error {
-	return c.Hx().Ctx().ParamsParser(obj)
+	return c.ctx.ParamsParser(obj)
 }
 
 // BindQuery binds the query to the given struct.
 func (c *DefaultController) BindQuery(obj interface{}) error {
-	return c.Hx().Ctx().QueryParser(obj)
+	return c.ctx.QueryParser(obj)
 }
 
 // Values is a helper function to get the values from the context.
 func (c *DefaultController) Values(key any, value ...any) (val any) {
-	return c.ctx.Values(key, value...)
+	return c.ctx.Locals(key, value...)
 }
 
 // ValuesString is a helper function to get the values as a string from the context.
 func (c *DefaultController) ValuesString(key any, value ...any) (val string) {
-	return c.ctx.ValuesString(key, value...)
+	return c.ctx.Locals(key, value...).(string)
 }
 
 // ValuesInt is a helper function to get the values as an int from the context.
 func (c *DefaultController) ValuesInt(key any, value ...any) (val int) {
-	return c.ctx.ValuesInt(key, value...)
+	return c.ctx.Locals(key, value...).(int)
 }
 
 // ValuesBool is a helper function to get the values as a bool from the context.
 func (c *DefaultController) ValuesBool(key any, value ...any) (val bool) {
-	return c.ctx.ValuesBool(key, value...)
+	return c.ctx.Locals(key, value...).(bool)
 }
 
 // Path is a helper function to get the path from the context.
@@ -164,15 +156,43 @@ func (c *DefaultController) Path() string {
 	return c.ctx.Path()
 }
 
-// DefaultCtx returns the context.
-func (c *DefaultController) DefaultCtx() Ctx {
-	c.Lock()
-	defer c.Unlock()
-
-	return c.ctx
+// Hx is a helper function to get the htmx from the context.
+func (c *DefaultController) Hx() Hx {
+	return HxFromContext(c.ctx)
 }
 
 // BindValues binds the values to the context.
-func (c *DefaultController) BindValues(funcs ...ContextFunc) error {
-	return c.ctx.BindValues(c.Hx().Ctx(), funcs...)
+func (c *DefaultController) BindValues(funcs ...BindFunc) error {
+	var wg sync.WaitGroup
+	var errOnce sync.Once
+	var err error
+
+	for _, f := range funcs {
+		f := f
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			k, v, errr := f(c.ctx)
+			if errr != nil {
+				errOnce.Do(func() {
+					err = errr
+				})
+			}
+
+			if errr == nil {
+				c.ctx.Locals(k, v)
+			}
+		}()
+	}
+
+	wg.Wait()
+
+	return err
+}
+
+// Reset resets the controller.
+func (c *DefaultController) Reset() {
+	c.ctx = nil
 }

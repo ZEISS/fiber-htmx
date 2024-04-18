@@ -6,129 +6,20 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"sync"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/katallaxie/pkg/utils"
 )
 
-// Ctx is the component context.
-type Ctx interface {
-	// Values is a helper function to get the values from the context.
-	Values(key any, value ...any) (val any)
-	// ValuesString is a helper function to get the values as a string from the context.
-	ValuesString(key any, value ...any) (val string)
-	// ValuesInt is a helper function to get the values as an int from the context.
-	ValuesInt(key any, value ...any) (val int)
-	// ValuesBool is a helper function to get the values as a bool from the context.
-	ValuesBool(key any, value ...any) (val bool)
-	// Path is a helper function to get the path from the context.
-	Path() string
-}
-
-var _ Ctx = (*DefaultContext)(nil)
-
-// DefaultContext is a helper type for default contexts.
-type DefaultContext struct {
-	localValues map[any]any
-	path        string
-
-	sync.RWMutex
-}
-
-// ContextFunc is a function that returns a context.
-type ContextFunc func(ctx *fiber.Ctx) (any, any, error)
-
-// NewDefaultContext returns a new default context.
-func NewDefaultContext() *DefaultContext {
-	c := new(DefaultContext)
-	c.localValues = make(map[any]any)
-
-	return c
-}
-
 // Locals is a method that returns the local values.
-func (c *DefaultContext) Locals(key any, value ...any) (val any) {
-	c.Lock()
-	defer c.Unlock()
-
-	if len(value) == 0 {
-		return c.localValues[key]
-	}
-
-	c.localValues[key] = value[0]
-
-	return value[0]
-}
-
-// Values is a method that returns the local values.
-func (c *DefaultContext) Values(key any, value ...any) (val any) {
-	return c.Locals(key, value...)
-}
-
-// ValuesString is a method that returns the local values.
-func (c *DefaultContext) ValuesString(key any, value ...any) (val string) {
-	return c.Locals(key, value...).(string)
-}
-
-// ValuesInt is a method that returns the local values.
-func (c *DefaultContext) ValuesInt(key any, value ...any) (val int) {
-	return c.Locals(key, value...).(int)
-}
-
-// ValuesBool is a method that returns the local values.
-func (c *DefaultContext) ValuesBool(key any, value ...any) (val bool) {
-	return c.Locals(key, value...).(bool)
-}
-
-// Path is a method that returns the path.
-func (c *DefaultContext) Path() string {
-	c.Lock()
-	defer c.Unlock()
-
-	return c.path
-}
-
-// BindValues is a helper function to bind values to the context.
-func (c *DefaultContext) BindValues(ctx *fiber.Ctx, funcs ...ContextFunc) error {
-	var wg sync.WaitGroup
-	var errOnce sync.Once
-	var err error
-
-	for _, f := range funcs {
-		f := f
-
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-
-			k, v, errr := f(ctx)
-			if errr != nil {
-				errOnce.Do(func() {
-					err = errr
-				})
-			}
-
-			if errr == nil {
-				c.Locals(k, v)
-			}
-		}()
-	}
-
-	wg.Wait()
-
-	return err
-}
-
-// Locals is a method that returns the local values.
-func Locals[V any](c Ctx, key any, value ...V) V {
+func Locals[V any](c *fiber.Ctx, key any, value ...V) V {
 	var v V
 	var ok bool
 
-	if len(value) == 0 {
-		v, ok = c.Values(key).(V)
+	if len(value) > 0 {
+		v, ok = c.Locals(key, value).(V)
 	} else {
-		v, ok = c.Values(key, value[0]).(V)
+		v, ok = c.Locals(key).(V)
 	}
 
 	if !ok {
@@ -136,42 +27,6 @@ func Locals[V any](c Ctx, key any, value ...V) V {
 	}
 
 	return v
-}
-
-// Reset is a method that resets the local values.
-func (c *DefaultContext) Reset() {
-	c.Lock()
-	defer c.Unlock()
-
-	c.localValues = make(map[any]any)
-}
-
-// UnimplementedContext is a helper type for unimplemented contexts.
-type UnimplementedContext struct{}
-
-// Values is a helper function to get the values from the context.
-func (u *UnimplementedContext) Values(key any, value ...any) (val any) {
-	return nil
-}
-
-// ValuesString is a helper function to get the values as a string from the context.
-func (u *UnimplementedContext) ValuesString(key any, value ...any) (val string) {
-	return ""
-}
-
-// ValuesInt is a helper function to get the values as an int from the context.
-func (u *UnimplementedContext) ValuesInt(key any, value ...any) (val int) {
-	return 0
-}
-
-// ValuesBool is a helper function to get the values as a bool from the context.
-func (u *UnimplementedContext) ValuesBool(key any, value ...any) (val bool) {
-	return false
-}
-
-// Path is a helper function to get the path from the context.
-func (u *UnimplementedContext) Path() string {
-	return ""
 }
 
 const (
@@ -235,37 +90,187 @@ const (
 	HxRequestHeaderTriggerName           HxRequestHeader = "HX-Trigger-Name"
 )
 
-// Hx ...
-type Hx struct {
-	HxBoosted               bool
-	HxCurrentURL            string
-	HxHistoryRestoreRequest bool
-	HxPrompt                string
-	HxRequest               bool
-	HxTarget                string
-	HxTriggerName           string
-	HxTrigger               string
+// Hx is an interface for htmx requests.
+type Hx interface {
+	// HxBoosted returns true if the request is boosted.
+	HxBoosted() bool
+	// HxCurrentURL returns the current URL.
+	HxCurrentURL() string
+	// HxHistoryRestoreRequest returns true if the request is a history restore request.
+	HxHistoryRestoreRequest() bool
+	// HxPrompt returns the prompt.
+	HxPrompt() string
+	// HxRequest returns true if the request is an htmx request.
+	HxRequest() bool
+	// HxTarget returns the target.
+	HxTarget() string
+	// HxTriggerName returns the trigger name.
+	HxTriggerName() string
+	// HxTrigger returns the trigger.
+	HxTrigger() string
+	// HxRenderPartial returns true if the request is an htmx request.
+	RenderPartial() bool
+	// Write writes a response.
+	Write(data []byte) (n int, err error)
+	// WriteHTML writes an HTML response.
+	WriteHTML(html template.HTML) (n int, err error)
+	// WriteJSON writes a JSON response.
+	WriteJSON(data any) (n int, err error)
+	// WriteString writes a string.
+	WriteString(s string) (n int, err error)
+	// RenderComp renders a component.
+	RenderComp(n Node, opt ...RenderOpt) error
+	// StopPolling stops polling.
+	StopPolling() error
+	// Redirect redirects the client.
+	Redirect(url string)
+	// ReplaceURL replaces the current URL.
+	ReplaceURL(url string)
+	// ReSwap ...
+	ReSwap(target string)
+	// ReTarget ...
+	ReTarget(target string)
+	// ReSelect ...
+	ReSelect(target string)
+	// Trigger ...
+	Trigger(target string)
 }
 
-// HxFromContext ...
-func HxFromContext(c *fiber.Ctx) *Hx {
-	return &Hx{
-		HxBoosted:               AsBool(c.Get(HxRequestHeaderBoosted.String())),
-		HxCurrentURL:            c.Get(HxRequestHeaderCurrentURL.String()),
-		HxHistoryRestoreRequest: AsBool(c.Get(HxRequestHeaderHistoryRestoreRequest.String())),
-		HxPrompt:                c.Get(HxRequestHeaderPrompt.String()),
-		HxRequest:               AsBool(c.Get(HxRequestHeaderRequest.String())),
-		HxTarget:                c.Get(HxRequestHeaderTarget.String()),
-		HxTriggerName:           c.Get(HxRequestHeaderTriggerName.String()),
-		HxTrigger:               c.Get(HxRequestHeaderTrigger.String()),
+// Redirect is a helper function to redirect the client.
+func (h *hx) Redirect(url string) {
+	h.ctx.Set(HXRedirect.String(), url)
+}
+
+// ReplaceURL is a helper function to replace the current URL.
+func (h *hx) ReplaceURL(url string) {
+	h.ctx.Set(HXReplaceUrl.String(), url)
+}
+
+// ReSwap ...
+func (h *hx) ReSwap(target string) {
+	h.ctx.Set(HXReswap.String(), target)
+}
+
+// ReTarget ...
+func (h *hx) ReTarget(target string) {
+	h.ctx.Set(HXRetarget.String(), target)
+}
+
+// ReSelect ...
+func (h *hx) ReSelect(target string) {
+	h.ctx.Set(HXReselect.String(), target)
+}
+
+// Trigger ...
+func (h *hx) Trigger(target string) {
+	h.ctx.Set(HXTrigger.String(), target)
+}
+
+type hx struct {
+	ctx *fiber.Ctx
+}
+
+// HxBoosted returns true if the request is boosted.
+func (h *hx) HxBoosted() bool {
+	return AsBool(h.ctx.Get(HxRequestHeaderBoosted.String()))
+}
+
+// HxCurrentURL returns the current URL.
+func (h *hx) HxCurrentURL() string {
+	return h.ctx.Get(HxRequestHeaderCurrentURL.String())
+}
+
+// HxHistoryRestoreRequest returns true if the request is a history restore request.
+func (h *hx) HxHistoryRestoreRequest() bool {
+	return AsBool(h.ctx.Get(HxRequestHeaderHistoryRestoreRequest.String()))
+}
+
+// HxPrompt returns the prompt.
+func (h *hx) HxPrompt() string {
+	return h.ctx.Get(HxRequestHeaderPrompt.String())
+}
+
+// HxRequest returns true if the request is an htmx request.
+func (h *hx) HxRequest() bool {
+	return AsBool(h.ctx.Get(HxRequestHeaderRequest.String()))
+}
+
+// HxTarget returns the target.
+func (h *hx) HxTarget() string {
+	return h.ctx.Get(HxRequestHeaderTarget.String())
+}
+
+// HxTriggerName returns the trigger name.
+func (h *hx) HxTriggerName() string {
+	return h.ctx.Get(HxRequestHeaderTriggerName.String())
+}
+
+// HxTrigger returns the trigger.
+func (h *hx) HxTrigger() string {
+	return h.ctx.Get(HxRequestHeaderTrigger.String())
+}
+
+// RenderPartial returns true if the request is an htmx request.
+func (h *hx) RenderPartial() bool {
+	return (h.HxRequest() || h.HxBoosted()) && !h.HxHistoryRestoreRequest()
+}
+
+// Write writes a response.
+func (h *hx) Write(data []byte) (n int, err error) {
+	return h.ctx.Write(data)
+}
+
+// WriteString writes a string.
+func (h *hx) WriteString(s string) (n int, err error) {
+	return h.ctx.WriteString(s)
+}
+
+// WriteHTML writes an HTML response.
+func (h *hx) WriteHTML(html template.HTML) (n int, err error) {
+	return h.WriteString(string(html))
+}
+
+// WriteJSON writes a JSON response.
+func (h *hx) WriteJSON(data any) (n int, err error) {
+	payload, err := json.Marshal(data)
+	if err != nil {
+		return 0, err
 	}
+
+	h.ctx.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+
+	return h.Write(payload)
+}
+
+// RenderComp is a helper function to render a component.
+func (h *hx) RenderComp(n Node, opt ...RenderOpt) error {
+	for _, o := range opt {
+		o(h)
+	}
+
+	return n.Render(h)
+}
+
+// StopPolling ...
+func (h *hx) StopPolling() error {
+	return h.ctx.SendStatus(StatusStopPolling)
+}
+
+// NewHx returns a new htmx request.
+func NewHx(c *fiber.Ctx) Hx {
+	return &hx{c}
 }
 
 // ContextWithHx ...
 func ContextWithHx(c *fiber.Ctx) *fiber.Ctx {
-	_ = c.Locals(htmxContext, HxFromContext(c))
+	_ = c.Locals(htmxContext, NewHx(c))
 
 	return c
+}
+
+// HxFromContext is a helper function to get the htmx from the context.
+func HxFromContext(c *fiber.Ctx) Hx {
+	return Locals[Hx](c, htmxContext)
 }
 
 // The contextKey type is unexported to prevent collisions with context keys defined in
@@ -278,7 +283,7 @@ const (
 )
 
 // FilterFunc is a function that filters the context.
-type FilterFunc func(h *Htmx) error
+type FilterFunc func(c *fiber.Ctx) error
 
 // Config ...
 type Config struct {
@@ -318,159 +323,19 @@ func New(config ...Config) fiber.Handler {
 	}
 }
 
-// Htmx is a helper struct for htmx requests.
-type Htmx struct {
-	request *Hx
-	ctx     *fiber.Ctx
-
-	sync.RWMutex
-}
-
-// Context is a method that returns the fiber context.
-func (h *Htmx) Context() *fiber.Ctx {
-	return h.ctx
-}
-
-// IsHxRequest returns true if the request is an htmx request.
-func (h *Htmx) IsHxRequest() bool {
-	return h.request.HxRequest
-}
-
-// IsHxBoosted returns true if the request is an htmx request.
-func (h *Htmx) IsHxBoosted() bool {
-	return h.request.HxBoosted
-}
-
-// IsHxHistoryRestoreRequest returns true if the request is an htmx request.
-func (h *Htmx) IsHxHistoryRestoreRequest() bool {
-	return h.request.HxHistoryRestoreRequest
-}
-
-// RenderPartial returns true if the request is an htmx request.
-func (h *Htmx) RenderPartial() bool {
-	return (h.request.HxRequest || h.request.HxBoosted) && !h.request.HxHistoryRestoreRequest
-}
-
-// Write writes a response.
-func (h *Htmx) Write(data []byte) (n int, err error) {
-	return h.ctx.Write(data)
-}
-
-// WriteHTML writes an HTML response.
-func (h *Htmx) WriteHTML(html template.HTML) (n int, err error) {
-	return h.WriteString(string(html))
-}
-
-// WriteJSON writes a JSON response.
-func (h *Htmx) WriteJSON(data any) (n int, err error) {
-	payload, err := json.Marshal(data)
-	if err != nil {
-		return 0, err
-	}
-
-	h.ctx.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-
-	return h.Write(payload)
-}
-
 // RenderOpt is helper function to configure the render.
-type RenderOpt func(h *Htmx)
+type RenderOpt func(h *hx)
 
 // RenderStatusCode is a helper function to set the status code.
 func RenderStatusCode(err error) RenderOpt {
-	return func(h *Htmx) {
+	return func(h *hx) {
 		var e *fiber.Error
 		ok := errors.As(err, &e)
 		if !ok {
 			e = fiber.NewError(fiber.StatusInternalServerError, fmt.Sprint("%w", err))
 		}
 
-		h.Ctx().Status(e.Code)
-	}
-}
-
-// RenderComp is a helper function to render a component.
-func (h *Htmx) RenderComp(n Node, opt ...RenderOpt) error {
-	for _, o := range opt {
-		o(h)
-	}
-
-	return n.Render(h)
-}
-
-// WriteString is a helper function to write a string.
-func (h *Htmx) WriteString(s string) (n int, err error) {
-	return h.ctx.WriteString(s)
-}
-
-// StopPolling ...
-func (h *Htmx) StopPolling() error {
-	return h.ctx.SendStatus(StatusStopPolling)
-}
-
-// Ctx returns the fiber context.
-func (h *Htmx) Ctx() *fiber.Ctx {
-	return h.ctx
-}
-
-// Redirect is a helper function to redirect the client.
-func (h *Htmx) Redirect(url string) {
-	h.ctx.Set(HXRedirect.String(), url)
-}
-
-// ReplaceURL is a helper function to replace the current URL.
-func (h *Htmx) ReplaceURL(url string) {
-	h.ctx.Set(HXReplaceUrl.String(), url)
-}
-
-// ReSwap ...
-func (h *Htmx) ReSwap(target string) {
-	h.ctx.Set(HXReswap.String(), target)
-}
-
-// ReTarget ...
-func (h *Htmx) ReTarget(target string) {
-	h.ctx.Set(HXRetarget.String(), target)
-}
-
-// ReSelect ...
-func (h *Htmx) ReSelect(target string) {
-	h.ctx.Set(HXReselect.String(), target)
-}
-
-// Trigger ...
-func (h *Htmx) Trigger(target string) {
-	h.ctx.Set(HXTrigger.String(), target)
-}
-
-// HtmxHandler ...
-type HtmxHandlerFunc = func(hx *Htmx) error
-
-// NewHtmxHandler returns a new htmx handler.
-func NewHtmxHandler(handler HtmxHandlerFunc, config ...Config) fiber.Handler {
-	cfg := configDefault(config...)
-
-	return func(c *fiber.Ctx) error {
-		if cfg.Next != nil && cfg.Next(c) {
-			return c.Next()
-		}
-
-		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
-
-		c = ContextWithHx(c)
-		hx := HxFromContext(c)
-
-		h := &Htmx{
-			request: hx,
-			ctx:     c,
-		}
-
-		err := handler(h)
-		if err != nil {
-			return cfg.ErrorHandler(c, err)
-		}
-
-		return nil
+		h.ctx.Status(e.Code)
 	}
 }
 
@@ -546,21 +411,15 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
 
 		c = ContextWithHx(c)
-		hx := HxFromContext(c)
-
-		h := &Htmx{
-			request: hx,
-			ctx:     c,
-		}
 
 		for _, f := range cfg.Filters {
-			err = f(h)
+			err = f(c)
 			if err != nil {
 				return ctrl.Error(err)
 			}
 		}
 
-		err = ctrl.Init(h)
+		err = ctrl.Init(c)
 		if err != nil {
 			return ctrl.Error(err)
 		}
@@ -601,13 +460,6 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 		}
 
 		return nil
-	}
-}
-
-// ControllerErrorHandler is a helper type for controller error handlers.
-func ControllerErrorHandler(ctrl Controller) fiber.ErrorHandler {
-	return func(c *fiber.Ctx, err error) error {
-		return ctrl.Error(err)
 	}
 }
 
