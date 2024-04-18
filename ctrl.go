@@ -1,6 +1,7 @@
 package htmx
 
 import (
+	"context"
 	"sync"
 
 	"github.com/gofiber/fiber/v2"
@@ -159,6 +160,11 @@ func (c *DefaultController) Path() string {
 // Hx is a helper function to get the htmx from the context.
 func (c *DefaultController) Hx() Hx {
 	return HxFromContext(c.ctx)
+}
+
+// Context returns the context.
+func (c *DefaultController) Context() context.Context {
+	return c.ctx.Context()
 }
 
 // BindValues binds the values to the context.
