@@ -167,6 +167,11 @@ func (c *DefaultController) Context() context.Context {
 	return c.ctx.Context()
 }
 
+// Ctx returns the fiber.Ctx.
+func (c *DefaultController) Ctx() *fiber.Ctx {
+	return c.ctx
+}
+
 // BindValues binds the values to the context.
 func (c *DefaultController) BindValues(funcs ...BindFunc) error {
 	var wg sync.WaitGroup
