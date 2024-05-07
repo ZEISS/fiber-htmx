@@ -1,6 +1,7 @@
 module github.com/zeiss/fiber-htmx
 
 go 1.21.6
+toolchain go1.22.2
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.4
@@ -9,7 +10,7 @@ require (
 	github.com/katallaxie/pkg v0.6.5
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.9.0
-	github.com/zeiss/fiber-authz v1.0.18
+	github.com/zeiss/fiber-authz v1.0.19
 	mvdan.cc/gofumpt v0.6.0
 )
 
@@ -147,7 +148,7 @@ require (
 	github.com/nunnatsa/ginkgolinter v0.16.2 // indirect
 	github.com/oapi-codegen/fiber-middleware v1.0.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/openfga/go-sdk v0.3.5 // indirect
+	github.com/openfga/go-sdk v0.3.6 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

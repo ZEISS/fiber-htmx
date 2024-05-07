@@ -322,8 +322,8 @@ github.com/onsi/ginkgo/v2 v2.15.0 h1:79HwNRBAZHOEwrczrgSOPy+eFTTlIGELKy5as+ClttY
 github.com/onsi/ginkgo/v2 v2.15.0/go.mod h1:HlxMHtYF57y6Dpf+mc5529KKmSq9h2FpCF+/ZkwUxKM=
 github.com/onsi/gomega v1.31.1 h1:KYppCUK+bUgAZwHOu7EXVBKyQA6ILvOESHkn/tgoqvo=
 github.com/onsi/gomega v1.31.1/go.mod h1:y40C95dwAD1Nz36SsEnxvfFe8FFfNxzI5eJ0EYGyAy0=
-github.com/openfga/go-sdk v0.3.5 h1:KQXhMREh+g/K7HNuZ/YmXuHkREkq0VMKteua4bYr3Uw=
-github.com/openfga/go-sdk v0.3.5/go.mod h1:u1iErzj5E9/bhe+8nsMv0gigcYbJtImcdgcE5DmpbBg=
+github.com/openfga/go-sdk v0.3.6 h1:uvU1Jbg58vfpB8FoMSHeIzuCSu7SkHGVMJLhHE5PbZ0=
+github.com/openfga/go-sdk v0.3.6/go.mod h1:t2iDiGuJtdyjvMHzkxDsbWbCWOLlVMViPKrU7Sau4K8=
 github.com/otiai10/copy v1.2.0/go.mod h1:rrF5dJ5F0t/EWSYODDu4j9/vEeYHMkc8jt0zJChqQWw=
 github.com/otiai10/copy v1.14.0 h1:dCI/t1iTdYGtkvCuBG2BgR6KZa83PTclw4U5n2wAllU=
 github.com/otiai10/copy v1.14.0/go.mod h1:ECfuL02W+/FkTWZWgQqXPWZgW9oeKCSQ5qVfSc4qc4w=
@@ -479,8 +479,8 @@ github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9dec
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 github.com/yuin/goldmark v1.4.1/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
-github.com/zeiss/fiber-authz v1.0.18 h1:FCCEQpuzscFFGKe2JkgCqcj0746WHtgUaGp/+xYVOoc=
-github.com/zeiss/fiber-authz v1.0.18/go.mod h1:GailjmQkt1qRGfmifUmFNV98cOSiSq+clSU5BlGrnzI=
+github.com/zeiss/fiber-authz v1.0.19 h1:dRdcD8ddhqC9J3jBjzUQ/kiCVscEmcYCw1Pt69Fcjn0=
+github.com/zeiss/fiber-authz v1.0.19/go.mod h1:d06djLv3OYmDgexnP0mvu7MAyqQbpjRurm/kzNgt6BU=
 github.com/zeiss/fiber-goth v1.2.0 h1:7FWojoA7FAgI5MTkO3s44igkVW9WKSLWIgS3ewFXmMA=
 github.com/zeiss/fiber-goth v1.2.0/go.mod h1:ALeKuUS2Pw7mJOSD7v7rgH86cR/05PwAXrdwK0haoxc=
 gitlab.com/bosi/decorder v0.4.2 h1:qbQaV3zgwnBZ4zPMhGLW4KZe7A7NwxEhJx39R3shffo=
