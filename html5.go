@@ -4,6 +4,8 @@ import (
 	"io"
 	"sort"
 	"strings"
+
+	"golang.org/x/exp/maps"
 )
 
 // HTML5Props represents the properties for an HTML5 document.
@@ -52,6 +54,13 @@ const (
 // ClassNames represents a set of class names.
 type ClassNames map[string]bool
 
+// Copy is copying all class names from the src to dst.
+func (c ClassNames) Copy(src ...ClassNames) {
+	for _, s := range src {
+		maps.Copy(c, s)
+	}
+}
+
 // Merge merges the provided class names into the class names.
 func (c ClassNames) Merge(classNames ClassNames) ClassNames {
 	for className, include := range classNames {
@@ -63,16 +72,18 @@ func (c ClassNames) Merge(classNames ClassNames) ClassNames {
 
 // Render writes the class names to the provided writer.
 func (c ClassNames) Render(w io.Writer) error {
-	var included []string
-	for c, include := range c {
-		if include {
-			included = append(included, c)
+	classes := make([]string, 0, len(c))
+
+	for class, ok := range c {
+		if !ok {
+			continue
 		}
+		classes = append(classes, strings.TrimSpace(class))
 	}
 
-	sort.Strings(included)
+	sort.Strings(classes)
 
-	return Class(strings.Join(included, " ")).Render(w)
+	return Class(strings.Join(classes, " ")).Render(w)
 }
 
 // Type returns the node type of the ClassNames.

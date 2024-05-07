@@ -4,13 +4,12 @@ package htmx
 type HxExtType string
 
 const (
-	HxExtAlpineMorph         HxExtType = "alpine-morph"
-	HxExtClassTools          HxExtType = "class-tools"
-	HxExtClientSideTemplates HxExtType = "client-side-templates"
-	HxExtIgnoreDebug         HxExtType = "ignore:debug"
-	HxExtJSON                HxExtType = "json-enc"
-	HxExtMultiSwap           HxExtType = "multi-swap"
-	HxExtPathDeps            HxExtType = "path-deps"
+	HxExtClassTools          HxExtType = "class-tools"           // The class-tools extension allows you to add and remove classes from elements.
+	HxExtClientSideTemplates HxExtType = "client-side-templates" // The client-side-templates extension allows you to use client-side templates to render the response.
+	HxExtIgnoreDebug         HxExtType = "ignore:debug"          // The ignore:debug extension allows you to ignore the debug header.
+	HxExtJSON                HxExtType = "json-enc"              // The json-enc extension allows you to specify the JSON encoding for the response.
+	HxExtMultiSwap           HxExtType = "multi-swap"            // The multi-swap extension allows you to swap multiple elements in a single response.
+	HxExtPathDeps            HxExtType = "path-deps"             // The path-deps extension allows you to specify the dependencies for a path.
 )
 
 // String returns the string representation of the htmx extension type.
