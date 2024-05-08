@@ -11,7 +11,7 @@ require (
 	github.com/katallaxie/pkg v0.6.5
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.9.0
-	github.com/zeiss/fiber-authz v1.0.19
+	github.com/zeiss/fiber-authz v1.0.23
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc
 	mvdan.cc/gofumpt v0.6.0
 )
