@@ -88,6 +88,16 @@ func Test_ClassNames(t *testing.T) {
 	}
 }
 
+func Benchmark_ClassNames_Render(b *testing.B) {
+	c := htmx.ClassNames{"foo": true, "bar": true}
+
+	for i := 0; i < b.N; i++ {
+		var buf bytes.Buffer
+		err := c.Render(&buf)
+		require.NoError(b, err)
+	}
+}
+
 func Test_ClassNames_Render(t *testing.T) {
 	t.Parallel()
 

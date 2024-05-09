@@ -1,12 +1,10 @@
 package htmx_test
 
 import (
-	"bytes"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/internal/assert"
 )
 
 func Test_Async(t *testing.T) {
@@ -24,14 +22,8 @@ func Test_Async(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			var b bytes.Buffer
-
 			a := htmx.Async()
-			assert.NotNil(t, a)
-
-			err := a.Render(&b)
-			require.NoError(t, err)
-			assert.Equal(t, test.want, b.String())
+			assert.Equal(t, test.want, a)
 		})
 	}
 }
@@ -51,14 +43,8 @@ func Test_AutoFocus(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			var b bytes.Buffer
-
 			a := htmx.AutoFocus()
-			assert.NotNil(t, a)
-
-			err := a.Render(&b)
-			require.NoError(t, err)
-			assert.Equal(t, test.want, b.String())
+			assert.Equal(t, test.want, a)
 		})
 	}
 }

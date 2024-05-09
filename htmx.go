@@ -138,32 +138,62 @@ type Hx interface {
 
 // Redirect is a helper function to redirect the client.
 func (h *hx) Redirect(url string) {
-	h.ctx.Set(HXRedirect.String(), url)
+	HxRedirect(h.ctx, url)
+}
+
+// HxRedirect is a helper function to redirect the client.
+func HxRedirect(c *fiber.Ctx, url string) {
+	c.Set(HXRedirect.String(), url)
 }
 
 // ReplaceURL is a helper function to replace the current URL.
 func (h *hx) ReplaceURL(url string) {
-	h.ctx.Set(HXReplaceUrl.String(), url)
+	HxReplaceURL(h.ctx, url)
 }
 
-// ReSwap ...
+// HxReplaceURL is a helper function to replace the current URL.
+func HxReplaceURL(c *fiber.Ctx, url string) {
+	c.Set(HXReplaceUrl.String(), url)
+}
+
+// ReSwap is a helper function to swap the response.
 func (h *hx) ReSwap(target string) {
-	h.ctx.Set(HXReswap.String(), target)
+	HxReSwap(h.ctx, target)
 }
 
-// ReTarget ...
+// HxReSwap is a helper function to swap the response.
+func HxReSwap(c *fiber.Ctx, target string) {
+	c.Set(HXReswap.String(), target)
+}
+
+// ReTarget is a helper function to retarget the response.
 func (h *hx) ReTarget(target string) {
-	h.ctx.Set(HXRetarget.String(), target)
+	HxReTarget(h.ctx, target)
 }
 
-// ReSelect ...
+// HxReTarget is a helper function to retarget the response.
+func HxReTarget(c *fiber.Ctx, target string) {
+	c.Set(HXRetarget.String(), target)
+}
+
+// ReSelect is a helper function to reselect the response.
 func (h *hx) ReSelect(target string) {
-	h.ctx.Set(HXReselect.String(), target)
+	HxReSelect(h.ctx, target)
 }
 
-// Trigger ...
+// HxReSelect is a helper function to reselect the response.
+func HxReSelect(c *fiber.Ctx, target string) {
+	c.Set(HXReselect.String(), target)
+}
+
+// Trigger is a helper function to trigger an event.
 func (h *hx) Trigger(target string) {
-	h.ctx.Set(HXTrigger.String(), target)
+	HxTriggers(h.ctx, target)
+}
+
+// HxTriggers is a helper function to trigger an event.
+func HxTriggers(c *fiber.Ctx, target string) {
+	c.Set(HXTrigger.String(), target)
 }
 
 type hx struct {
@@ -172,17 +202,32 @@ type hx struct {
 
 // HxBoosted returns true if the request is boosted.
 func (h *hx) HxBoosted() bool {
-	return AsBool(h.ctx.Get(HxRequestHeaderBoosted.String()))
+	return HxBoosted(h.ctx)
+}
+
+// HxBoosted returns true if the request is boosted.
+func HxBoosted(c *fiber.Ctx) bool {
+	return AsBool(c.Get(HxRequestHeaderBoosted.String()))
 }
 
 // HxCurrentURL returns the current URL.
 func (h *hx) HxCurrentURL() string {
-	return h.ctx.Get(HxRequestHeaderCurrentURL.String())
+	return HxCurrentURL(h.ctx)
+}
+
+// HxCurrentURL returns the current URL.
+func HxCurrentURL(c *fiber.Ctx) string {
+	return c.Get(HxRequestHeaderCurrentURL.String())
 }
 
 // HxHistoryRestoreRequest returns true if the request is a history restore request.
 func (h *hx) HxHistoryRestoreRequest() bool {
-	return AsBool(h.ctx.Get(HxRequestHeaderHistoryRestoreRequest.String()))
+	return HxHistoryRestoreRequest(h.ctx)
+}
+
+// HxHistoryRestoreRequest returns true if the request is a history restore request.
+func HxHistoryRestoreRequest(c *fiber.Ctx) bool {
+	return AsBool(c.Get(HxRequestHeaderHistoryRestoreRequest.String()))
 }
 
 // HxPrompt returns the prompt.
@@ -192,7 +237,12 @@ func (h *hx) HxPrompt() string {
 
 // HxRequest returns true if the request is an htmx request.
 func (h *hx) HxRequest() bool {
-	return AsBool(h.ctx.Get(HxRequestHeaderRequest.String()))
+	return HxRequest(h.ctx)
+}
+
+// HxRequest returns true if the request is an htmx request.
+func HxRequest(c *fiber.Ctx) bool {
+	return AsBool(c.Get(HxRequestHeaderRequest.String()))
 }
 
 // HxTarget returns the target.
@@ -212,7 +262,12 @@ func (h *hx) HxTrigger() string {
 
 // RenderPartial returns true if the request is an htmx request.
 func (h *hx) RenderPartial() bool {
-	return (h.HxRequest() || h.HxBoosted()) && !h.HxHistoryRestoreRequest()
+	return RenderPartial(h.ctx)
+}
+
+// RenderPartial returns true if the request is an htmx request.
+func RenderPartial(c *fiber.Ctx) bool {
+	return (HxRequest(c) || HxBoosted(c)) && !HxHistoryRestoreRequest(c)
 }
 
 // Write writes a response.
@@ -244,16 +299,26 @@ func (h *hx) WriteJSON(data any) (n int, err error) {
 
 // RenderComp is a helper function to render a component.
 func (h *hx) RenderComp(n Node, opt ...RenderOpt) error {
-	for _, o := range opt {
-		o(h)
-	}
-
-	return n.Render(h)
+	return RenderComp(h.ctx, n, opt...)
 }
 
-// StopPolling ...
+// RenderComp is a helper function to render a component.
+func RenderComp(c *fiber.Ctx, n Node, opt ...RenderOpt) error {
+	for _, o := range opt {
+		o(c)
+	}
+
+	return n.Render(c)
+}
+
+// StopPolling is a helper function to stop polling.
 func (h *hx) StopPolling() error {
-	return h.ctx.SendStatus(StatusStopPolling)
+	return StopPolling(h.ctx)
+}
+
+// StopPolling is a helper function to stop polling.
+func StopPolling(c *fiber.Ctx) error {
+	return c.SendStatus(StatusStopPolling)
 }
 
 // NewHx returns a new htmx request.
@@ -324,18 +389,18 @@ func New(config ...Config) fiber.Handler {
 }
 
 // RenderOpt is helper function to configure the render.
-type RenderOpt func(h *hx)
+type RenderOpt func(c *fiber.Ctx)
 
 // RenderStatusCode is a helper function to set the status code.
 func RenderStatusCode(err error) RenderOpt {
-	return func(h *hx) {
+	return func(c *fiber.Ctx) {
 		var e *fiber.Error
 		ok := errors.As(err, &e)
 		if !ok {
 			e = fiber.NewError(fiber.StatusInternalServerError, fmt.Sprint("%w", err))
 		}
 
-		h.ctx.Status(e.Code)
+		c.Status(e.Code)
 	}
 }
 
