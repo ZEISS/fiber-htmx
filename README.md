@@ -8,20 +8,18 @@
 
 A Go package to write HTML5 and HTMX components in Go. The package is designed to work with [fiber](http://gofiber.io) and [htmx](https://htmx.org/).
 
-## Installation
+## Features
 
-```bash
-$ go get github.com/zeiss/fiber-htmx
-```
+- Write declartive HTML5 components in Go without using templates and with the full-power of a type-safe language, auto-completion, and refactoring.
+- Full support for HTMX components.
+- No dependencies on JavaScript frameworks.
+- Fast rendering of HTML5 and HTMX components.
+- Easy to use and learn.
+- Easy to extend and customize.
 
-## Components
+### Example
 
-- [x] [htmx](https://htmx.org/)
-- [x] [HTML5](https://www.w3.org/TR/2011/WD-html5-20110405/)
-- [ ] [DaisyUI](https://daisyui.com/) (WIP)
-- [ ] [Heroicons](https://heroicons.com/) (WIP)
-
-The package supports to write HTML5 components and HTMX components in Go.
+Creating a button leveraging htmx is as easy as this.
 
 ```go
 htmx.Button(
@@ -31,6 +29,21 @@ htmx.Button(
 )
 ```
 
+## Installation
+
+```bash
+$ go get github.com/zeiss/fiber-htmx
+```
+
+## Components
+
+There are additional components that help to write HTML5 and HTMX components in Go.
+
+- [x] [htmx](https://htmx.org/)
+- [x] [HTML5](https://www.w3.org/TR/2011/WD-html5-20110405/)
+- [ ] [DaisyUI](https://daisyui.com/) (WIP)
+- [ ] [Heroicons](https://heroicons.com/) (WIP)
+
 There is also the option to use `htmx.Controller` to encapsulate the logic of the components.
 
 ```go
@@ -39,8 +52,9 @@ type HelloWorldController struct {
 }
 
 func (c *HelloWorldController) Get() error {
-    return c.Hx.RenderComp(
-        htmx.HTML5(
+    return htmx.RenderComp(
+		c.Ctx(),
+		htmx.HTML5(
             c.Hx,
             htmx.HTML5Props{
                 Title:    "index",

@@ -20,7 +20,7 @@ func Range(nodes ...Node) RangeLoop {
 	return &rangeLoop{nodes: []Node{}, src: nodes}
 }
 
-// Nodes returns the nodes.
+// Group returns the nodes as a group.
 func (r *rangeLoop) Group() Node {
 	return Group(r.nodes...)
 }
@@ -46,11 +46,11 @@ func (r *rangeLoop) Map(f func(int) Node) RangeLoop {
 }
 
 // Filter loops and filters the content.
-func Filter(f func(i int) bool, children ...Node) []Node {
+func Filter(f func(n Node) bool, children ...Node) []Node {
 	var nodes []Node
-	for i, n := range children {
-		if f(i) {
-			nodes = append(nodes, n)
+	for i := 0; i < len(children); i++ {
+		if f(children[i]) {
+			nodes = append(nodes, children[i])
 		}
 	}
 
@@ -61,7 +61,7 @@ func Filter(f func(i int) bool, children ...Node) []Node {
 func Map(f func(i int) Node, children ...Node) []Node {
 	nodes := make([]Node, len(children))
 
-	for i := range children {
+	for i := 0; i < len(children); i++ {
 		nodes[i] = f(i)
 	}
 
@@ -69,7 +69,7 @@ func Map(f func(i int) Node, children ...Node) []Node {
 }
 
 // Reduce reduces the content to a single node.
-func Reduce(f func(Node, Node) Node, children ...Node) Node {
+func Reduce(f func(prev Node, next Node) Node, children ...Node) Node {
 	if len(children) == 0 {
 		return nil
 	}

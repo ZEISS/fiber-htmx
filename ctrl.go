@@ -33,6 +33,8 @@ type Controller interface {
 	Head() error
 	// Error is called when an error occurs.
 	Error(err error) error
+	// Ctx returns the fiber.Ctx.
+	Ctx() *fiber.Ctx
 }
 
 var _ Controller = (*DefaultController)(nil)

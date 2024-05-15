@@ -133,7 +133,8 @@ func (c *exampleController) Error(err error) error {
 }
 
 func (c *exampleController) Get() error {
-	return c.Hx().RenderComp(
+	return htmx.RenderComp(
+		c.Ctx(),
 		htmx.HTML5(
 			htmx.HTML5Props{
 				Title:    "index",
