@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"sync"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/katallaxie/pkg/utils"
@@ -27,6 +28,41 @@ func Locals[V any](c *fiber.Ctx, key any, value ...V) V {
 	}
 
 	return v
+}
+
+// ResolveFunc is a function that returns a context.
+type ResolveFunc func(ctx *fiber.Ctx) (any, any, error)
+
+// Bind is a function that returns a BindFactory.
+func Resolve(ctx *fiber.Ctx, funcs ...ResolveFunc) error {
+	c := struct {
+		wg      sync.WaitGroup
+		errOnce sync.Once
+		err     error
+	}{}
+
+	for _, f := range funcs {
+		f := f
+
+		c.wg.Add(1)
+		go func() {
+			defer c.wg.Done()
+
+			k, v, err := f(ctx)
+			if err != nil {
+				c.errOnce.Do(func() {
+					c.err = err
+				})
+				return
+			}
+
+			ctx.Locals(k, v)
+		}()
+	}
+
+	c.wg.Wait()
+
+	return c.err
 }
 
 const (
@@ -358,6 +394,9 @@ type Config struct {
 	// Filters is a list of filters that filter the context.
 	Filters []FilterFunc
 
+	// Resolvers is a list of resolvers that resolve the context.
+	Resolvers []ResolveFunc
+
 	// ErrorHandler is executed when an error is returned from fiber.Handler.
 	//
 	// Optional. Default: DefaultErrorHandler
@@ -368,6 +407,7 @@ type Config struct {
 var ConfigDefault = Config{
 	ErrorHandler: defaultErrorHandler,
 	Filters:      []FilterFunc{},
+	Resolvers:    []ResolveFunc{},
 }
 
 // default ErrorHandler that process return error from fiber.Handler
@@ -475,6 +515,11 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 
 		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
 
+		err = Resolve(c, cfg.Resolvers...)
+		if err != nil {
+			return ctrl.Error(err)
+		}
+
 		c = ContextWithHx(c)
 
 		for _, f := range cfg.Filters {
@@ -543,6 +588,10 @@ func configDefault(config ...Config) Config {
 
 	if cfg.Filters == nil {
 		cfg.Filters = ConfigDefault.Filters
+	}
+
+	if cfg.Resolvers == nil {
+		cfg.Resolvers = ConfigDefault.Resolvers
 	}
 
 	return cfg

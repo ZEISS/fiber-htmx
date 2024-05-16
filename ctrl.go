@@ -2,7 +2,6 @@ package htmx
 
 import (
 	"context"
-	"sync"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -52,9 +51,6 @@ func NewDefaultController() *DefaultController {
 type DefaultController struct {
 	ctx *fiber.Ctx
 }
-
-// BindFunc is a function that returns a context.
-type BindFunc func(ctx *fiber.Ctx) (any, any, error)
 
 // Init is called when the controller is initialized.
 func (c *DefaultController) Init(ctx *fiber.Ctx) error {
@@ -172,37 +168,6 @@ func (c *DefaultController) Context() context.Context {
 // Ctx returns the fiber.Ctx.
 func (c *DefaultController) Ctx() *fiber.Ctx {
 	return c.ctx
-}
-
-// BindValues binds the values to the context.
-func (c *DefaultController) BindValues(funcs ...BindFunc) error {
-	var wg sync.WaitGroup
-	var errOnce sync.Once
-	var err error
-
-	for _, f := range funcs {
-		f := f
-
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-
-			k, v, errr := f(c.ctx)
-			if errr != nil {
-				errOnce.Do(func() {
-					err = errr
-				})
-			}
-
-			if errr == nil {
-				c.ctx.Locals(k, v)
-			}
-		}()
-	}
-
-	wg.Wait()
-
-	return err
 }
 
 // Reset resets the controller.
