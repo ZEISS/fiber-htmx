@@ -114,7 +114,8 @@ type exampleController struct {
 }
 
 func (c *exampleController) Error(err error) error {
-	return c.Hx().RenderComp(
+	return htmx.RenderComp(
+		c.Ctx(),
 		htmx.HTML5(
 			htmx.HTML5Props{
 				Title:    "error",

@@ -55,7 +55,6 @@ func (c *HelloWorldController) Get() error {
     return htmx.RenderComp(
 		c.Ctx(),
 		htmx.HTML5(
-            c.Hx,
             htmx.HTML5Props{
                 Title:    "index",
                 Language: "en",
@@ -70,7 +69,7 @@ func (c *HelloWorldController) Get() error {
 }
 
 app := fiber.New()
-app.Get("/", htmx.ControllerHandler(&HelloWorldController{}))
+app.Get("/", htmx.NewHxControllerHandler(&HelloWorldController{}))
 
 app.Listen(":3000")
 ```
