@@ -1,6 +1,7 @@
 package htmx
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -23,6 +24,19 @@ func Locals[V any](c *fiber.Ctx, key any, value ...V) V {
 		v, ok = c.Locals(key).(V)
 	}
 
+	if !ok {
+		return utils.Zero[V]()
+	}
+
+	return v
+}
+
+// Values is a helper type for user context.
+func Values[V any](ctx context.Context, key any) V {
+	var v V
+	var ok bool
+
+	v, ok = ctx.Value(key).(V)
 	if !ok {
 		return utils.Zero[V]()
 	}
@@ -55,8 +69,7 @@ func Resolve(ctx *fiber.Ctx, funcs ...ResolveFunc) error {
 				})
 				return
 			}
-
-			ctx.Locals(k, v)
+			ctx.SetUserContext(context.WithValue(ctx.UserContext(), k, v))
 		}()
 	}
 
