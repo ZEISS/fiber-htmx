@@ -16,6 +16,7 @@ func Navbar(props NavbarProps, children ...htmx.Node) htmx.Node {
 				"navbar":      true,
 				"bg-base-100": true,
 			},
+			props.ClassNames,
 		),
 		htmx.Group(children...),
 	)
@@ -33,6 +34,7 @@ func NavbarStart(props NavbarStartProps, children ...htmx.Node) htmx.Node {
 			htmx.ClassNames{
 				"navbar-start": true,
 			},
+			props.ClassNames,
 		),
 		htmx.Group(children...),
 	)
@@ -50,6 +52,7 @@ func NavbarCenter(props NavbarCenterProps, children ...htmx.Node) htmx.Node {
 			htmx.ClassNames{
 				"navbar-center": true,
 			},
+			props.ClassNames,
 		),
 		htmx.Group(children...),
 	)
