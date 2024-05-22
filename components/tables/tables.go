@@ -286,6 +286,7 @@ func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
 				"space-y-4": true,
 			},
 		),
+		p.Toolbar,
 		htmx.Div(
 			htmx.Merge(),
 			htmx.Table(
