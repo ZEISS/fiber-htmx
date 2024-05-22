@@ -98,8 +98,8 @@ func HxPut(url string) Node {
 	return Attribute("hx-put", url)
 }
 
-// HxPath sets the hx-patch attribute to specify the URL for PATCH requests.
-func HxPath(url string) Node {
+// HxPatch sets the hx-patch attribute to specify the URL for PATCH requests.
+func HxPatch(url string) Node {
 	return Attribute("hx-patch", url)
 }
 

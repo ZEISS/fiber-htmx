@@ -255,7 +255,7 @@ func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 }
 
 // NewHxControllerHandler returns a new htmx controller handler.
-// deprecated: use NewControllerHandler instead.
+// Deprecated: use NewControllerHandler instead.
 func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 	return NewControllerHandler(ctrl, config...)
 }
