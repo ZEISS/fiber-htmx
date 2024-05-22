@@ -335,3 +335,50 @@ func Glass(props ButtonProps, children ...htmx.Node) htmx.Node {
 		htmx.Group(children...),
 	)
 }
+
+// Circle generates a circle button element based on the provided properties.
+func Circle(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return htmx.Button(
+		htmx.Merge(
+			htmx.ClassNames{
+				"btn":        true,
+				"btn-square": true,
+			},
+			props.ClassNames,
+		),
+		htmx.Attribute("type", props.Type),
+		htmx.If(props.Disabled, htmx.Disabled()),
+		htmx.Group(children...),
+	)
+}
+
+// CircleSmall generates a small circle button element based on the provided properties.
+func CircleSmall(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return Circle(
+		ButtonProps{
+			ClassNames: htmx.Merge(
+
+				htmx.ClassNames{
+					"btn-sm": true,
+				},
+				props.ClassNames,
+			),
+		},
+		children...,
+	)
+}
+
+// CircleMedium generates a medium circle button element based on the provided properties.
+func CircleMedium(props ButtonProps, children ...htmx.Node) htmx.Node {
+	return Circle(
+		ButtonProps{
+			ClassNames: htmx.Merge(
+				htmx.ClassNames{
+					"btn-md": true,
+				},
+				props.ClassNames,
+			),
+		},
+		children...,
+	)
+}

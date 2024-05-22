@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/avatars"
+	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/drawers"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
@@ -147,6 +148,7 @@ func (c *exampleController) Get() error {
 				},
 			},
 			htmx.Body(
+				htmx.HxBoost(true),
 				htmx.Div(
 					htmx.ClassNames{},
 					drawers.Drawer(
@@ -206,6 +208,12 @@ func (c *exampleController) Get() error {
 										),
 										navbars.NavbarEnd(
 											navbars.NavbarEndProps{},
+											buttons.CircleSmall(
+												buttons.ButtonProps{},
+												icons.BetllAlertOutlineSmall(
+													icons.IconProps{},
+												),
+											),
 											dropdowns.Dropdown(
 												dropdowns.DropdownProps{
 													ClassNames: htmx.ClassNames{
@@ -213,7 +221,13 @@ func (c *exampleController) Get() error {
 													},
 												},
 												dropdowns.DropdownButton(
-													dropdowns.DropdownButtonProps{},
+													dropdowns.DropdownButtonProps{
+														ClassNames: htmx.ClassNames{
+															"btn-sm":     true,
+															"btn-circle": true,
+															"btn-ghost":  true,
+														},
+													},
 													avatars.AvatarRoundSmall(
 														avatars.AvatarProps{},
 														htmx.Img(
