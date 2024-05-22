@@ -5,6 +5,7 @@ import htmx "github.com/zeiss/fiber-htmx"
 // SwapProps contains the properties for the swap component.
 type SwapProps struct {
 	ClassNames htmx.ClassNames
+	Value      string
 }
 
 // SwapOn is a component for the on state of the swap component.
@@ -16,6 +17,7 @@ func SwapOn(p SwapProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.Group(children...),
 	)
 }
 
@@ -28,6 +30,7 @@ func SwapOff(p SwapProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.Group(children...),
 	)
 }
 
@@ -39,9 +42,6 @@ func Swap(p SwapProps, children ...htmx.Node) htmx.Node {
 				"swap": true,
 			},
 			p.ClassNames,
-		),
-		htmx.Input(
-			htmx.Attribute("type", "checkbox"),
 		),
 		htmx.Group(children...),
 	)

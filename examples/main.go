@@ -21,6 +21,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/menus"
 	"github.com/zeiss/fiber-htmx/components/navbars"
+	"github.com/zeiss/fiber-htmx/components/swap"
 )
 
 // Config ...
@@ -208,9 +209,33 @@ func (c *exampleController) Get() error {
 										),
 										navbars.NavbarEnd(
 											navbars.NavbarEndProps{},
+											swap.Swap(
+												swap.SwapProps{
+													ClassNames: htmx.ClassNames{
+														"swap-rotate": true,
+													},
+												},
+												htmx.Input(
+													htmx.Class("theme-controller"),
+													htmx.Value("dark"),
+													htmx.Attribute("type", "checkbox"),
+												),
+												swap.SwapOn(
+													swap.SwapProps{},
+													icons.MoonOutlineSmall(
+														icons.IconProps{},
+													),
+												),
+												swap.SwapOff(
+													swap.SwapProps{},
+													icons.SunOutlineSmall(
+														icons.IconProps{},
+													),
+												),
+											),
 											buttons.CircleSmall(
 												buttons.ButtonProps{},
-												icons.BetllAlertOutlineSmall(
+												icons.BellAlertOutlineSmall(
 													icons.IconProps{},
 												),
 											),
