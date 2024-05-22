@@ -155,11 +155,6 @@ func (c *DefaultController) Path() string {
 	return c.ctx.Path()
 }
 
-// Hx is a helper function to get the htmx from the context.
-func (c *DefaultController) Hx() Hx {
-	return HxFromContext(c.ctx)
-}
-
 // Context returns the context.
 func (c *DefaultController) Context() context.Context {
 	return c.ctx.Context()

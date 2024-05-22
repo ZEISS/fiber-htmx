@@ -1,6 +1,7 @@
 package htmx_test
 
 import (
+	"context"
 	"testing"
 
 	htmx "github.com/zeiss/fiber-htmx"
@@ -44,6 +45,29 @@ func TestMerge(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equal(t, tt.out, htmx.Merge(tt.in...))
+		})
+	}
+}
+
+func Test_Values(t *testing.T) {
+	type contextKey int
+	const testKey contextKey = iota
+
+	tests := []struct {
+		name string
+		in   context.Context
+		out  interface{}
+	}{
+		{
+			name: "values",
+			in:   context.WithValue(context.Background(), testKey, "value"),
+			out:  "value",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.out, htmx.Values[string](tt.in, testKey))
 		})
 	}
 }

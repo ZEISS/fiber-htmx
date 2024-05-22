@@ -1,82 +1,12 @@
 package htmx
 
 import (
-	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
-	"sync"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/katallaxie/pkg/utils"
 )
-
-// Locals is a method that returns the local values.
-func Locals[V any](c *fiber.Ctx, key any, value ...V) V {
-	var v V
-	var ok bool
-
-	if len(value) > 0 {
-		v, ok = c.Locals(key, value).(V)
-	} else {
-		v, ok = c.Locals(key).(V)
-	}
-
-	if !ok {
-		return utils.Zero[V]()
-	}
-
-	return v
-}
-
-// Values is a helper type for user context.
-func Values[V any](ctx context.Context, key any) V {
-	var v V
-	var ok bool
-
-	v, ok = ctx.Value(key).(V)
-	if !ok {
-		return utils.Zero[V]()
-	}
-
-	return v
-}
-
-// ResolveFunc is a function that returns a context.
-type ResolveFunc func(ctx *fiber.Ctx) (any, any, error)
-
-// Bind is a function that returns a BindFactory.
-func Resolve(ctx *fiber.Ctx, funcs ...ResolveFunc) error {
-	c := struct {
-		wg      sync.WaitGroup
-		errOnce sync.Once
-		err     error
-	}{}
-
-	for _, f := range funcs {
-		f := f
-
-		c.wg.Add(1)
-		go func() {
-			defer c.wg.Done()
-
-			k, v, err := f(ctx)
-			if err != nil {
-				c.errOnce.Do(func() {
-					c.err = err
-				})
-				return
-			}
-			ctx.SetUserContext(context.WithValue(ctx.UserContext(), k, v))
-		}()
-	}
-
-	c.wg.Wait()
-
-	return c.err
-}
 
 const (
 	// StatusStopPolling is a helper status code to stop polling.
@@ -139,216 +69,79 @@ const (
 	HxRequestHeaderTriggerName           HxRequestHeader = "HX-Trigger-Name"
 )
 
-// Hx is an interface for htmx requests.
-type Hx interface {
-	// HxBoosted returns true if the request is boosted.
-	HxBoosted() bool
-	// HxCurrentURL returns the current URL.
-	HxCurrentURL() string
-	// HxHistoryRestoreRequest returns true if the request is a history restore request.
-	HxHistoryRestoreRequest() bool
-	// HxPrompt returns the prompt.
-	HxPrompt() string
-	// HxRequest returns true if the request is an htmx request.
-	HxRequest() bool
-	// HxTarget returns the target.
-	HxTarget() string
-	// HxTriggerName returns the trigger name.
-	HxTriggerName() string
-	// HxTrigger returns the trigger.
-	HxTrigger() string
-	// HxRenderPartial returns true if the request is an htmx request.
-	RenderPartial() bool
-	// Write writes a response.
-	Write(data []byte) (n int, err error)
-	// WriteHTML writes an HTML response.
-	WriteHTML(html template.HTML) (n int, err error)
-	// WriteJSON writes a JSON response.
-	WriteJSON(data any) (n int, err error)
-	// WriteString writes a string.
-	WriteString(s string) (n int, err error)
-	// RenderComp renders a component.
-	RenderComp(n Node, opt ...RenderOpt) error
-	// StopPolling stops polling.
-	StopPolling() error
-	// Redirect redirects the client.
-	Redirect(url string)
-	// ReplaceURL replaces the current URL.
-	ReplaceURL(url string)
-	// ReSwap ...
-	ReSwap(target string)
-	// ReTarget ...
-	ReTarget(target string)
-	// ReSelect ...
-	ReSelect(target string)
-	// Trigger ...
-	Trigger(target string)
-}
-
 // Redirect is a helper function to redirect the client.
-func (h *hx) Redirect(url string) {
-	HxRedirect(h.ctx, url)
-}
-
-// HxRedirect is a helper function to redirect the client.
-func HxRedirect(c *fiber.Ctx, url string) {
+func Redirect(c *fiber.Ctx, url string) {
 	c.Set(HXRedirect.String(), url)
 }
 
 // ReplaceURL is a helper function to replace the current URL.
-func (h *hx) ReplaceURL(url string) {
-	HxReplaceURL(h.ctx, url)
-}
-
-// HxReplaceURL is a helper function to replace the current URL.
-func HxReplaceURL(c *fiber.Ctx, url string) {
+func ReplaceURL(c *fiber.Ctx, url string) {
 	c.Set(HXReplaceUrl.String(), url)
 }
 
 // ReSwap is a helper function to swap the response.
-func (h *hx) ReSwap(target string) {
-	HxReSwap(h.ctx, target)
-}
-
-// HxReSwap is a helper function to swap the response.
-func HxReSwap(c *fiber.Ctx, target string) {
+func ReSwap(c *fiber.Ctx, target string) {
 	c.Set(HXReswap.String(), target)
 }
 
 // ReTarget is a helper function to retarget the response.
-func (h *hx) ReTarget(target string) {
-	HxReTarget(h.ctx, target)
-}
-
-// HxReTarget is a helper function to retarget the response.
-func HxReTarget(c *fiber.Ctx, target string) {
+func ReTarget(c *fiber.Ctx, target string) {
 	c.Set(HXRetarget.String(), target)
 }
 
 // ReSelect is a helper function to reselect the response.
-func (h *hx) ReSelect(target string) {
-	HxReSelect(h.ctx, target)
-}
-
-// HxReSelect is a helper function to reselect the response.
-func HxReSelect(c *fiber.Ctx, target string) {
+func ReSelect(c *fiber.Ctx, target string) {
 	c.Set(HXReselect.String(), target)
 }
 
-// Trigger is a helper function to trigger an event.
-func (h *hx) Trigger(target string) {
-	HxTriggers(h.ctx, target)
-}
-
-// HxTriggers is a helper function to trigger an event.
+// Triggers is a helper function to trigger an event.
 func HxTriggers(c *fiber.Ctx, target string) {
 	c.Set(HXTrigger.String(), target)
 }
 
-type hx struct {
-	ctx *fiber.Ctx
-}
-
-// HxBoosted returns true if the request is boosted.
-func (h *hx) HxBoosted() bool {
-	return HxBoosted(h.ctx)
-}
-
-// HxBoosted returns true if the request is boosted.
-func HxBoosted(c *fiber.Ctx) bool {
+// Boosted returns true if the request is boosted.
+func Boosted(c *fiber.Ctx) bool {
 	return AsBool(c.Get(HxRequestHeaderBoosted.String()))
 }
 
-// HxCurrentURL returns the current URL.
-func (h *hx) HxCurrentURL() string {
-	return HxCurrentURL(h.ctx)
-}
-
-// HxCurrentURL returns the current URL.
-func HxCurrentURL(c *fiber.Ctx) string {
+// CurrentURL returns the current URL.
+func CurrentURL(c *fiber.Ctx) string {
 	return c.Get(HxRequestHeaderCurrentURL.String())
 }
 
-// HxHistoryRestoreRequest returns true if the request is a history restore request.
-func (h *hx) HxHistoryRestoreRequest() bool {
-	return HxHistoryRestoreRequest(h.ctx)
-}
-
-// HxHistoryRestoreRequest returns true if the request is a history restore request.
-func HxHistoryRestoreRequest(c *fiber.Ctx) bool {
+// HistoryRestoreRequest returns true if the request is a history restore request.
+func HistoryRestoreRequest(c *fiber.Ctx) bool {
 	return AsBool(c.Get(HxRequestHeaderHistoryRestoreRequest.String()))
 }
 
-// HxPrompt returns the prompt.
-func (h *hx) HxPrompt() string {
-	return h.ctx.Get(HxRequestHeaderPrompt.String())
+// Prompt returns the prompt.
+func Prompt(c *fiber.Ctx) string {
+	return c.Get(HxRequestHeaderPrompt.String())
 }
 
-// HxRequest returns true if the request is an htmx request.
-func (h *hx) HxRequest() bool {
-	return HxRequest(h.ctx)
-}
-
-// HxRequest returns true if the request is an htmx request.
-func HxRequest(c *fiber.Ctx) bool {
+// Request returns true if the request is an htmx request.
+func Request(c *fiber.Ctx) bool {
 	return AsBool(c.Get(HxRequestHeaderRequest.String()))
 }
 
-// HxTarget returns the target.
-func (h *hx) HxTarget() string {
-	return h.ctx.Get(HxRequestHeaderTarget.String())
+// Targets is a helper function to get the target.
+func Targets(c *fiber.Ctx) string {
+	return c.Get(HxRequestHeaderTarget.String())
 }
 
-// HxTriggerName returns the trigger name.
-func (h *hx) HxTriggerName() string {
-	return h.ctx.Get(HxRequestHeaderTriggerName.String())
+// TriggerName is a helper function to get the trigger name.
+func TriggerName(c *fiber.Ctx) string {
+	return c.Get(HxRequestHeaderTriggerName.String())
 }
 
-// HxTrigger returns the trigger.
-func (h *hx) HxTrigger() string {
-	return h.ctx.Get(HxRequestHeaderTrigger.String())
-}
-
-// RenderPartial returns true if the request is an htmx request.
-func (h *hx) RenderPartial() bool {
-	return RenderPartial(h.ctx)
+// Trigger is a helper function to trigger an event.
+func Trigger(c *fiber.Ctx, target string) {
+	c.Set(HxRequestHeaderTrigger.String(), target)
 }
 
 // RenderPartial returns true if the request is an htmx request.
 func RenderPartial(c *fiber.Ctx) bool {
-	return (HxRequest(c) || HxBoosted(c)) && !HxHistoryRestoreRequest(c)
-}
-
-// Write writes a response.
-func (h *hx) Write(data []byte) (n int, err error) {
-	return h.ctx.Write(data)
-}
-
-// WriteString writes a string.
-func (h *hx) WriteString(s string) (n int, err error) {
-	return h.ctx.WriteString(s)
-}
-
-// WriteHTML writes an HTML response.
-func (h *hx) WriteHTML(html template.HTML) (n int, err error) {
-	return h.WriteString(string(html))
-}
-
-// WriteJSON writes a JSON response.
-func (h *hx) WriteJSON(data any) (n int, err error) {
-	payload, err := json.Marshal(data)
-	if err != nil {
-		return 0, err
-	}
-
-	h.ctx.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-
-	return h.Write(payload)
-}
-
-// RenderComp is a helper function to render a component.
-func (h *hx) RenderComp(n Node, opt ...RenderOpt) error {
-	return RenderComp(h.ctx, n, opt...)
+	return (Request(c) || Boosted(c)) && !HistoryRestoreRequest(c)
 }
 
 // RenderComp is a helper function to render a component.
@@ -361,40 +154,9 @@ func RenderComp(c *fiber.Ctx, n Node, opt ...RenderOpt) error {
 }
 
 // StopPolling is a helper function to stop polling.
-func (h *hx) StopPolling() error {
-	return StopPolling(h.ctx)
-}
-
-// StopPolling is a helper function to stop polling.
 func StopPolling(c *fiber.Ctx) error {
 	return c.SendStatus(StatusStopPolling)
 }
-
-// NewHx returns a new htmx request.
-func NewHx(c *fiber.Ctx) Hx {
-	return &hx{c}
-}
-
-// ContextWithHx ...
-func ContextWithHx(c *fiber.Ctx) *fiber.Ctx {
-	_ = c.Locals(htmxContext, NewHx(c))
-
-	return c
-}
-
-// HxFromContext is a helper function to get the htmx from the context.
-func HxFromContext(c *fiber.Ctx) Hx {
-	return Locals[Hx](c, htmxContext)
-}
-
-// The contextKey type is unexported to prevent collisions with context keys defined in
-// other packages.
-type contextKey int
-
-// The keys for the values in context
-const (
-	htmxContext contextKey = iota
-)
 
 // FilterFunc is a function that filters the context.
 type FilterFunc func(c *fiber.Ctx) error
@@ -426,19 +188,6 @@ var ConfigDefault = Config{
 // default ErrorHandler that process return error from fiber.Handler
 func defaultErrorHandler(_ *fiber.Ctx, _ error) error {
 	return fiber.ErrBadRequest
-}
-
-// New ...
-func New(config ...Config) fiber.Handler {
-	cfg := configDefault(config...)
-
-	return func(c *fiber.Ctx) error {
-		if cfg.Next != nil && cfg.Next(c) {
-			return c.Next()
-		}
-
-		return ContextWithHx(c).Next()
-	}
 }
 
 // RenderOpt is helper function to configure the render.
@@ -506,8 +255,14 @@ func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 }
 
 // NewHxControllerHandler returns a new htmx controller handler.
-// nolint:gocyclo
+// deprecated: use NewControllerHandler instead.
 func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
+	return NewControllerHandler(ctrl, config...)
+}
+
+// NewControllerHandler returns a new htmx controller handler.
+// nolint:gocyclo
+func NewControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
 	return func(c *fiber.Ctx) (err error) {
@@ -532,8 +287,6 @@ func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 		if err != nil {
 			return ctrl.Error(err)
 		}
-
-		c = ContextWithHx(c)
 
 		for _, f := range cfg.Filters {
 			err = f(c)
