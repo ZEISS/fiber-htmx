@@ -37,7 +37,69 @@ $ go get github.com/zeiss/fiber-htmx
 
 ## Components
 
-There are additional components that help to write HTML5 and HTMX components in Go.
+Write HTML5 and HTMX components in Go.
+
+```go
+func HelloWorld() htmx.Node {
+    return htmx.Div(
+        htmx.ClassNames{
+            "font-semibold",
+        },
+        htmx.Text("Hello World"),
+    )
+}
+```
+
+There are different types of composition. For example, passing children to a component.
+
+```go
+func HelloWorld(children ...htmx.Node) htmx.Node {
+    return htmx.Div(
+        htmx.ClassNames{
+            "font-semibold",
+        },
+        htmx.Text("Hello World"),
+        htmx.Div(
+            htmx.ClassNames{
+                "text-red-500",
+            },
+            htmx.Group(children...),
+        ),
+    )
+}
+```
+Styling of components is done with the `htmx.ClassNames` type.
+
+```go
+func HelloWorld() htmx.Node {
+    return htmx.Div(
+        htmx.ClassNames{
+            "font-semibold": true,
+            "text-red-500": true,
+        },
+        htmx.Text("Hello World"),
+    )
+}
+```
+
+There are also helpers to make the life with styling easier by merging classes.
+
+```go
+func HelloWorld(classes htmx.ClassNames) htmx.Node {
+    return htmx.Div(
+        htmx.Merge(
+            htmx.ClassNames{
+                "font-semibold",
+                "text-red-500",
+            },
+            classes,
+        )
+        htmx.Text("Hello World"),
+    )
+}
+```
+
+There are additional complex components that help to write HTML5 and HTMX components in Go.
 
 - [x] [htmx](https://htmx.org/)
 - [x] [HTML5](https://www.w3.org/TR/2011/WD-html5-20110405/)
