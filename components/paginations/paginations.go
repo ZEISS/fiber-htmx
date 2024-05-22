@@ -11,11 +11,11 @@ var DefaultLimits = []int{10, 25, 50, 100}
 
 // PaginationProps is a struct that contains the properties of a pagination
 type PaginationProps struct {
-	ClassName htmx.ClassNames
-	Total     int
-	Offset    int
-	Limit     int
-	URL       string
+	ClassNames htmx.ClassNames
+	Total      int
+	Offset     int
+	Limit      int
+	URL        string
 }
 
 // Pagination ...
@@ -25,7 +25,7 @@ func Pagination(p PaginationProps, children ...htmx.Node) htmx.Node {
 			htmx.ClassNames{
 				"join": true,
 			},
-			p.ClassName,
+			p.ClassNames,
 		),
 		htmx.Group(children...),
 	)
@@ -64,8 +64,8 @@ func Next(p PaginationProps) htmx.Node {
 
 // SelectProps ...
 type SelectProps struct {
-	ClassName htmx.ClassNames
-	Limits    []int
+	ClassNames htmx.ClassNames
+	Limits     []int
 }
 
 // Select ...
@@ -80,7 +80,7 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 
 	return forms.Select(
 		forms.SelectProps{
-			ClassName: htmx.Merge(p.ClassName),
+			ClassNames: htmx.Merge(p.ClassNames),
 		},
 		options...,
 	)

@@ -16,12 +16,12 @@ var DefaultLimits = []int{5, 10, 25, 50}
 
 // PaginationProps is a struct that contains the properties of a pagination
 type PaginationProps struct {
-	ClassName htmx.ClassNames
-	Limit     int
-	Offset    int
-	Target    string
-	Total     int
-	URL       string
+	ClassNames htmx.ClassNames
+	Limit      int
+	Offset     int
+	Target     string
+	Total      int
+	URL        string
 }
 
 // Pagination ...
@@ -31,7 +31,7 @@ func Pagination(p PaginationProps, children ...htmx.Node) htmx.Node {
 			htmx.ClassNames{
 				"join": true,
 			},
-			p.ClassName,
+			p.ClassNames,
 		),
 		htmx.Group(children...),
 	)
@@ -126,7 +126,7 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 		htmx.HxBoost(true),
 		forms.Select(
 			forms.SelectProps{
-				ClassName: htmx.Merge(
+				ClassNames: htmx.Merge(
 					htmx.ClassNames{
 						"join-item":      true,
 						"input-bordered": true,
@@ -151,7 +151,7 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 
 // TableToolbarProps is a struct that contains the properties of a table toolbar
 type TableToolbarProps[R comparable] struct {
-	ClassName htmx.ClassNames
+	ClassNames htmx.ClassNames
 }
 
 // TableToolbar is a component that renders a table toolbar
@@ -161,7 +161,7 @@ func TableToolbar[R comparable](p TableToolbarProps[R], children ...htmx.Node) h
 			htmx.ClassNames{
 				"table-toolbar": true,
 			},
-			p.ClassName,
+			p.ClassNames,
 		),
 		htmx.Group(children...),
 	)
@@ -169,7 +169,7 @@ func TableToolbar[R comparable](p TableToolbarProps[R], children ...htmx.Node) h
 
 // TablePaginationProps is a struct that contains the properties of a table pagination
 type TablePaginationProps[R comparable] struct {
-	ClassName  htmx.ClassNames
+	ClassNames htmx.ClassNames
 	Pagination htmx.Node
 }
 
@@ -183,7 +183,7 @@ func TablePagination[R comparable](p TablePaginationProps[R], children ...htmx.N
 				"justify-between": true,
 				"px-2":            true,
 			},
-			p.ClassName,
+			p.ClassNames,
 		),
 		htmx.Div(
 			htmx.Merge(
@@ -210,7 +210,7 @@ func TablePagination[R comparable](p TablePaginationProps[R], children ...htmx.N
 
 // TableProps is a struct that contains the properties of a table
 type TableProps[R comparable] struct {
-	ClassName  htmx.ClassNames
+	ClassNames htmx.ClassNames
 	Columns    Columns[R]
 	ID         string
 	Pagination htmx.Node
@@ -294,7 +294,7 @@ func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
 					htmx.ClassNames{
 						"table": true,
 					},
-					p.ClassName,
+					p.ClassNames,
 				),
 				htmx.Group(children...),
 				htmx.THead(

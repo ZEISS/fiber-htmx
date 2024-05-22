@@ -4,7 +4,7 @@ import htmx "github.com/zeiss/fiber-htmx"
 
 // SelectProps ...
 type SelectProps struct {
-	ClassName htmx.ClassNames
+	ClassNames htmx.ClassNames
 }
 
 // Select ...
@@ -16,7 +16,7 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 				"w-full":   true,
 				"max-w-xs": true,
 			},
-			p.ClassName,
+			p.ClassNames,
 		),
 		htmx.Group(children...),
 	)
