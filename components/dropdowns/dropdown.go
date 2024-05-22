@@ -54,7 +54,9 @@ type DropdownMenuItemsProps struct {
 // DropdownMenuItems generates a dropdown menu items element based on the provided properties.
 func DropdownMenuItems(p DropdownMenuItemsProps, children ...htmx.Node) htmx.Node {
 	return htmx.Ul(
-		htmx.TabIndex(htmx.IntAsString(p.TabIndex)),
+		htmx.TabIndex(
+			htmx.IntAsString(p.TabIndex),
+		),
 		htmx.Merge(
 			htmx.ClassNames{
 				"bg-base-100":      true,
@@ -80,7 +82,10 @@ type DropdownMenuItemProps struct {
 // DropdownMenuItem generates a dropdown items element based on the provided properties.
 func DropdownMenuItem(p DropdownMenuItemProps, children ...htmx.Node) htmx.Node {
 	return htmx.Li(
-		htmx.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }

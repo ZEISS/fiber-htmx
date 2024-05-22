@@ -347,6 +347,57 @@ func (c *exampleController) Get() error {
 												htmx.Text("Home"),
 											),
 										),
+										menus.MenuTitle(
+											menus.MenuTitleProps{},
+											htmx.Text("Components"),
+										),
+										menus.MenuItem(
+											menus.MenuItemProps{},
+											menus.MenuCollapsible(
+												menus.MenuCollapsibleProps{},
+												menus.MenuCollapsibleSummary(
+													menus.MenuCollapsibleSummaryProps{},
+													htmx.Text("Buttons"),
+												),
+												menus.MenuItem(
+													menus.MenuItemProps{},
+													htmx.A(
+														htmx.Attribute("href", "#"),
+														htmx.Text("Item 1"),
+													),
+													htmx.A(
+														htmx.Attribute("href", "#"),
+														htmx.Text("Item 2"),
+													),
+													htmx.A(
+														htmx.Attribute("href", "#"),
+														htmx.Text("Item 3"),
+													),
+												),
+											),
+											menus.MenuCollapsible(
+												menus.MenuCollapsibleProps{},
+												menus.MenuCollapsibleSummary(
+													menus.MenuCollapsibleSummaryProps{},
+													htmx.Text("Forms"),
+												),
+												menus.MenuItem(
+													menus.MenuItemProps{},
+													htmx.A(
+														htmx.Attribute("href", "#"),
+														htmx.Text("Item 1"),
+													),
+													htmx.A(
+														htmx.Attribute("href", "#"),
+														htmx.Text("Item 2"),
+													),
+													htmx.A(
+														htmx.Attribute("href", "#"),
+														htmx.Text("Item 3"),
+													),
+												),
+											),
+										),
 									),
 								),
 							),

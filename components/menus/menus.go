@@ -33,8 +33,7 @@ func MenuItem(p MenuItemProps, children ...htmx.Node) htmx.Node {
 	return htmx.Li(
 		htmx.Merge(
 			htmx.ClassNames{
-				"menu-item":         true,
-				"hover:bg-base-300": true,
+				"menu-item": true,
 			},
 			p.ClassNames,
 		),
