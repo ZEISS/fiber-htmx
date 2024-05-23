@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
@@ -21,6 +22,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/menus"
 	"github.com/zeiss/fiber-htmx/components/navbars"
 	"github.com/zeiss/fiber-htmx/components/swap"
+	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
 // Config ...
@@ -271,6 +273,58 @@ func (c *exampleController) Get() error {
 											),
 										),
 									),
+									htmx.Div(
+										tables.Table(
+											tables.TableProps{
+												Pagination: tables.TablePagination(
+													tables.TablePaginationProps{
+														Pagination: tables.Pagination(
+															tables.PaginationProps{
+																Total:  len(demoRows),
+																Offset: 0,
+																Limit:  10,
+															},
+															// tables.Select(
+															// 	tables.SelectProps{
+															// 		Total:  len(demoRows),
+															// 		Offset: 0,
+															// 		Limit:  10,
+															// 		Limits: tables.DefaultLimits,
+															// 		URL:    "/api/data",
+															// 	},
+															// ),
+														),
+													},
+												),
+											},
+											tables.Columns[DemoRow]{
+												{
+													ID:          "id",
+													AccessorKey: "ID",
+													Header: func(p tables.TableProps) htmx.Node {
+														return htmx.Th(htmx.Text("ID"))
+													},
+													Cell: func(p tables.TableProps, row DemoRow) htmx.Node {
+														return htmx.Td(
+															htmx.Text(strconv.Itoa(row.ID)),
+														)
+													},
+												},
+												{
+													ID:          "name",
+													AccessorKey: "Name",
+													Header: func(p tables.TableProps) htmx.Node {
+														return htmx.Th(htmx.Text("Name"))
+													},
+													Cell: func(p tables.TableProps, row DemoRow) htmx.Node {
+														return htmx.Td(htmx.Text(row.Name))
+													},
+												},
+											},
+											demoRows,
+										),
+									),
+
 									// 		htmx.Div(
 									// 			htmx.ClassNames{
 									// 				"bg-base-100": true,

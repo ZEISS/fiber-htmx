@@ -150,12 +150,12 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 }
 
 // TableToolbarProps is a struct that contains the properties of a table toolbar
-type TableToolbarProps[R comparable] struct {
+type TableToolbarProps struct {
 	ClassNames htmx.ClassNames
 }
 
 // TableToolbar is a component that renders a table toolbar
-func TableToolbar[R comparable](p TableToolbarProps[R], children ...htmx.Node) htmx.Node {
+func TableToolbar(p TableToolbarProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.Merge(
 			htmx.ClassNames{
@@ -168,13 +168,13 @@ func TableToolbar[R comparable](p TableToolbarProps[R], children ...htmx.Node) h
 }
 
 // TablePaginationProps is a struct that contains the properties of a table pagination
-type TablePaginationProps[R comparable] struct {
+type TablePaginationProps struct {
 	ClassNames htmx.ClassNames
 	Pagination htmx.Node
 }
 
 // TablePagination is a component that renders a table pagination
-func TablePagination[R comparable](p TablePaginationProps[R], children ...htmx.Node) htmx.Node {
+func TablePagination(p TablePaginationProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.Merge(
 			htmx.ClassNames{
@@ -208,71 +208,43 @@ func TablePagination[R comparable](p TablePaginationProps[R], children ...htmx.N
 	)
 }
 
+// Row is a struct that contains the properties of a row
+type Row interface {
+	comparable
+}
+
 // TableProps is a struct that contains the properties of a table
-type TableProps[R comparable] struct {
+type TableProps struct {
 	ClassNames htmx.ClassNames
-	Columns    Columns[R]
 	ID         string
 	Pagination htmx.Node
-	Rows       Rows[R]
 	Toolbar    htmx.Node
 }
 
-// Rows is a struct that contains the data of a table
-type Rows[R comparable] struct {
-	Data []R
-}
-
-// NewRows returns a new Rows object.
-func NewRows[R comparable](data []R) Rows[R] {
-	return Rows[R]{
-		Data: data,
-	}
-}
-
-// Insert inserts a new row.
-func (r *Rows[R]) Insert(data R) {
-	r.Data = append(r.Data, data)
-}
-
-// ValueByIndex is a helper function that returns the value of a row based on the provided index.
-func (r *Rows[R]) ValueByIndex(index int) R {
-	if index >= len(r.Data) {
-		panic("Index out of range")
-	}
-
-	return r.Data[index]
-}
-
-// GetAll returns all the rows.
-func (r *Rows[T]) GetAll() []T {
-	return r.Data
-}
-
 // Columns returns a new column definition.
-type Columns[R comparable] []ColumnDef[R]
+type Columns[R Row] []ColumnDef[R]
 
 // ColumnDef returns a new column definition.
-type ColumnDef[R comparable] struct {
+type ColumnDef[R Row] struct {
 	ID              string
 	AccessorKey     string
-	Header          func(p TableProps[R]) htmx.Node
-	Cell            func(p TableProps[R], row R) htmx.Node
+	Header          func(p TableProps) htmx.Node
+	Cell            func(p TableProps, row R) htmx.Node
 	EnableSorting   bool
 	EnableFiltering bool
 }
 
 // Table is a struct that contains the properties of a table
-func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
+func Table[S ~[]R, R Row](p TableProps, columns Columns[R], s S) htmx.Node {
 	headers := []htmx.Node{}
-	for _, column := range p.Columns {
+	for _, column := range columns {
 		headers = append(headers, column.Header(p))
 	}
 
 	rows := []htmx.Node{}
-	for _, row := range p.Rows.Data {
+	for _, row := range s {
 		cells := []htmx.Node{}
-		for _, column := range p.Columns {
+		for _, column := range columns {
 			cells = append(cells, column.Cell(p, row))
 		}
 		rows = append(rows, htmx.Tr(cells...))
@@ -296,7 +268,6 @@ func Table[R comparable](p TableProps[R], children ...htmx.Node) htmx.Node {
 					},
 					p.ClassNames,
 				),
-				htmx.Group(children...),
 				htmx.THead(
 					htmx.Tr(
 						headers...,
