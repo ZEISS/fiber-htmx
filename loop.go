@@ -81,3 +81,13 @@ func Reduce(f func(prev Node, next Node) Node, children ...Node) Node {
 
 	return node
 }
+
+// ForEach loops over the content.
+func ForEach[S ~[]E, E comparable](s S, f func(E) Node) Node {
+	var nodes []Node
+	for _, e := range s {
+		nodes = append(nodes, f(e))
+	}
+
+	return Group(nodes...)
+}
