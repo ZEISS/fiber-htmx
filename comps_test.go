@@ -1,18 +1,27 @@
 package htmx_test
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
 func BenchmarkElement(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := htmx.Element("div").Render(io.Discard)
+		assert.NoError(b, err)
+	}
+}
+
+func Benchmark_AttrRender(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		err := htmx.Attribute("href", "/").Render(io.Discard)
 		assert.NoError(b, err)
 	}
 }
@@ -32,11 +41,35 @@ func ExampleAttribute_name_value() {
 	// Output: href="/"
 }
 
-func BenchmarkAttribute(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		htmx.Attribute("href", "/")
-		err := htmx.Attribute("href", "/").Render(io.Discard)
-		assert.NoError(b, err)
+func Test_AttrRender(t *testing.T) {
+	tests := []struct {
+		desc  string
+		name  string
+		value string
+		out   string
+	}{
+		{
+			desc:  "name only",
+			name:  "data-tip",
+			value: "",
+			out:   ` data-tip=""`,
+		},
+		{
+			desc:  "name and value",
+			name:  "href",
+			value: "/",
+			out:   ` href="/"`,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			var bb bytes.Buffer
+
+			err := htmx.Attribute(test.name, test.value).Render(&bb)
+			require.NoError(t, err)
+			assert.Equal(t, test.out, bb.String())
+		})
 	}
 }
 
