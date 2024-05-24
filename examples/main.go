@@ -3,12 +3,10 @@ package main
 import (
 	"context"
 	"log"
-	"net/http"
 	"os"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
@@ -1446,11 +1444,7 @@ func run(_ context.Context) error {
 	app.Use(logger.New())
 	app.Use(recover.New())
 
-	app.Use("/static", filesystem.New(filesystem.Config{
-		Root: http.FS(htmx.Static()),
-	}))
-
-	app.All("/", htmx.NewHxControllerHandler(&exampleController{}))
+	app.Get("/", htmx.NewHxControllerHandler(&exampleController{}))
 
 	err := app.Listen(cfg.Flags.Addr)
 	if err != nil {
