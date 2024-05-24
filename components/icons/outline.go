@@ -479,3 +479,25 @@ func InformationCircleOutline(p IconProps) htmx.Node {
 		),
 	)
 }
+
+// PlusOutline ...
+func PlusOutline(p IconProps) htmx.Node {
+	return htmx.SVG(
+		htmx.Attribute("xmlns", "http://www.w3.org/2000/svg"),
+		htmx.Attribute("fill", "none"),
+		htmx.Attribute("viewBox", "0 0 24 24"),
+		htmx.Attribute("stroke-width", "1.5"),
+		htmx.Attribute("stroke", "currentColor"),
+		htmx.Merge(
+			htmx.ClassNames{
+				"w-6 h-6": true,
+			},
+			p.ClassNames,
+		),
+		htmx.Path(
+			htmx.Attribute("stroke-linecap", "round"),
+			htmx.Attribute("stroke-linejoin", "round"),
+			htmx.Attribute("d", "M12 4.5v15m7.5-7.5h-15"),
+		),
+	)
+}
