@@ -169,9 +169,6 @@ type Config struct {
 	// Filters is a list of filters that filter the context.
 	Filters []FilterFunc
 
-	// Resolvers is a list of resolvers that resolve the context.
-	Resolvers []ResolveFunc
-
 	// ErrorHandler is executed when an error is returned from fiber.Handler.
 	//
 	// Optional. Default: DefaultErrorHandler
@@ -182,7 +179,6 @@ type Config struct {
 var ConfigDefault = Config{
 	ErrorHandler: defaultErrorHandler,
 	Filters:      []FilterFunc{},
-	Resolvers:    []ResolveFunc{},
 }
 
 // default ErrorHandler that process return error from fiber.Handler
@@ -283,11 +279,6 @@ func NewControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 
 		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
 
-		err = Resolve(c, cfg.Resolvers...)
-		if err != nil {
-			return ctrl.Error(err)
-		}
-
 		for _, f := range cfg.Filters {
 			err = f(c)
 			if err != nil {
@@ -354,10 +345,6 @@ func configDefault(config ...Config) Config {
 
 	if cfg.Filters == nil {
 		cfg.Filters = ConfigDefault.Filters
-	}
-
-	if cfg.Resolvers == nil {
-		cfg.Resolvers = ConfigDefault.Resolvers
 	}
 
 	return cfg

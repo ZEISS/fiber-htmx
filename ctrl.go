@@ -150,11 +150,6 @@ func (c *DefaultController) ValuesBool(key any, value ...any) (val bool) {
 	return c.ctx.Locals(key, value...).(bool)
 }
 
-// Path is a helper function to get the path from the context.
-func (c *DefaultController) Path() string {
-	return c.ctx.Path()
-}
-
 // Context returns the context.
 func (c *DefaultController) Context() context.Context {
 	return c.ctx.Context()
