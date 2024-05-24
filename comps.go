@@ -160,14 +160,13 @@ func (a *attr) Render(w io.Writer) error {
 		return err
 	}
 
-	// Concatenating strings is faster than using + or fmt.Sprintf.
 	bb := make([]byte, len(a.name)+len(*a.value)+4)
 	bl := 0
 	bl += copy(bb[bl:], " ")
 	bl += copy(bb[bl:], a.name)
 	bl += copy(bb[bl:], `="`)
 	bl += copy(bb[bl:], template.HTMLEscapeString(*a.value))
-	bl += copy(bb[bl:], `"`)
+	copy(bb[bl:], `"`)
 
 	_, err := w.Write(bb)
 
