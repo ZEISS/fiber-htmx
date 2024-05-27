@@ -118,6 +118,46 @@ func HxExt(ext string) Node {
 	return Attribute("hx-ext", ext)
 }
 
+// HxTarget404 sets the hx-target-404 attribute to specify the target element for 404 responses.
+func HxTarget404(target string) Node {
+	return Attribute("hx-target-404", target)
+}
+
+// HxTarget403 sets the hx-target-403 attribute to specify the target element for 403 responses.
+func HxTarget403(target string) Node {
+	return Attribute("hx-target-403", target)
+}
+
+// HxTarget401 sets the hx-target-401 attribute to specify the target element for 401 responses.
+func HxTarget401(target string) Node {
+	return Attribute("hx-target-401", target)
+}
+
+// HxTarget500 sets the hx-target-500 attribute to specify the target element for 500 responses.
+func HxTarget500(target string) Node {
+	return Attribute("hx-target-500", target)
+}
+
+// HxTarget5xx sets the hx-target-5xx attribute to specify the target element for 5xx responses.
+func HxTarget5xx(target string) Node {
+	return Attribute("hx-target-5*", target)
+}
+
+// HxTarget4xx sets the hx-target-4xx attribute to specify the target element for 4xx responses.
+func HxTarget4xx(target string) Node {
+	return Attribute("hx-target-4*", target)
+}
+
+// HxTargetError sets the hx-target-error attribute to specify the target element for error responses.
+func HxTargetError(target string) Node {
+	return Attribute("hx-target-error", target)
+}
+
+// HxTarget50x sets the hx-target-50x attribute to specify the target element for 50x responses.
+func HxTarget50x(target string) Node {
+	return Attribute("hx-target-50*", target)
+}
+
 // HxDisable sets the hx-disable attribute to disable htmx functionality.
 func HxDisable() Node {
 	return Attribute("hx-disable")

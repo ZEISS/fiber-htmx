@@ -10,6 +10,7 @@ const (
 	HxExtJSON                HxExtType = "json-enc"              // The json-enc extension allows you to specify the JSON encoding for the response.
 	HxExtMultiSwap           HxExtType = "multi-swap"            // The multi-swap extension allows you to swap multiple elements in a single response.
 	HxExtPathDeps            HxExtType = "path-deps"             // The path-deps extension allows you to specify the dependencies for a path.
+	HxResponseTargets        HxExtType = "response-targets"      // The response-target extension allows you to specify the target for the response.
 )
 
 // String returns the string representation of the htmx extension type.
