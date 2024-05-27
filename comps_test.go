@@ -84,3 +84,74 @@ func TestNodeFunc(t *testing.T) {
 		assert.Equal(t, "hello", fmt.Sprint(fn))
 	})
 }
+
+func TestIf(t *testing.T) {
+	tests := []struct {
+		desc string
+		cond bool
+		in   htmx.Node
+		out  string
+	}{
+		{
+			desc: "true",
+			cond: true,
+			in:   htmx.Element("div"),
+			out:  "<div><div></div></div>",
+		},
+		{
+			desc: "false",
+			cond: false,
+			in:   htmx.Element("div"),
+			out:  "<div></div>",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			var bb bytes.Buffer
+
+			err := htmx.Div(htmx.If(test.cond, test.in)).Render(&bb)
+			require.NoError(t, err)
+			assert.Equal(t, test.out, bb.String())
+		})
+	}
+}
+
+func TestKeyExists(t *testing.T) {
+	tests := []struct {
+		desc string
+		kv   map[string]string
+		fn   func(k, v string) htmx.Node
+		in   string
+		out  string
+	}{
+		{
+			desc: "exists",
+			kv:   map[string]string{"foo": "bar"},
+			fn: func(k, v string) htmx.Node {
+				return htmx.Attribute(k, v)
+			},
+			in:  "foo",
+			out: "<div foo=\"bar\"></div>",
+		},
+		{
+			desc: "missing",
+			kv:   map[string]string{},
+			fn: func(k, v string) htmx.Node {
+				return htmx.Attribute(k, v)
+			},
+			in:  "foo",
+			out: "<div></div>",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			var bb bytes.Buffer
+
+			err := htmx.Div(htmx.KeyExists(test.kv, test.in, test.fn)).Render(&bb)
+			require.NoError(t, err)
+			assert.Equal(t, test.out, bb.String())
+		})
+	}
+}

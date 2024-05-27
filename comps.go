@@ -253,3 +253,12 @@ func If(condition bool, n Node) Node {
 
 	return nil
 }
+
+// KeyExists is a node that renders a child node if a key exists in a map.
+func KeyExists[K comparable, V any](m map[K]V, key K, fn func(k K, v V) Node) Node {
+	if v, ok := m[key]; ok {
+		return fn(key, v)
+	}
+
+	return nil
+}
