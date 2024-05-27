@@ -1444,7 +1444,9 @@ func run(_ context.Context) error {
 	app.Use(logger.New())
 	app.Use(recover.New())
 
-	app.Get("/", htmx.NewHxControllerHandler(&exampleController{}))
+	app.Get("/", htmx.NewHxControllerHandler(func() htmx.Controller {
+		return &exampleController{}
+	}))
 
 	err := app.Listen(cfg.Flags.Addr)
 	if err != nil {
