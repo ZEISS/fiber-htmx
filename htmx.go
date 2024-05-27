@@ -161,6 +161,9 @@ func StopPolling(c *fiber.Ctx) error {
 // FilterFunc is a function that filters the context.
 type FilterFunc func(c *fiber.Ctx) error
 
+// ControllerFactory is a factory function that creates a new controller.
+type ControllerFactory func() Controller
+
 // Config ...
 type Config struct {
 	// Next defines a function to skip this middleware when returned true.
@@ -252,13 +255,13 @@ func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 
 // NewHxControllerHandler returns a new htmx controller handler.
 // Deprecated: use NewControllerHandler instead.
-func NewHxControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
+func NewHxControllerHandler(ctrl ControllerFactory, config ...Config) fiber.Handler {
 	return NewControllerHandler(ctrl, config...)
 }
 
 // NewControllerHandler returns a new htmx controller handler.
 // nolint:gocyclo
-func NewControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
+func NewControllerHandler(factory ControllerFactory, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
 	return func(c *fiber.Ctx) (err error) {
@@ -266,6 +269,15 @@ func NewControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 			return c.Next()
 		}
 
+		ctrl := factory()
+
+		// Initialize the controller
+		err = ctrl.Init(c)
+		if err != nil {
+			return cfg.ErrorHandler(c, err)
+		}
+
+		// Recover from panic if controller is initialized
 		defer func() {
 			if r := recover(); r != nil {
 				var ok bool
@@ -284,11 +296,6 @@ func NewControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 			if err != nil {
 				return ctrl.Error(err)
 			}
-		}
-
-		err = ctrl.Init(c)
-		if err != nil {
-			return ctrl.Error(err)
 		}
 
 		err = ctrl.Prepare()

@@ -32,6 +32,8 @@ type Controller interface {
 	Head() error
 	// Error is called when an error occurs.
 	Error(err error) error
+	// Reset resets the controller.
+	Reset()
 	// Ctx returns the fiber.Ctx.
 	Ctx() *fiber.Ctx
 }
