@@ -12,6 +12,9 @@ type Node interface {
 	Render(w io.Writer) error
 }
 
+// Nodes is a slice of nodes.
+type Nodes []Node
+
 // NodeType is the type of a node.
 type NodeType int
 
