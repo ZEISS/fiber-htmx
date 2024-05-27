@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"io"
 	"strings"
+
+	"github.com/go-playground/validator/v10"
 )
 
 // Node is a node in the HTML tree.
@@ -254,6 +256,22 @@ func If(condition bool, n Node) Node {
 	return nil
 }
 
+// Errors is a slice of errors.
+type Errors[K comparable] map[K]error
+
+// Error is a node that renders an error.
+func FromValidationErrors[K comparable](errr []validator.FieldError) Errors[K] {
+	ee := make(Errors[K])
+
+	for _, err := range errr {
+		if k, ok := any(err).(K); ok {
+			ee[k] = err
+		}
+	}
+
+	return ee
+}
+
 // KeyExists is a node that renders a child node if a key exists in a map.
 func KeyExists[K comparable, V any](m map[K]V, key K, fn func(k K, v V) Node) Node {
 	if v, ok := m[key]; ok {
@@ -261,4 +279,9 @@ func KeyExists[K comparable, V any](m map[K]V, key K, fn func(k K, v V) Node) No
 	}
 
 	return nil
+}
+
+// ErrorExists is a node that renders a child node if an error exists.
+func ErrorExists[K comparable](e Errors[K], key K, fn func(k K, v error) Node) Node {
+	return KeyExists(e, key, fn)
 }
