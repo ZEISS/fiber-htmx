@@ -112,7 +112,7 @@ There is also the option to use `htmx.Controller` to encapsulate the logic of th
 
 func NewHelloWorldController() htmx.ControllerFactory {
   return func() htmx.Controller {
-		return &exampleController{}
+		return &NewHelloWorldController{}
 	}
 }
 
