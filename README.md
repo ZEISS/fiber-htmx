@@ -109,6 +109,13 @@ There are additional complex components that help to write HTML5 and HTMX compon
 There is also the option to use `htmx.Controller` to encapsulate the logic of the components.
 
 ```go
+
+func NewHelloWorldController() htmx.ControllerFactory {
+  return func() htmx.Controller {
+		return &exampleController{}
+	}
+}
+
 type HelloWorldController struct {
     htmx.DefaultController
 }
@@ -131,7 +138,7 @@ func (c *HelloWorldController) Get() error {
 }
 
 app := fiber.New()
-app.Get("/", htmx.NewHxControllerHandler(&HelloWorldController{}))
+app.Get("/", htmx.NewHxControllerHandler(NewHelloWorldController())
 
 app.Listen(":3000")
 ```
