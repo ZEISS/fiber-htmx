@@ -143,12 +143,13 @@ See [examples](https://github.com/zeiss/fiber-htmx/tree/master/examples) to unde
 ## Benchmarks
 
 ```bash
-BenchmarkElement-2               7863930               132.8 ns/op
-BenchmarkAttribute-2             8052403               157.9 ns/op
-Benchmark_HTML5_Render-2             788           1596065 ns/op
+BenchmarkElement-10                     12964440                77.40 ns/op
+Benchmark_AttrRender-10                 16038232                74.15 ns/op
+Benchmark_HTML5_Render-10                   1392            847193 ns/op
+Benchmark_ClassNames_Render-10           3166761               378.2 ns/op
 ```
 
-Rendering `10.000` nodes took `>1.6ms`. The package is fast enough to render HTML5 and HTMX components. 
+Rendering `10.000` nodes took `>0.8ms`. The package is fast enough to render HTML5 and HTMX components. 
 
 ## License
 
