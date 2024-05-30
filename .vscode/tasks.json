@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "options": {
+      "env": {}
+    },
+    "tasks": [
+      {
+        "label": "Start",
+        "type": "shell",
+        "command": "air",
+        "options": {
+          "cwd": "${workspaceFolder}"
+        }
+      }
+    ]
+  }

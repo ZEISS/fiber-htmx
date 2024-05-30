@@ -155,3 +155,37 @@ func TestKeyExists(t *testing.T) {
 		})
 	}
 }
+
+func TestFragment(t *testing.T) {
+	tests := []struct {
+		desc string
+		in   []htmx.Node
+		out  string
+	}{
+		{
+			desc: "empty",
+			in:   nil,
+			out:  "",
+		},
+		{
+			desc: "single",
+			in:   []htmx.Node{htmx.Element("div")},
+			out:  "<div></div>",
+		},
+		{
+			desc: "multiple",
+			in:   []htmx.Node{htmx.Element("div"), htmx.Element("span")},
+			out:  "<div></div><span></span>",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			var bb bytes.Buffer
+
+			err := htmx.Fragment(test.in...).Render(&bb)
+			require.NoError(t, err)
+			assert.Equal(t, test.out, bb.String())
+		})
+	}
+}

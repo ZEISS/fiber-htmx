@@ -247,6 +247,37 @@ func Group(children ...Node) Node {
 	return group{children: children}
 }
 
+type fragment struct {
+	children []Node
+}
+
+// Fragment is a node that renders a fragment of nodes.
+func Fragment(children ...Node) Node {
+	return fragment{children: children}
+}
+
+// String is a node that renders a fragment of nodes.
+func (c fragment) String() string {
+	var b strings.Builder
+
+	for _, child := range c.children {
+		_ = child.Render(&b)
+	}
+
+	return b.String()
+}
+
+// Render is a node that renders a fragment of nodes.
+func (c fragment) Render(w io.Writer) error {
+	for _, child := range c.children {
+		if err := child.Render(w); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // If is a node that renders a child node if a condition is true.
 func If(condition bool, n Node) Node {
 	if condition {

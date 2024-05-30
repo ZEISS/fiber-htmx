@@ -149,6 +149,10 @@ func (c *exampleController) Get() error {
 			},
 			htmx.Body(
 				htmx.HxBoost(true),
+				htmx.Fragment(
+					htmx.Div(),
+					htmx.Div(),
+				),
 				htmx.Div(
 					htmx.ClassNames{},
 					drawers.Drawer(
