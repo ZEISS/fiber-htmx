@@ -12,7 +12,8 @@ func Toast(p ToastProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.Merge(
 			htmx.ClassNames{
-				"toast": true,
+				"toast":     true,
+				"z-[99999]": true,
 			},
 			p.ClassNames,
 		),
@@ -28,6 +29,7 @@ func ToastTopStart(p ToastProps, children ...htmx.Node) htmx.Node {
 				"toast":       true,
 				"toast-top":   true,
 				"toast-start": true,
+				"z-[99999]":   true,
 			},
 			p.ClassNames,
 		),
@@ -43,6 +45,7 @@ func ToastTopEnd(p ToastProps, children ...htmx.Node) htmx.Node {
 				"toast":     true,
 				"toast-top": true,
 				"toast-end": true,
+				"z-[99999]": true,
 			},
 			p.ClassNames,
 		),
@@ -57,6 +60,7 @@ func ToastEnd(p ToastProps, children ...htmx.Node) htmx.Node {
 			htmx.ClassNames{
 				"toast":     true,
 				"toast-end": true,
+				"z-[99999]": true,
 			},
 			p.ClassNames,
 		),
