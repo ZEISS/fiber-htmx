@@ -71,6 +71,7 @@ func ToastAlertInfo(children ...htmx.Node) htmx.Node {
 			"alert":      true,
 			"alert-info": true,
 		},
+		htmx.Role("alert"),
 		htmx.Group(children...),
 	)
 }
@@ -82,6 +83,7 @@ func ToastAlertSuccess(children ...htmx.Node) htmx.Node {
 			"alert":         true,
 			"alert-success": true,
 		},
+		htmx.Role("alert"),
 		htmx.Group(children...),
 	)
 }
@@ -93,6 +95,7 @@ func ToastAlertError(children ...htmx.Node) htmx.Node {
 			"alert":       true,
 			"alert-error": true,
 		},
+		htmx.Role("alert"),
 		htmx.Group(children...),
 	)
 }
