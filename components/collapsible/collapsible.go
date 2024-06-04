@@ -11,11 +11,14 @@ type CollapseProps struct {
 // Collapse is a component that can be expanded and collapsed.
 func Collapse(props CollapseProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
+		htmx.Merge(
+			htmx.ClassNames{
+				"collapse":    true,
+				"bg-base-200": true,
+			},
+			props.ClassNames,
+		),
 		htmx.Attribute("tabindex", htmx.IntAsString(props.TabIndex)),
-		htmx.ClassNames{
-			"collapse":    true,
-			"bg-base-200": true,
-		}.Merge(props.ClassNames),
 		htmx.Group(children...),
 	)
 }
@@ -66,9 +69,12 @@ type CollapseContentProps struct {
 // CollapseContent is a component that can be expanded and collapsed.
 func CollapseContent(props CollapseContentProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"collapse-content": true,
-		}.Merge(props.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"collapse-content": true,
+			},
+			props.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -83,5 +89,6 @@ type CollapseCheckboxProps struct {
 func CollapseCheckbox(props CollapseCheckboxProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
 		htmx.Type("checkbox"),
+		htmx.Group(children...),
 	)
 }
