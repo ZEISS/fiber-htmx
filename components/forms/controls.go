@@ -68,7 +68,7 @@ func FormControlLabelAltText(props FormControlLabelAltTextProps, children ...htm
 	return htmx.Span(
 		htmx.Merge(
 			htmx.ClassNames{
-				"label-text-all": true,
+				"label-text-alt": true,
 			},
 			props.ClassNames,
 		),
