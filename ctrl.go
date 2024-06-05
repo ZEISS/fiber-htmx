@@ -2,8 +2,11 @@ package htmx
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 // Controller is the interface for the htmx controller.
@@ -36,6 +39,18 @@ type Controller interface {
 	Reset()
 	// Ctx returns the fiber.Ctx.
 	Ctx() *fiber.Ctx
+}
+
+// TransactionController is the interface for a controller that also does database transactions.
+type TransactionController interface {
+	// Returns the transaction.
+	Tx() *gorm.DB
+	// Begin begins a transaction.
+	Begin(*gorm.DB) error
+	// Commit commits the transaction.
+	Commmit() error
+	// Rollback rolls back the transaction.
+	Rollback() error
 }
 
 var _ Controller = (*DefaultController)(nil)
@@ -165,4 +180,70 @@ func (c *DefaultController) Ctx() *fiber.Ctx {
 // Reset resets the controller.
 func (c *DefaultController) Reset() {
 	c.ctx = nil
+}
+
+var _ TransactionController = (*DefaultTransactionController)(nil)
+
+// NewTransactionController returns a new transaction controller.
+func NewTransactionController() *DefaultTransactionController {
+	return &DefaultTransactionController{
+		DefaultController: NewDefaultController(),
+	}
+}
+
+// DefaultTransactionController is the interface for the htmx transaction controller.
+type DefaultTransactionController struct {
+	*DefaultController
+	tx *gorm.DB
+}
+
+// Begin begins a transaction.
+func (c *DefaultTransactionController) Begin(conn *gorm.DB) error {
+	tx := conn.Begin()
+	if tx.Error != nil {
+		return tx.Error
+	}
+	c.tx = tx
+
+	return nil
+}
+
+// Commit commits the transaction.
+func (c *DefaultTransactionController) Commmit() error {
+	if c.tx == nil {
+		return nil
+	}
+
+	c.tx.Commit()
+	if err := c.tx.Error; err != nil {
+		return err
+	}
+
+	c.tx = nil
+
+	return nil
+}
+
+// Rollback rolls back the transaction.
+func (c *DefaultTransactionController) Rollback() error {
+	if c.tx == nil {
+		return nil
+	}
+
+	c.tx.Rollback()
+	if err := c.tx.Error; err != nil && !errors.Is(err, sql.ErrTxDone) {
+		return err
+	}
+	c.tx = nil
+
+	return nil
+}
+
+// Txn returns the transaction.
+func (c *DefaultTransactionController) Tx() *gorm.DB {
+	if c.tx != nil {
+		return c.tx
+	}
+
+	return nil
 }
