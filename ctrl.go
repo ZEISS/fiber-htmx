@@ -177,6 +177,16 @@ func (c *DefaultController) Ctx() *fiber.Ctx {
 	return c.ctx
 }
 
+// Render renders a component.
+func (c *DefaultController) Render(node Node, opt ...RenderOpt) error {
+	return RenderComp(c.ctx, node, opt...)
+}
+
+// Path returns the path.
+func (c *DefaultController) Path() string {
+	return c.ctx.Path()
+}
+
 // Reset resets the controller.
 func (c *DefaultController) Reset() {
 	c.ctx = nil
