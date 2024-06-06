@@ -179,7 +179,9 @@ func (c *DefaultController) Ctx() *fiber.Ctx {
 
 // Redirect redirects to the given path.
 func (c *DefaultController) Redirect(path string) error {
-	return c.ctx.Redirect(path)
+	Redirect(c.ctx, path)
+
+	return nil
 }
 
 // Render renders a component.
