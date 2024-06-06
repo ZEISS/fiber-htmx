@@ -9,7 +9,7 @@ type FormControlProps struct {
 
 // FormControl generates a form control element based on the provided properties.
 func FormControl(p FormControlProps, children ...htmx.Node) htmx.Node {
-	return htmx.Div(
+	return htmx.Label(
 		htmx.Merge(
 			htmx.ClassNames{
 				"form-control": true,
@@ -28,7 +28,7 @@ type FormControlLabelProps struct {
 
 // FormControlLabel generates a form control label element based on the provided properties.
 func FormControlLabel(props FormControlLabelProps, children ...htmx.Node) htmx.Node {
-	return htmx.Label(
+	return htmx.Div(
 		htmx.Merge(
 			htmx.ClassNames{
 				"label":          true,
