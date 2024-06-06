@@ -14,7 +14,7 @@ import (
 )
 
 // Results is a struct that contains the results of a query
-type Results[R any] struct {
+type Results[T any] struct {
 	// Limit is the number of items to return.
 	Limit int `json:"limit" xml:"limit" form:"limit" query:"limit"`
 	// Offset is the number of items to skip.
@@ -28,11 +28,11 @@ type Results[R any] struct {
 	// TotalPages is the total number of pages.
 	TotalPages int `json:"total_pages"`
 	// Rows is the items to return.
-	Rows []R `json:"rows" xml:"rows"`
+	Rows []T `json:"rows" xml:"rows"`
 }
 
 // GetLimit returns the limit.
-func (p *Results[R]) GetLimit() int {
+func (p *Results[T]) GetLimit() int {
 	if p.Limit == 0 {
 		p.Limit = 10
 	}
@@ -41,7 +41,7 @@ func (p *Results[R]) GetLimit() int {
 }
 
 // GetOffset returns the page.
-func (p *Results[R]) GetOffset() int {
+func (p *Results[T]) GetOffset() int {
 	if p.Offset < 0 {
 		p.Offset = 0
 	}
@@ -50,7 +50,7 @@ func (p *Results[R]) GetOffset() int {
 }
 
 // GetSort returns the sort.
-func (p *Results[R]) GetSort() string {
+func (p *Results[T]) GetSort() string {
 	if p.Sort == "" {
 		p.Sort = "desc"
 	}
@@ -59,9 +59,10 @@ func (p *Results[R]) GetSort() string {
 }
 
 // GetRows returns the rows as pointers.
-func (p *Results[R]) GetRows() []*R {
-	rows := make([]*R, 0, len(p.Rows))
+func (p *Results[T]) GetRows() []*T {
+	rows := make([]*T, 0, len(p.Rows))
 	for _, row := range p.Rows {
+		row := row
 		rows = append(rows, &row)
 	}
 
@@ -69,22 +70,22 @@ func (p *Results[R]) GetRows() []*R {
 }
 
 // GetTotalRows returns the total rows.
-func (p *Results[R]) GetTotalRows() int {
+func (p *Results[T]) GetTotalRows() int {
 	return p.TotalRows
 }
 
 // GetTotalPages returns the total pages.
-func (p *Results[R]) GetTotalPages() int {
+func (p *Results[T]) GetTotalPages() int {
 	return p.TotalPages
 }
 
 // GetLen returns the length of the rows.
-func (p *Results[R]) GetLen() int {
+func (p *Results[T]) GetLen() int {
 	return len(p.Rows)
 }
 
 // PaginatedResults returns a function that paginates the results.
-func PaginatedResults[R any](value interface{}, pagination *Results[R], db *gorm.DB) func(db *gorm.DB) *gorm.DB {
+func PaginatedResults[T any](value interface{}, pagination *Results[T], db *gorm.DB) func(db *gorm.DB) *gorm.DB {
 	var totalRows int64
 	db.Model(value).Count(&totalRows).Where("deleted_at IS NULL")
 
