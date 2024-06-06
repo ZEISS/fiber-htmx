@@ -487,3 +487,8 @@ func Integrity(v string) Node {
 func CrossOrigin(v string) Node {
 	return Attribute("crossorigin", v)
 }
+
+// OnePasswordIgnore sets the data-1p-ignore attribute for elements.
+func OnePasswordIgnore() Node {
+	return Attribute("data-1p-ignore")
+}
