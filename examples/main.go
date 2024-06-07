@@ -18,6 +18,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/menus"
+	"github.com/zeiss/fiber-htmx/components/mockups"
 	"github.com/zeiss/fiber-htmx/components/navbars"
 	"github.com/zeiss/fiber-htmx/components/swap"
 	"github.com/zeiss/fiber-htmx/components/tables"
@@ -144,6 +145,10 @@ func (c *exampleController) Get() error {
 					),
 					htmx.Script(
 						htmx.Attribute("src", "https://cdn.tailwindcss.com"),
+					),
+					htmx.Script(
+						htmx.Attribute("src", "https://unpkg.com/hyperscript.org@0.9.12"),
+						htmx.Attribute("type", "application/javascript"),
 					),
 				},
 			},
@@ -274,6 +279,50 @@ func (c *exampleController) Get() error {
 												),
 											),
 										),
+									),
+									htmx.Div(
+										mockups.Code(
+											mockups.CodeProps{},
+										),
+										swap.Swap(
+											swap.SwapProps{
+												ClassNames: htmx.ClassNames{
+													"swap-rotate": true,
+												},
+											},
+											// Write a Hyperscript that toggles a checkbox inside the current element
+											htmx.HyperScript(`on click
+    writeText(my previousElementSibling's innerText) on navigator.clipboard
+    set <input/> in me to checked to not checked
+    wait 1s
+    set <input/> in me to checked to true`),
+											htmx.Input(
+
+												htmx.Value("copy"),
+												htmx.Attribute("type", "checkbox"),
+												htmx.Checked(),
+											),
+											swap.SwapOn(
+												swap.SwapProps{},
+												icons.MoonOutlineSmall(
+													icons.IconProps{},
+												),
+											),
+											swap.SwapOff(
+												swap.SwapProps{},
+												icons.SunOutlineSmall(
+													icons.IconProps{},
+												),
+											),
+										),
+										// 									htmx.Button(
+										// 										htmx.HyperScript(`on click
+										// writeText(my previousElementSibling's innerText) on navigator.clipboard
+										// put 'copied!' into me
+										// wait 1s
+										// put 'copy' into me`),
+										// 										htmx.Text("Copy"),
+										// 									),
 									),
 									htmx.Div(
 										tables.Table(
