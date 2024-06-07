@@ -18,11 +18,11 @@ type Results[T any] struct {
 	// Limit is the number of items to return.
 	Limit int `json:"limit" xml:"limit" form:"limit" query:"limit"`
 	// Offset is the number of items to skip.
-	Offset int `json:"offset" xml:"offset" form:"offset" query:"limit"`
+	Offset int `json:"offset" xml:"offset" form:"offset" query:"offset"`
 	// Search is the search term to filter the results.
-	Search string `json:"search,omitempty" xml:"search" form:"search" query:"limit"`
+	Search string `json:"search,omitempty" xml:"search" form:"search" query:"search"`
 	// Sort is the sorting order.
-	Sort string `json:"sort,omitempty" xml:"sort" form:"sort" query:"limit"`
+	Sort string `json:"sort,omitempty" xml:"sort" form:"sort" query:"sort"`
 	// TotalRows is the total number of rows.
 	TotalRows int `json:"total_rows"`
 	// TotalPages is the total number of pages.
