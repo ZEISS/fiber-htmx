@@ -8,6 +8,7 @@ type RadioProps struct {
 	Name       string          // The name of the radio element.
 	Value      string          // The value of the radio element.
 	Checked    bool            // Whether the radio element is checked.
+	Disabled   bool
 }
 
 // Radio generates a radio element based on the provided properties.
@@ -23,6 +24,7 @@ func Radio(p RadioProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),
 		htmx.If(p.Checked, htmx.Checked()),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -41,6 +43,7 @@ func RadioSuccess(p RadioProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),
 		htmx.If(p.Checked, htmx.Checked()),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -59,6 +62,7 @@ func RadioInfo(p RadioProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),
 		htmx.If(p.Checked, htmx.Checked()),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -77,6 +81,7 @@ func RadioWarning(p RadioProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),
 		htmx.If(p.Checked, htmx.Checked()),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -95,6 +100,7 @@ func RadioError(p RadioProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),
 		htmx.If(p.Checked, htmx.Checked()),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -113,6 +119,7 @@ func RadioPrimary(p RadioProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),
 		htmx.If(p.Checked, htmx.Checked()),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -131,6 +138,7 @@ func RadioSecondary(p RadioProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),
 		htmx.If(p.Checked, htmx.Checked()),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -149,6 +157,7 @@ func RadioAccent(p RadioProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),
 		htmx.If(p.Checked, htmx.Checked()),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
