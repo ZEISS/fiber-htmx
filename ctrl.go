@@ -170,13 +170,13 @@ func (c *DefaultController) ValuesBool(key any, value ...any) (val bool) {
 }
 
 // Session is a helper function to get the session from the context.
-func (c *DefaultController) Session() (adapters.GothSession, error) {
+func (c *DefaultController) Session() adapters.GothSession {
 	session, err := goth.SessionFromContext(c.Ctx())
 	if err != nil {
-		return adapters.GothSession{}, err
+		return adapters.GothSession{}
 	}
 
-	return session, nil
+	return session
 }
 
 // Context returns the context.
