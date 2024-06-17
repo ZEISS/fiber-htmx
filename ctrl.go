@@ -6,6 +6,8 @@ import (
 	"errors"
 
 	"github.com/gofiber/fiber/v2"
+	goth "github.com/zeiss/fiber-goth"
+	"github.com/zeiss/fiber-goth/adapters"
 	"gorm.io/gorm"
 )
 
@@ -165,6 +167,16 @@ func (c *DefaultController) ValuesInt(key any, value ...any) (val int) {
 // ValuesBool is a helper function to get the values as a bool from the context.
 func (c *DefaultController) ValuesBool(key any, value ...any) (val bool) {
 	return c.ctx.Locals(key, value...).(bool)
+}
+
+// Session is a helper function to get the session from the context.
+func (c *DefaultController) Session() (adapters.GothSession, error) {
+	session, err := goth.SessionFromContext(c.Ctx())
+	if err != nil {
+		return adapters.GothSession{}, err
+	}
+
+	return session, nil
 }
 
 // Context returns the context.

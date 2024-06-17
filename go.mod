@@ -1,8 +1,8 @@
 module github.com/zeiss/fiber-htmx
 
-go 1.21.9
+go 1.22
 
-toolchain go1.22.2
+toolchain go1.22.3
 
 require (
 	github.com/go-playground/validator/v10 v10.22.0
@@ -12,6 +12,7 @@ require (
 	github.com/katallaxie/pkg v0.6.5
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.9.0
+	github.com/zeiss/fiber-goth v1.2.4
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc
 	gorm.io/gorm v1.25.10
 	mvdan.cc/gofumpt v0.6.0
@@ -181,7 +182,7 @@ require (
 	github.com/ultraware/whitespace v0.1.1 // indirect
 	github.com/uudashr/gocognit v1.1.2 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.53.0 // indirect
+	github.com/valyala/fasthttp v1.54.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/xen0n/gosmopolitan v1.2.2 // indirect
 	github.com/yagipy/maintidx v1.0.0 // indirect
