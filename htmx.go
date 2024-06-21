@@ -351,7 +351,7 @@ func NewControllerHandler(factory ControllerFactory, config ...Config) fiber.Han
 func NewHtmxMessageHandler(config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
-	return func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) (err error) {
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
 		}
@@ -360,7 +360,7 @@ func NewHtmxMessageHandler(config ...Config) fiber.Handler {
 		c.Locals(messagesKey, header.Messages)
 
 		if Request(c) {
-			defer addHeaders(c, header)
+			defer func() { err = addHeaders(c, header) }()
 		}
 
 		return c.Next()
@@ -368,9 +368,15 @@ func NewHtmxMessageHandler(config ...Config) fiber.Handler {
 
 }
 
-func addHeaders(c *fiber.Ctx, headers *HtmxMessageHeader) {
-	b, _ := json.Marshal(headers)
+func addHeaders(c *fiber.Ctx, headers *HtmxMessageHeader) error {
+	b, err := json.Marshal(headers)
+	if err != nil {
+		return err
+	}
+
 	c.Append(HXTrigger.String(), string(b))
+
+	return nil
 }
 
 // HtmxMessageHeader is a struct that represents a message header.
