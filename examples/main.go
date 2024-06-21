@@ -328,24 +328,14 @@ func (c *exampleController) Get() error {
 										tables.Table(
 											tables.TableProps{
 												Pagination: tables.TablePagination(
-													tables.TablePaginationProps{
-														Pagination: tables.Pagination(
-															tables.PaginationProps{
-																Total:  len(demoRows),
-																Offset: 0,
-																Limit:  10,
-															},
-															// tables.Select(
-															// 	tables.SelectProps{
-															// 		Total:  len(demoRows),
-															// 		Offset: 0,
-															// 		Limit:  10,
-															// 		Limits: tables.DefaultLimits,
-															// 		URL:    "/api/data",
-															// 	},
-															// ),
-														),
-													},
+													tables.TablePaginationProps{},
+													tables.Pagination(
+														tables.PaginationProps{
+															Total:  len(demoRows),
+															Offset: 0,
+															Limit:  10,
+														},
+													),
 												),
 											},
 											tables.Columns[DemoRow]{

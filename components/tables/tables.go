@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/utils"
 	"gorm.io/gorm"
 
-	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
@@ -82,6 +82,28 @@ func (p *Results[T]) GetTotalPages() int {
 // GetLen returns the length of the rows.
 func (p *Results[T]) GetLen() int {
 	return len(p.Rows)
+}
+
+// FromContext returns the results from the context.
+func FromContext[T any](c *fiber.Ctx) (Results[T], error) {
+	var result Results[T]
+
+	limit, err := c.ParamsInt("limit", 10)
+	if err != nil {
+		return result, err
+	}
+	result.Limit = limit
+
+	offset, err := c.ParamsInt("offset", 0)
+	if err != nil {
+		return result, err
+	}
+	result.Offset = offset
+
+	result.Search = c.Params("search")
+	result.Sort = c.Params("sort")
+
+	return result, nil
 }
 
 // PaginatedResults returns a function that paginates the results.
@@ -257,7 +279,6 @@ func TableToolbar(p TableToolbarProps, children ...htmx.Node) htmx.Node {
 // TablePaginationProps is a struct that contains the properties of a table pagination
 type TablePaginationProps struct {
 	ClassNames htmx.ClassNames
-	Pagination htmx.Node
 }
 
 // TablePagination is a component that renders a table pagination
@@ -281,16 +302,7 @@ func TablePagination(p TablePaginationProps, children ...htmx.Node) htmx.Node {
 					"lg:space-x-8": true,
 				},
 			),
-			htmx.P(
-				htmx.Merge(
-					htmx.ClassNames{
-						"text-sm":     true,
-						"font-medium": true,
-					},
-				),
-				htmx.Text("Rows per page"),
-			),
-			p.Pagination,
+			htmx.Group(children...),
 		),
 	)
 }
@@ -367,12 +379,4 @@ func Table[S ~[]R, R Row](p TableProps, columns Columns[R], s S) htmx.Node {
 		),
 		p.Pagination,
 	)
-}
-
-// PaginationFromContext returns a new Pagination object based on the provided context.
-func PaginationPropsFromContext(c *fiber.Ctx) (limit int, offset int) {
-	limit = c.QueryInt("limit", 10)
-	offset = c.QueryInt("offset", 0)
-
-	return
 }
