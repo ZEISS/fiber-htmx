@@ -88,20 +88,10 @@ func (p *Results[T]) GetLen() int {
 func FromContext[T any](c *fiber.Ctx) (Results[T], error) {
 	var result Results[T]
 
-	limit, err := c.ParamsInt("limit", 10)
+	err := c.BodyParser(result)
 	if err != nil {
 		return result, err
 	}
-	result.Limit = limit
-
-	offset, err := c.ParamsInt("offset", 0)
-	if err != nil {
-		return result, err
-	}
-	result.Offset = offset
-
-	result.Search = c.Params("search")
-	result.Sort = c.Params("sort")
 
 	return result, nil
 }

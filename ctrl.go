@@ -179,6 +179,12 @@ func (c *DefaultController) Session() adapters.GothSession {
 	return session
 }
 
+// Messages is a helper function to get the message from the context.
+func (c *DefaultController) Messages(msgs ...HtmxMessage) {
+	m := MessagesFromContext(c.Ctx())
+	m.Add(msgs...)
+}
+
 // Context returns the context.
 func (c *DefaultController) Context() context.Context {
 	return c.ctx.Context()

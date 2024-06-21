@@ -1,11 +1,21 @@
 package htmx
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+)
+
+// The contextKey type is unexported to prevent collisions with context keys defined in
+// other packages.
+type contextKey int
+
+// The keys for the values in context
+const (
+	messagesKey contextKey = iota
 )
 
 const (
@@ -335,6 +345,71 @@ func NewControllerHandler(factory ControllerFactory, config ...Config) fiber.Han
 
 		return nil
 	}
+}
+
+// NewHtmxMessageHandler is a helper function to handle htmx messages.
+func NewHtmxMessageHandler(config ...Config) fiber.Handler {
+	cfg := configDefault(config...)
+
+	return func(c *fiber.Ctx) error {
+		if cfg.Next != nil && cfg.Next(c) {
+			return c.Next()
+		}
+
+		header := NewHtmxMessageHeader()
+		c.Locals(messagesKey, header.Messages)
+
+		if Request(c) {
+			defer addHeaders(c, header)
+		}
+
+		return c.Next()
+	}
+
+}
+
+func addHeaders(c *fiber.Ctx, headers *HtmxMessageHeader) {
+	b, _ := json.Marshal(headers)
+	c.Append(HXTrigger.String(), string(b))
+}
+
+// HtmxMessageHeader is a struct that represents a message header.
+type HtmxMessageHeader struct {
+	// Message is the message for the user.
+	Messages *HtmxMessages `json:"messages"`
+}
+
+// HtmxMessage is s struct that represents a message.
+type HtmxMessage struct {
+	// Message is the message for the user.
+	Message string `json:"message"`
+	// Tags is the tag for the message e.g. info, warning, error, success.
+	Tags string `json:"tags"`
+}
+
+// NewHtmxMessageHeader returns a new htmx messages.
+func NewHtmxMessageHeader() *HtmxMessageHeader {
+	return &HtmxMessageHeader{
+		Messages: &HtmxMessages{},
+	}
+}
+
+// HtmxMessages is a slice of messages.
+type HtmxMessages []HtmxMessage
+
+// AddMessage adds a message to the messages.
+func (m *HtmxMessages) Add(msg ...HtmxMessage) {
+	*m = append(*m, msg...)
+}
+
+// MessagesFromContext returns the messages from the context.
+func MessagesFromContext(c *fiber.Ctx) *HtmxMessages {
+	messages, ok := c.Locals(messagesKey).(*HtmxMessages)
+	if !ok {
+		return nil
+	}
+
+	return messages
 }
 
 // Helper function to set default values

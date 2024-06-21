@@ -6,11 +6,6 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/gofiber/fiber/v2/middleware/requestid"
-	"github.com/spf13/cobra"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/avatars"
 	"github.com/zeiss/fiber-htmx/components/buttons"
@@ -22,6 +17,12 @@ import (
 	"github.com/zeiss/fiber-htmx/components/navbars"
 	"github.com/zeiss/fiber-htmx/components/swap"
 	"github.com/zeiss/fiber-htmx/components/tables"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
+	"github.com/spf13/cobra"
 )
 
 // Config ...
@@ -95,7 +96,6 @@ var demoRows = []DemoRow{
 
 func init() {
 	rootCmd.PersistentFlags().StringVar(&cfg.Flags.Addr, "addr", ":3000", "addr")
-
 	rootCmd.SilenceUsage = true
 }
 
@@ -124,6 +124,14 @@ func (c *exampleController) Error(err error) error {
 }
 
 func (c *exampleController) Get() error {
+	msg := htmx.MessagesFromContext(c.Ctx())
+	msg.Add(htmx.HtmxMessage{
+		Message: "Hello, World!",
+	})
+	msg.Add(htmx.HtmxMessage{
+		Message: "Hello, World!",
+	})
+
 	return htmx.RenderComp(
 		c.Ctx(),
 		htmx.HTML5(
@@ -1486,6 +1494,7 @@ func run(_ context.Context) error {
 	app.Use(requestid.New())
 	app.Use(logger.New())
 	app.Use(recover.New())
+	app.Use(htmx.NewHtmxMessageHandler())
 
 	app.Get("/", htmx.NewHxControllerHandler(func() htmx.Controller {
 		return &exampleController{}
