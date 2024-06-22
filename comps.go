@@ -279,6 +279,15 @@ func If(condition bool, n Node) Node {
 	return nil
 }
 
+// IfElse is a node that renders a child node if a condition is true, otherwise it renders another child node.
+func IfElse(condition bool, n, elseN Node) Node {
+	if condition {
+		return n
+	}
+
+	return elseN
+}
+
 // Errors is a slice of errors.
 type Errors[K comparable] map[K]error
 
