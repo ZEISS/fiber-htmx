@@ -17,6 +17,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/navbars"
 	"github.com/zeiss/fiber-htmx/components/swap"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/fiber-htmx/components/toasts"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -331,6 +332,23 @@ func (c *exampleController) Get() error {
 										// put 'copy' into me`),
 										// 										htmx.Text("Copy"),
 										// 									),
+									),
+									htmx.Div(
+										toasts.Toast(
+											toasts.ToastProps{},
+											toasts.ToastAlertInfo(
+												toasts.ToastProps{},
+												htmx.Text("message 1"),
+											),
+											toasts.ToastAlertInfo(
+												toasts.ToastProps{},
+												htmx.Text("message 2"),
+											),
+											toasts.ToastAlertInfo(
+												toasts.ToastProps{},
+												htmx.Text("message 3"),
+											),
+										),
 									),
 									htmx.Div(
 										tables.Table(

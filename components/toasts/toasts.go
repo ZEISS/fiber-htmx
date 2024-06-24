@@ -1,10 +1,16 @@
 package toasts
 
-import htmx "github.com/zeiss/fiber-htmx"
+import (
+	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/buttons"
+)
 
 // ToastProps contains the properties for the toast component.
 type ToastProps struct {
+	// ClassNames contains the class names for the toast component.
 	ClassNames htmx.ClassNames
+	// DisableCloseButton is enabled when the close button is disabled.
+	DisableCloseButton bool
 }
 
 // Toast is a component for the htmx toast extension.
@@ -22,7 +28,7 @@ func Toast(p ToastProps, children ...htmx.Node) htmx.Node {
 }
 
 // ToastTopToastStart is a component for the htmx toast extension.
-func ToastTopStart(p ToastProps, children ...htmx.Node) htmx.Node {
+func ToastTopStart(props ToastProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.Merge(
 			htmx.ClassNames{
@@ -31,14 +37,14 @@ func ToastTopStart(p ToastProps, children ...htmx.Node) htmx.Node {
 				"toast-start": true,
 				"z-[99999]":   true,
 			},
-			p.ClassNames,
+			props.ClassNames,
 		),
 		htmx.Group(children...),
 	)
 }
 
 // ToastTopToastEnd is a component for the htmx toast extension.
-func ToastTopEnd(p ToastProps, children ...htmx.Node) htmx.Node {
+func ToastTopEnd(props ToastProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.Merge(
 			htmx.ClassNames{
@@ -47,7 +53,7 @@ func ToastTopEnd(p ToastProps, children ...htmx.Node) htmx.Node {
 				"toast-end": true,
 				"z-[99999]": true,
 			},
-			p.ClassNames,
+			props.ClassNames,
 		),
 		htmx.Group(children...),
 	)
@@ -69,37 +75,82 @@ func ToastEnd(p ToastProps, children ...htmx.Node) htmx.Node {
 }
 
 // ToastAlertInfo is a component for the htmx toast extension.
-func ToastAlertInfo(children ...htmx.Node) htmx.Node {
+func ToastAlertInfo(props ToastProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.ClassNames{
-			"alert":      true,
-			"alert-info": true,
+			"flex":            true,
+			"alert":           true,
+			"alert-info":      true,
+			"justify-between": true,
 		},
 		htmx.Role("alert"),
 		htmx.Group(children...),
+		htmx.HyperScript(`on load wait 5s then remove me`),
+		htmx.If(
+			!props.DisableCloseButton,
+			buttons.Outline(
+				buttons.ButtonProps{
+					ClassNames: htmx.ClassNames{
+						"btn-sm": true,
+					},
+				},
+				htmx.HyperScript("on click remove closest .alert"),
+				htmx.Text("Close"),
+			),
+		),
 	)
 }
 
 // ToastAlertSuccess is a component for the htmx toast extension.
-func ToastAlertSuccess(children ...htmx.Node) htmx.Node {
+func ToastAlertSuccess(props ToastProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.ClassNames{
-			"alert":         true,
-			"alert-success": true,
+			"flex":            true,
+			"alert":           true,
+			"alert-success":   true,
+			"justify-between": true,
 		},
 		htmx.Role("alert"),
+		htmx.HyperScript(`on load wait 5s then remove me`),
 		htmx.Group(children...),
+		htmx.If(
+			!props.DisableCloseButton,
+			buttons.Outline(
+				buttons.ButtonProps{
+					ClassNames: htmx.ClassNames{
+						"btn-sm": true,
+					},
+				},
+				htmx.HyperScript("on click remove closest .alert"),
+				htmx.Text("Close"),
+			),
+		),
 	)
 }
 
 // ToastAlertError is a component for the htmx toast extension.
-func ToastAlertError(children ...htmx.Node) htmx.Node {
+func ToastAlertError(props ToastProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.ClassNames{
-			"alert":       true,
-			"alert-error": true,
+			"flex":            true,
+			"alert":           true,
+			"alert-error":     true,
+			"justify-between": true,
 		},
 		htmx.Role("alert"),
+		htmx.HyperScript(`on load wait 5s then remove me`),
 		htmx.Group(children...),
+		htmx.If(
+			!props.DisableCloseButton,
+			buttons.Outline(
+				buttons.ButtonProps{
+					ClassNames: htmx.ClassNames{
+						"btn-sm": true,
+					},
+				},
+				htmx.HyperScript("on click remove closest .alert"),
+				htmx.Text("Close"),
+			),
+		),
 	)
 }
