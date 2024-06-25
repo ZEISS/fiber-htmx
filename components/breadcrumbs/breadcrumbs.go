@@ -31,7 +31,10 @@ type BreadcrumbProps struct {
 // BreadCrumb generates a breadcrumb item element based on the provided properties.
 func Breadcrumb(p BreadcrumbProps, children ...htmx.Node) htmx.Node {
 	return htmx.Li(
-		htmx.ClassNames{}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{},
+			p.ClassNames,
+		),
 		htmx.A(
 			htmx.Href(p.Href),
 			htmx.Rel(p.Rel),

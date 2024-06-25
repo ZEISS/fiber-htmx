@@ -21,9 +21,12 @@ func ChevronUpDownOutline(p IconProps) htmx.Node {
 		htmx.Attribute("viewBox", "0 0 24 24"),
 		htmx.Attribute("stroke-width", "1.5"),
 		htmx.Attribute("stroke", "currentColor"),
-		htmx.ClassNames{
-			"w-6 h-6": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"w-6": true,
+				"h-6": true},
+			p.ClassNames,
+		),
 		htmx.Path(
 			htmx.Attribute("stroke-linecap", "round"),
 			htmx.Attribute("stroke-linejoin", "round"),
@@ -40,9 +43,12 @@ func ChevronUpOutline(p IconProps) htmx.Node {
 		htmx.Attribute("viewBox", "0 0 24 24"),
 		htmx.Attribute("stroke-width", "1.5"),
 		htmx.Attribute("stroke", "currentColor"),
-		htmx.ClassNames{
-			"w-6 h-6": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"w-6": true,
+				"h-6": true},
+			p.ClassNames,
+		),
 		htmx.Path(
 			htmx.Attribute("stroke-linecap", "round"),
 			htmx.Attribute("stroke-linejoin", "round"),
@@ -59,9 +65,12 @@ func ChevronDownOutline(p IconProps) htmx.Node {
 		htmx.Attribute("viewBox", "0 0 24 24"),
 		htmx.Attribute("stroke-width", "1.5"),
 		htmx.Attribute("stroke", "currentColor"),
-		htmx.ClassNames{
-			"w-6 h-6": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"w-6": true,
+				"h-6": true},
+			p.ClassNames,
+		),
 		htmx.Path(
 			htmx.Attribute("stroke-linecap", "round"),
 			htmx.Attribute("stroke-linejoin", "round"),
@@ -78,9 +87,12 @@ func ChevronLeftOutline(p IconProps) htmx.Node {
 		htmx.Attribute("viewBox", "0 0 24 24"),
 		htmx.Attribute("stroke-width", "1.5"),
 		htmx.Attribute("stroke", "currentColor"),
-		htmx.ClassNames{
-			"w-6 h-6": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"w-6": true,
+				"h-6": true},
+			p.ClassNames,
+		),
 		htmx.Path(
 			htmx.Attribute("stroke-linecap", "round"),
 			htmx.Attribute("stroke-linejoin", "round"),
@@ -97,9 +109,12 @@ func ChevronRightOutline(p IconProps) htmx.Node {
 		htmx.Attribute("viewBox", "0 0 24 24"),
 		htmx.Attribute("stroke-width", "1.5"),
 		htmx.Attribute("stroke", "currentColor"),
-		htmx.ClassNames{
-			"w-6 h-6": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"w-6": true,
+				"h-6": true},
+			p.ClassNames,
+		),
 		htmx.Path(
 			htmx.Attribute("stroke-linecap", "round"),
 			htmx.Attribute("stroke-linejoin", "round"),
@@ -118,8 +133,8 @@ func SearchOutline(p IconProps) htmx.Node {
 		htmx.Attribute("stroke", "currentColor"),
 		htmx.Merge(
 			htmx.ClassNames{
-				"w-6 h-6": true,
-			},
+				"w-6": true,
+				"h-6": true},
 			p.ClassNames,
 		),
 		htmx.Path(

@@ -1,35 +1,33 @@
 package alerts
 
-import htmx "github.com/zeiss/fiber-htmx"
+import (
+	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/icons"
+)
 
 // AlertProps is the type of the props for the Alert component
 type AlertProps struct {
+	// ClassNames are the class names for the alert component.
 	ClassNames htmx.ClassNames
+	// Icon is the icon for the alert component.
+	Icon htmx.Node
 }
 
 // Alert is a component that displays an alert.
 func Alert(p AlertProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"alert": true,
-		}.Merge(p.ClassNames),
-		htmx.SVG(
+		htmx.Merge(
 			htmx.ClassNames{
-				"stroke-info": true,
-				"shrink-0":    true,
-				"w-6":         true,
-				"h-6":         true,
+				"alert": true,
 			},
-			htmx.SVG(
-				htmx.Attribute("xmlns", "http://www.w3.org/2000/svg"),
-				htmx.Attribute("fill", "none"),
-				htmx.Attribute("viewBox", "0 0 24 24"),
-				htmx.Path(
-					htmx.Attribute("stroke-linecap", "round"),
-					htmx.Attribute("stroke-linejoin", "round"),
-					htmx.Attribute("stroke-width", "2"),
-					htmx.Attribute("d", "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"),
-				),
+			p.ClassNames,
+		),
+		htmx.Role("alert"),
+		htmx.IfElse(
+			p.Icon != nil,
+			p.Icon,
+			icons.InformationCircleOutline(
+				icons.IconProps{},
 			),
 		),
 		htmx.Span(
@@ -41,27 +39,19 @@ func Alert(p AlertProps, children ...htmx.Node) htmx.Node {
 // Info is a component that displays an info alert.
 func Info(p AlertProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"alert":      true,
-			"alert-info": true,
-		}.Merge(p.ClassNames),
-		htmx.SVG(
+		htmx.Merge(
 			htmx.ClassNames{
-				"stroke-info": true,
-				"shrink-0":    true,
-				"w-6":         true,
-				"h-6":         true,
+				"alert":      true,
+				"alert-info": true,
 			},
-			htmx.SVG(
-				htmx.Attribute("xmlns", "http://www.w3.org/2000/svg"),
-				htmx.Attribute("fill", "none"),
-				htmx.Attribute("viewBox", "0 0 24 24"),
-				htmx.Path(
-					htmx.Attribute("stroke-linecap", "round"),
-					htmx.Attribute("stroke-linejoin", "round"),
-					htmx.Attribute("stroke-width", "2"),
-					htmx.Attribute("d", "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"),
-				),
+			p.ClassNames,
+		),
+		htmx.Role("alert"),
+		htmx.IfElse(
+			p.Icon != nil,
+			p.Icon,
+			icons.InformationCircleOutline(
+				icons.IconProps{},
 			),
 		),
 		htmx.Span(
@@ -73,10 +63,14 @@ func Info(p AlertProps, children ...htmx.Node) htmx.Node {
 // Success is a component that displays a success alert.
 func Success(p AlertProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"alert":         true,
-			"alert-success": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"alert":         true,
+				"alert-success": true,
+			},
+			p.ClassNames,
+		),
+		htmx.Role("alert"),
 		htmx.SVG(
 			htmx.ClassNames{
 				"stroke-success": true,
@@ -105,10 +99,14 @@ func Success(p AlertProps, children ...htmx.Node) htmx.Node {
 // Warning is a component that displays a warning alert.
 func Warning(p AlertProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"alert":         true,
-			"alert-warning": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"alert":         true,
+				"alert-warning": true,
+			},
+			p.ClassNames,
+		),
+		htmx.Role("alert"),
 		htmx.SVG(
 			htmx.ClassNames{
 				"stroke-warning": true,
@@ -137,10 +135,13 @@ func Warning(p AlertProps, children ...htmx.Node) htmx.Node {
 // Error is a component that displays an error alert.
 func Error(p AlertProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"alert":       true,
-			"alert-error": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"alert":       true,
+				"alert-error": true,
+			},
+			p.ClassNames,
+		),
 		htmx.SVG(
 			htmx.ClassNames{
 				"stroke-error": true,

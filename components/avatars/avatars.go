@@ -10,9 +10,12 @@ type AvatarProps struct {
 // AvatarRounded generates an avatar based on the provided properties.
 func AvatarRoundedMedium(p AvatarProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"avatar": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"avatar": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Div(
 			htmx.ClassNames{
 				"w-24":    true,
@@ -26,9 +29,12 @@ func AvatarRoundedMedium(p AvatarProps, children ...htmx.Node) htmx.Node {
 // AvatarRoundedSmall generates an extra small avatar based on the provided properties.
 func AvatarRoundedSmall(p AvatarProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"avatar": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"avatar": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Div(
 			htmx.ClassNames{
 				"w-8":     true,
@@ -42,9 +48,12 @@ func AvatarRoundedSmall(p AvatarProps, children ...htmx.Node) htmx.Node {
 // AvatarRoundedLarge generates a large avatar based on the provided properties.
 func AvatarRoundedLarge(p AvatarProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"avatar": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"avatar": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Div(
 			htmx.ClassNames{
 				"w-32":    true,
@@ -58,9 +67,12 @@ func AvatarRoundedLarge(p AvatarProps, children ...htmx.Node) htmx.Node {
 // AvatarRoundMedium generates a round avatar based on the provided properties.
 func AvatarRoundMedium(p AvatarProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"avatar": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"avatar": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Div(
 			htmx.ClassNames{
 				"w-24":         true,
@@ -74,9 +86,12 @@ func AvatarRoundMedium(p AvatarProps, children ...htmx.Node) htmx.Node {
 // AvatarRoundSmall generates an extra small round avatar based on the provided properties.
 func AvatarRoundSmall(p AvatarProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"avatar": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"avatar": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Div(
 			htmx.ClassNames{
 				"w-8":          true,
@@ -90,9 +105,12 @@ func AvatarRoundSmall(p AvatarProps, children ...htmx.Node) htmx.Node {
 // AvatarRoundLarge generates a large round avatar based on the provided properties.
 func AvatarRoundLarge(p AvatarProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"avatar": true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"avatar": true,
+			},
+			p.ClassNames,
+		),
 		htmx.Div(
 			htmx.ClassNames{
 				"w-32":         true,
