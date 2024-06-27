@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	authz "github.com/zeiss/fiber-authz"
 )
 
 // The contextKey type is unexported to prevent collisions with context keys defined in
@@ -178,10 +179,10 @@ type ControllerFactory func() Controller
 type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	Next func(c *fiber.Ctx) bool
-
 	// Filters is a list of filters that filter the context.
 	Filters []FilterFunc
-
+	// AuthzChecker is a function that authenticates the user.
+	AuthzChecker authz.AuthzChecker
 	// ErrorHandler is executed when an error is returned from fiber.Handler.
 	//
 	// Optional. Default: DefaultErrorHandler
@@ -190,8 +191,12 @@ type Config struct {
 
 // ConfigDefault is the default config.
 var ConfigDefault = Config{
+	// ErrorHandler is executed when an error is returned from fiber.Handler.
 	ErrorHandler: defaultErrorHandler,
-	Filters:      []FilterFunc{},
+	// Filters is a list of filters that filter the context.
+	Filters: []FilterFunc{},
+	// AuthzChecker is a function that authenticates the user.
+	AuthzChecker: authz.NewNoop(),
 }
 
 // default ErrorHandler that process return error from fiber.Handler
@@ -301,6 +306,23 @@ func NewControllerHandler(factory ControllerFactory, config ...Config) fiber.Han
 
 		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
 
+		auth, ok := ctrl.(authz.AuthzController) // check for authz from the controller
+		if ok && cfg.AuthzChecker != nil {
+			principial, object, action, err := auth.Resolve(c)
+			if err != nil {
+				return ctrl.Error(err)
+			}
+
+			allowed, err := cfg.AuthzChecker.Allowed(c.Context(), principial, object, action)
+			if err != nil {
+				return ctrl.Error(err)
+			}
+
+			if !allowed {
+				return ctrl.Error(authz.ErrForbidden)
+			}
+		}
+
 		for _, f := range cfg.Filters {
 			err = f(c)
 			if err != nil {
@@ -365,7 +387,6 @@ func NewHtmxMessageHandler(config ...Config) fiber.Handler {
 
 		return c.Next()
 	}
-
 }
 
 func addHeaders(c *fiber.Ctx, headers *HtmxMessageHeader) error {
@@ -433,6 +454,10 @@ func configDefault(config ...Config) Config {
 
 	if cfg.Filters == nil {
 		cfg.Filters = ConfigDefault.Filters
+	}
+
+	if cfg.AuthzChecker == nil {
+		cfg.AuthzChecker = ConfigDefault.AuthzChecker
 	}
 
 	return cfg
