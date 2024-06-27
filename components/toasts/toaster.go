@@ -43,10 +43,10 @@ func Toaster(props ToastsProps, children ...htmx.Node) htmx.Node {
 }
 
 // RenderToasts is the handler for rendering the toasts.
-func RenderToasts(c *fiber.Ctx, children ...htmx.Node) htmx.Node {
+func RenderToasts(c *fiber.Ctx, children ...htmx.Node) error {
 	htmx.ReSwap(c, "none") // this forces htmx not to replace the content
 
-	return htmx.Fragment(children...)
+	return htmx.RenderComp(c, htmx.Fragment(children...))
 }
 
 // Toasts are messsage to toast.
