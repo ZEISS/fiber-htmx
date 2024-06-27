@@ -1,6 +1,7 @@
 package toasts
 
 import (
+	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
@@ -39,6 +40,13 @@ func Toaster(props ToastsProps, children ...htmx.Node) htmx.Node {
 		htmx.ID(props.ID),
 		htmx.Group(children...),
 	)
+}
+
+// RenderToasts is the handler for rendering the toasts.
+func RenderToasts(c *fiber.Ctx, children ...htmx.Node) htmx.Node {
+	htmx.ReSwap(c, "none") // this forces htmx not to replace the content
+
+	return htmx.Fragment(children...)
 }
 
 // Toasts are messsage to toast.
