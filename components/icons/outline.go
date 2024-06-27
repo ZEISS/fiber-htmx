@@ -24,7 +24,8 @@ func ChevronUpDownOutline(p IconProps) htmx.Node {
 		htmx.Merge(
 			htmx.ClassNames{
 				"w-6": true,
-				"h-6": true},
+				"h-6": true,
+			},
 			p.ClassNames,
 		),
 		htmx.Path(
@@ -46,7 +47,8 @@ func ChevronUpOutline(p IconProps) htmx.Node {
 		htmx.Merge(
 			htmx.ClassNames{
 				"w-6": true,
-				"h-6": true},
+				"h-6": true,
+			},
 			p.ClassNames,
 		),
 		htmx.Path(
@@ -68,7 +70,8 @@ func ChevronDownOutline(p IconProps) htmx.Node {
 		htmx.Merge(
 			htmx.ClassNames{
 				"w-6": true,
-				"h-6": true},
+				"h-6": true,
+			},
 			p.ClassNames,
 		),
 		htmx.Path(
@@ -90,7 +93,8 @@ func ChevronLeftOutline(p IconProps) htmx.Node {
 		htmx.Merge(
 			htmx.ClassNames{
 				"w-6": true,
-				"h-6": true},
+				"h-6": true,
+			},
 			p.ClassNames,
 		),
 		htmx.Path(
@@ -112,7 +116,8 @@ func ChevronRightOutline(p IconProps) htmx.Node {
 		htmx.Merge(
 			htmx.ClassNames{
 				"w-6": true,
-				"h-6": true},
+				"h-6": true,
+			},
 			p.ClassNames,
 		),
 		htmx.Path(
@@ -134,7 +139,8 @@ func SearchOutline(p IconProps) htmx.Node {
 		htmx.Merge(
 			htmx.ClassNames{
 				"w-6": true,
-				"h-6": true},
+				"h-6": true,
+			},
 			p.ClassNames,
 		),
 		htmx.Path(

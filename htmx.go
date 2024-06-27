@@ -308,12 +308,12 @@ func NewControllerHandler(factory ControllerFactory, config ...Config) fiber.Han
 
 		auth, ok := ctrl.(authz.AuthzController) // check for authz from the controller
 		if ok && cfg.AuthzChecker != nil {
-			principial, object, action, err := auth.Resolve(c)
+			principal, object, action, err := auth.Resolve(c)
 			if err != nil {
 				return ctrl.Error(err)
 			}
 
-			allowed, err := cfg.AuthzChecker.Allowed(c.Context(), principial, object, action)
+			allowed, err := cfg.AuthzChecker.Allowed(c.Context(), principal, object, action)
 			if err != nil {
 				return ctrl.Error(err)
 			}
