@@ -13,6 +13,70 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
+// Paginated is a struct that contains the properties of a pagination
+type Paginated[T any] struct {
+	// Limit is the number of items to return.
+	Limit int `json:"limit" xml:"limit" form:"limit" query:"limit"`
+	// Offset is the number of items to skip.
+	Offset int `json:"offset" xml:"offset" form:"offset" query:"offset"`
+	// Search is the search term to filter the results.
+	Search string `json:"search,omitempty" xml:"search" form:"search" query:"search"`
+	// Sort is the sorting order.
+	Sort string `json:"sort,omitempty" xml:"sort" form:"sort" query:"sort"`
+	// Value is the value to paginate.
+	Value T `json:"value,omitempty" xml:"value" form:"value" query:"value"`
+}
+
+// GetLimit returns the limit.
+func (p *Paginated[T]) GetLimit() int {
+	if p.Limit == 0 {
+		p.Limit = 10
+	}
+
+	return p.Limit
+}
+
+// GetOffset returns the page.
+func (p *Paginated[T]) GetOffset() int {
+	if p.Offset < 0 {
+		p.Offset = 0
+	}
+
+	return p.Offset
+}
+
+// GetSort returns the sort.
+func (p *Paginated[T]) GetSort() string {
+	if p.Sort == "" {
+		p.Sort = "desc"
+	}
+
+	return p.Sort
+}
+
+// GetSearch returns the search.
+func (p *Paginated[T]) GetSearch() string {
+	return p.Search
+}
+
+// Paginate returns a function that paginates the results.
+func Paginate[T any](value interface{}, pagination *Paginated[T], db *gorm.DB) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Offset(pagination.GetOffset()).Limit(pagination.GetLimit())
+	}
+}
+
+// RowsPtr is a function that returns the rows as pointers.
+func RowsPtr[T any](rows []T) []*T {
+	rowsPtr := make([]*T, 0, len(rows))
+	for _, row := range rows {
+		row := row
+		rowsPtr = append(rowsPtr, &row)
+	}
+
+	return rowsPtr
+}
+
 // Results is a struct that contains the results of a query
 type Results[T any] struct {
 	// Limit is the number of items to return.
