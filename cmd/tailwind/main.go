@@ -52,6 +52,7 @@ func main() {
 OUTTER:
 	for {
 		tt, text := l.Next()
+		//nolint:exhaustive
 		switch tt {
 		case css.IdentToken:
 			name := strings.ReplaceAll(string(text), "\\/", "_")
@@ -87,6 +88,6 @@ OUTTER:
 
 	_, err = file.Write(out)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 }
