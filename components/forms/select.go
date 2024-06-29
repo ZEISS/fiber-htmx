@@ -4,7 +4,10 @@ import htmx "github.com/zeiss/fiber-htmx"
 
 // SelectProps ...
 type SelectProps struct {
+	// ClassNames is a map of class names.
 	ClassNames htmx.ClassNames
+	// Disabled is disabling the select.
+	Disabled bool
 }
 
 // Select ...
@@ -18,6 +21,7 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -34,6 +38,7 @@ func SelectBordered(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -50,6 +55,7 @@ func SelectGhost(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -66,6 +72,7 @@ func SelectPrimary(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -82,6 +89,7 @@ func SelectSecondary(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -98,6 +106,7 @@ func SelectAccent(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -114,6 +123,7 @@ func SelectInfo(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -130,6 +140,7 @@ func SelectSuccess(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -146,6 +157,7 @@ func SelectWarning(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -162,6 +174,7 @@ func SelectDanger(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
@@ -178,6 +191,7 @@ func SelectError(p SelectProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.If(p.Disabled, htmx.Disabled()),
 		htmx.Group(children...),
 	)
 }
