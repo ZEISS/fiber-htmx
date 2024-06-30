@@ -48,14 +48,12 @@ This will create the following HTML element.
 <div class="font-semibold">Hello World</div>
 ```
 
-There is support for all HTML5 elements and Tailwind classes. Use `import "github.com/zeiss/fiber-htmx/tailwind"` to include Tailwind classes. 
-
-```html
+There is support for all HTML5 elements and Tailwind classes. Use `import "github.com/zeiss/fiber-htmx/tailwind"` to include Tailwind classes.
 
 ## Installation
 
 ```bash
-$ go get github.com/zeiss/fiber-htmx
+go get github.com/zeiss/fiber-htmx
 ```
 
 ## Components
