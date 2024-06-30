@@ -29,6 +29,29 @@ htmx.Button(
 )
 ```
 
+## Elements
+
+HTML and HTMX elements are represented as functions in Go. The functions are used to create the elements.
+
+```go
+htmx.Div(
+    htmx.ClassNames{
+        tailwind.FontSemibold: true,
+    },
+    htmx.Text("Hello World"),
+)
+```
+
+This will create the following HTML element.
+
+```html
+<div class="font-semibold">Hello World</div>
+```
+
+There is support for all HTML5 elements and Tailwind classes. Use `import "github.com/zeiss/fiber-htmx/tailwind"` to include Tailwind classes. 
+
+```html
+
 ## Installation
 
 ```bash
@@ -68,13 +91,14 @@ func HelloWorld(children ...htmx.Node) htmx.Node {
     )
 }
 ```
+
 Styling of components is done with the `htmx.ClassNames` type.
 
 ```go
 func HelloWorld() htmx.Node {
     return htmx.Div(
         htmx.ClassNames{
-            "font-semibold": true,
+            tailwind.FontSemibold: true,
             "text-red-500": true,
         },
         htmx.Text("Hello World"),
@@ -103,6 +127,7 @@ There are additional complex components that help to write HTML5 and HTMX compon
 
 - [x] [htmx](https://htmx.org/)
 - [x] [HTML5](https://www.w3.org/TR/2011/WD-html5-20110405/)
+- [x] [TailwindCSS](https://tailwindcss.com/)
 - [ ] [DaisyUI](https://daisyui.com/) (WIP)
 - [ ] [Heroicons](https://heroicons.com/) (WIP)
 
@@ -112,8 +137,8 @@ There is also the option to use `htmx.Controller` to encapsulate the logic of th
 
 func NewHelloWorldController() htmx.ControllerFactory {
   return func() htmx.Controller {
-		return &NewHelloWorldController{}
-	}
+    return &NewHelloWorldController{}
+  }
 }
 
 type HelloWorldController struct {
@@ -121,9 +146,8 @@ type HelloWorldController struct {
 }
 
 func (c *HelloWorldController) Get() error {
-    return htmx.RenderComp(
-		c.Ctx(),
-		htmx.HTML5(
+    return c.Render(
+      htmx.HTML5(
             htmx.HTML5Props{
                 Title:    "index",
                 Language: "en",
@@ -138,7 +162,7 @@ func (c *HelloWorldController) Get() error {
 }
 
 app := fiber.New()
-app.Get("/", htmx.NewHxControllerHandler(NewHelloWorldController())
+app.Get("/", htmx.NewHxControllerHandler(NewHelloWorldController()))
 
 app.Listen(":3000")
 ```

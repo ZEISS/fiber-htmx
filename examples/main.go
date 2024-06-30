@@ -19,6 +19,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/navbars"
 	"github.com/zeiss/fiber-htmx/components/swap"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/fiber-htmx/components/toasts"
 
 	"github.com/gofiber/fiber/v2"
@@ -195,17 +196,17 @@ func (c *exampleController) Get() error {
 							},
 							htmx.Div(
 								htmx.ClassNames{
-									"overflow-auto": true,
-									"w-full":        true,
-									"h-screen":      true,
-									"max-w-full":    true,
+									tailwind.OverflowAuto: true,
+									tailwind.WFull:        true,
+									tailwind.HScreen:      true,
+									tailwind.MaxWFull:     true,
 								},
 								htmx.Div(
 									htmx.ClassNames{
-										"flex":        true,
-										"h-full":      true,
-										"flex-col":    true,
-										"bg-base-200": true,
+										tailwind.Flex:    true,
+										tailwind.HFull:   true,
+										tailwind.FlexCol: true,
+										"bg-base-200":    true,
 									},
 									navbars.Navbar(
 										navbars.NavbarProps{

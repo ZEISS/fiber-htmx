@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"go/format"
 	"log"
 	"os"
@@ -15,8 +14,6 @@ import (
 	"github.com/tdewolff/parse/v2"
 	"github.com/tdewolff/parse/v2/css"
 )
-
-const Prefix = "Tailwind"
 
 type flags struct {
 	Output string
@@ -59,7 +56,6 @@ OUTTER:
 			name = strings.ReplaceAll(name, "\\", "_")
 			name = strings.ReplaceAll(name, "%", "Percent")
 			name = strings.ReplaceAll(name, ".", "Fraction")
-			name = fmt.Sprintf("%s%s", Prefix, name)
 			name = strcase.ToPascal(name)
 
 			ref := strings.ReplaceAll(string(text), "\\/", "\\\\/")
