@@ -1,11 +1,16 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
+	"time"
 
+	"github.com/valyala/fasthttp"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/alerts"
 	"github.com/zeiss/fiber-htmx/components/avatars"
@@ -173,6 +178,10 @@ func (c *exampleController) Get() error {
 						htmx.Attribute("src", "https://unpkg.com/hyperscript.org@0.9.12"),
 						htmx.Attribute("type", "application/javascript"),
 					),
+					htmx.Script(
+						htmx.Attribute("src", "https://unpkg.com/htmx-ext-sse@2.0.0/sse.js"),
+						htmx.Attribute("type", "application/javascript"),
+					),
 				},
 			},
 			htmx.Body(
@@ -320,7 +329,6 @@ func (c *exampleController) Get() error {
     wait 1s
     set <input/> in me to checked to true`),
 											htmx.Input(
-
 												htmx.Value("copy"),
 												htmx.Attribute("type", "checkbox"),
 												htmx.Checked(),
@@ -342,6 +350,14 @@ func (c *exampleController) Get() error {
 									alerts.Info(
 										alerts.AlertProps{},
 										htmx.Text("Hello, World!"),
+									),
+									htmx.Div(
+										htmx.HxSSE(),
+										htmx.HxSSEConnect("/sse"),
+										htmx.HxSSESwap("message"),
+									),
+									htmx.Div(
+										htmx.ID("events"),
 									),
 									htmx.Div(
 										forms.TextInput(
@@ -532,6 +548,44 @@ func run(_ context.Context) error {
 	app.Get("/", htmx.NewHxControllerHandler(func() htmx.Controller {
 		return &exampleController{}
 	}))
+
+	app.Get("/sse", func(c *fiber.Ctx) error {
+		c.Set("Content-Type", "text/event-stream")
+		c.Set("Cache-Control", "no-cache")
+		c.Set("Connection", "keep-alive")
+		c.Set("Transfer-Encoding", "chunked")
+
+		c.Status(fiber.StatusOK).Context().SetBodyStreamWriter(fasthttp.StreamWriter(func(w *bufio.Writer) {
+			fmt.Println("WRITER")
+			var i int
+			for {
+				i++
+				msg := fmt.Sprintf("%d - the time is %v", i, time.Now())
+
+				var buf bytes.Buffer
+				err := htmx.Div(htmx.ID("message"), htmx.Text(msg)).Render(&buf)
+				if err != nil {
+					break
+				}
+
+				fmt.Fprintf(w, "event: %s\n", "message")
+				fmt.Fprintf(w, "data: %s\n\n", buf.String())
+
+				err = w.Flush()
+				if err != nil {
+					// Refreshing page in web browser will establish a new
+					// SSE connection, but only (the last) one is alive, so
+					// dead connections must be closed here.
+					fmt.Printf("Error while flushing: %v. Closing http connection.\n", err)
+
+					break
+				}
+				time.Sleep(2 * time.Second)
+			}
+		}))
+
+		return nil
+	})
 
 	app.Post("/error", htmx.NewHxControllerHandler(func() htmx.Controller {
 		return &exampleController{}

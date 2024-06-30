@@ -11,6 +11,7 @@ const (
 	HxExtMultiSwap           HxExtType = "multi-swap"            // The multi-swap extension allows you to swap multiple elements in a single response.
 	HxExtPathDeps            HxExtType = "path-deps"             // The path-deps extension allows you to specify the dependencies for a path.
 	HxResponseTargets        HxExtType = "response-targets"      // The response-target extension allows you to specify the target for the response.
+	HxExtSSE                 HxExtType = "sse"                   // The sse extension allows you to use Server-Sent Events (SSE) to stream updates to the client.
 )
 
 // String returns the string representation of the htmx extension type.
@@ -41,4 +42,19 @@ func XSLTTemplat(v string) Node {
 // HyperScript sets the _ attribute to specify the hyperscript for the response.
 func HyperScript(v string) Node {
 	return Attribute("_", v)
+}
+
+// HxSSE sets the sse attribute to specify the Server-Sent Events (SSE) URL.
+func HxSSE() Node {
+	return HxExt(HxExtSSE.String())
+}
+
+// HxSSEConnect sets the sse-connect attribute to specify the Server-Sent Events (SSE) URL.
+func HxSSEConnect(url string) Node {
+	return Attribute("sse-connect", url)
+}
+
+// HxSSESwap sets the sse-swap attribute to specify the Server-Sent Events (SSE) swap.
+func HxSSESwap(target string) Node {
+	return Attribute("sse-swap", target)
 }
