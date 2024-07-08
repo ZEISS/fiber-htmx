@@ -111,7 +111,7 @@ func (c *ClientImpl) Events() chan Event {
 
 // Close closes the client.
 func (c *ClientImpl) Close() {
-	close(c.events)
+	<-c.events
 }
 
 // NewClient creates a new client.
@@ -177,31 +177,23 @@ func NewSSEHandler(sender SenderFactory, config ...Config) fiber.Handler {
 		c.Set(fiber.HeaderTransferEncoding, "chunked")
 
 		s := sender(c) // return a sender
-		defer s.Close()
 
 		c.Status(fiber.StatusOK).Context().SetBodyStreamWriter(fasthttp.StreamWriter(func(w *bufio.Writer) {
-			for {
-				select {
-				case msg, ok := <-s.Events():
-					if !ok {
-						return
-					}
-
-					_, err := fmt.Fprint(w, msg.String())
-					if err != nil {
-						return
-					}
-
-					err = w.Flush()
-					if err != nil {
-						// Refreshing page in web browser will establish a new
-						// SSE connection, but only (the last) one is alive, so
-						// dead connections must be closed here.
-						return
-					}
-				case <-c.Context().Done():
+			defer s.Close()
+			for msg := range s.Events() {
+				_, err := fmt.Fprint(w, msg.String())
+				if err != nil {
 					return
 				}
+
+				err = w.Flush()
+				if err != nil {
+					// Refreshing page in web browser will establish a new
+					// SSE connection, but only (the last) one is alive, so
+					// dead connections must be closed here.
+					return
+				}
+
 			}
 		}))
 
