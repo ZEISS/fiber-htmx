@@ -165,6 +165,15 @@ app.Get("/", htmx.NewHxControllerHandler(NewHelloWorldController()))
 app.Listen(":3000")
 ```
 
+## Server-side events (SSE)
+
+The package supports server-side events (SSE) to update the components on the client-side.
+
+```go
+manager := sse.NewBroadcastManager(5)
+app.Get("/sse", sse.NewSSEHandler(manager))
+```
+
 ## Examples
 
 See [examples](https://github.com/zeiss/fiber-htmx/tree/master/examples) to understand the provided interfaces.
