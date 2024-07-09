@@ -535,7 +535,7 @@ func (c *exampleController) Get() error {
 }
 
 type webSrv struct {
-	factory sse.SenderFactory
+	manager sse.Manager
 }
 
 func (w *webSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.RunFunc) func() error {
@@ -550,7 +550,7 @@ func (w *webSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			return &exampleController{}
 		}))
 
-		app.Get("/sse", sse.NewSSEHandler(w.factory))
+		app.Get("/sse", sse.NewSSEHandler(w.manager))
 
 		app.Post("/error", htmx.NewHxControllerHandler(func() htmx.Controller {
 			return &exampleController{}
@@ -569,15 +569,15 @@ func run(ctx context.Context) error {
 	log.SetFlags(0)
 	log.SetOutput(os.Stderr)
 
-	broadcast := sse.NewBroadcastManager(5)
+	manager := sse.NewBroadcastManager(5)
 
 	webSrv := &webSrv{
-		factory: broadcast.CreateSender(),
+		manager: manager,
 	}
 
 	s, _ := server.WithContext(ctx)
 
-	s.Listen(broadcast, true)
+	s.Listen(manager, true)
 	s.Listen(webSrv, true)
 
 	ticker := time.NewTicker(2 * time.Second)
@@ -588,7 +588,7 @@ func run(ctx context.Context) error {
 			case <-ctx.Done():
 				return
 			case t := <-ticker.C:
-				broadcast.Send(sse.NewMessage("demo", fmt.Sprintf("Hello, World! %s", t)))
+				manager.Send() <- sse.NewMessage("demo", fmt.Sprintf("Hello, World! %s", t))
 			}
 		}
 	}()
