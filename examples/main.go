@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -24,6 +25,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/fiber-htmx/components/toasts"
+	"github.com/zeiss/fiber-htmx/components/utils"
 	"github.com/zeiss/fiber-htmx/sse"
 
 	"github.com/gofiber/fiber/v2"
@@ -398,6 +400,14 @@ func (c *exampleController) Get() error {
 											),
 										),
 									),
+									htmx.Fallback(htmx.Markdown([]byte("## Hello, Markdown!")), htmx.Text("Fallback")),
+									htmx.Fallback(
+										htmx.ErrorBoundary(
+											func() htmx.Node {
+												return utils.Panic(errors.New("panic"))
+											},
+										),
+										htmx.Text("Fallback")),
 									htmx.Div(
 										tables.Table(
 											tables.TableProps{

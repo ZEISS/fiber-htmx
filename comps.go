@@ -1,12 +1,14 @@
 package htmx
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"io"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/yuin/goldmark"
 )
 
 // Node is a node in the HTML tree.
@@ -270,6 +272,58 @@ func (c fragment) Render(w io.Writer) error {
 	return nil
 }
 
+type errorBoundary struct {
+	n ErrBoundaryFunc
+}
+
+// ErrBoundaryFunc is a function that returns a node.
+type ErrBoundaryFunc func() Node
+
+// ErrorBoundary is a node that catches panics and renders an error.
+func ErrorBoundary(n ErrBoundaryFunc) Node {
+	return errorBoundary{n: n}
+}
+
+// Render is a node that renders an error boundary.
+func (c errorBoundary) Render(w io.Writer) error {
+	n := c.n()
+
+	return n.Render(w)
+}
+
+type fallback struct {
+	n Node
+	f Node
+}
+
+// Fallback is a node that renders a fallback node if a condition is false.
+func Fallback(n Node, f Node) Node {
+	return fallback{n: n, f: f}
+}
+
+// Render is a node that renders a fallback node.
+func (c fallback) Render(w io.Writer) (err error) {
+	if c.n == nil {
+		return c.f.Render(w)
+	}
+
+	defer func() {
+		if r := recover(); r != nil {
+			err = c.f.Render(w)
+		}
+	}()
+
+	var b bytes.Buffer
+
+	if err := c.n.Render(&b); err != nil {
+		return c.f.Render(w)
+	}
+
+	_, err = io.Copy(w, &b)
+
+	return err
+}
+
 // If is a node that renders a child node if a condition is true.
 func If(condition bool, n Node) Node {
 	if condition {
@@ -316,4 +370,21 @@ func KeyExists[K comparable, V any](m map[K]V, key K, fn func(k K, v V) Node) No
 // ErrorExists is a node that renders a child node if an error exists.
 func ErrorExists[K comparable](e Errors[K], key K, fn func(k K, v error) Node) Node {
 	return KeyExists(e, key, fn)
+}
+
+type md struct {
+	source []byte
+	opts   []goldmark.Option
+}
+
+// Markdown is a node that renders a markdown.
+func Markdown(source []byte, opts ...goldmark.Option) Node {
+	return md{source: source, opts: opts}
+}
+
+// Render is a node that renders a markdown.
+func (m md) Render(w io.Writer) error {
+	md := goldmark.New(m.opts...)
+
+	return md.Convert(m.source, w)
 }
