@@ -38,6 +38,7 @@ var ConfigDefault = Config{
 }
 
 // New ...
+// nolint:gocyclo
 func New(config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
