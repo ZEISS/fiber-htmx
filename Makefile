@@ -1,11 +1,11 @@
 .DEFAULT_GOAL := release
 
-GO 				?= go
+GO 						?= go
 GO_RUN_TOOLS 	?= $(GO) run -modfile ./tools/go.mod
-GO_TEST 		?= $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
+GO_TEST 			?= $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
 GO_RELEASER 	?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
 GO_BENCHSTAT 	?= $(GO_RUN_TOOLS) golang.org/x/perf/cmd/benchstat
-GO_MOD 			?= $(shell ${GO} list -m)
+GO_MOD 				?= $(shell ${GO} list -m)
 
 .PHONY: release
 release: ## Release the project.
@@ -14,6 +14,10 @@ release: ## Release the project.
 .PHONY: generate
 generate: ## Generate code.
 	$(GO) generate ./...
+
+.PHONY: bundle
+bundle: ## Bundle the project.
+	./node_modules/.bin/esbuild src/**/*.js --minify --sourcemap --bundle --outfile=dist/out.js
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.

@@ -11,6 +11,7 @@ import (
 
 	"github.com/katallaxie/pkg/server"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/bundle"
 	"github.com/zeiss/fiber-htmx/components/alerts"
 	"github.com/zeiss/fiber-htmx/components/avatars"
 	"github.com/zeiss/fiber-htmx/components/buttons"
@@ -120,7 +121,11 @@ func (c *exampleController) Error(err error) error {
 			htmx.HTML5Props{
 				Title:    "error",
 				Language: "en",
-				Head:     []htmx.Node{},
+				Head: []htmx.Node{
+					htmx.Link(
+						htmx.Attribute("href", "/static/out.js"),
+					),
+				},
 			},
 			htmx.Div(
 				htmx.ClassNames{
@@ -182,6 +187,9 @@ func (c *exampleController) Get() error {
 					htmx.Script(
 						htmx.Attribute("src", "https://unpkg.com/htmx-ext-sse@2.0.0/sse.js"),
 						htmx.Attribute("type", "application/javascript"),
+					),
+					htmx.Script(
+						htmx.Attribute("src", "/static/out.js"),
 					),
 				},
 			},
@@ -324,11 +332,11 @@ func (c *exampleController) Get() error {
 												},
 											},
 											// Write a Hyperscript that toggles a checkbox inside the current element
-											htmx.HyperScript(`on click
-    writeText(my previousElementSibling's innerText) on navigator.clipboard
-    set <input/> in me to checked to not checked
-    wait 1s
-    set <input/> in me to checked to true`),
+											// 										htmx.HyperScript(`on click
+											// writeText(my previousElementSibling's innerText) on navigator.clipboard
+											// set <input/> in me to checked to not checked
+											// wait 1s
+											// set <input/> in me to checked to true`),
 											htmx.Input(
 												htmx.Value("copy"),
 												htmx.Attribute("type", "checkbox"),
@@ -407,7 +415,40 @@ func (c *exampleController) Get() error {
 												return utils.Panic(errors.New("panic"))
 											},
 										),
-										htmx.Text("Fallback")),
+										htmx.Text("Fallback"),
+									),
+									htmx.Raw(`<multi-select>Click me</multi-select>`),
+									dropdowns.Dropdown(
+										dropdowns.DropdownProps{
+											ClassNames: htmx.ClassNames{},
+										},
+										dropdowns.DropdownButton(
+											dropdowns.DropdownButtonProps{
+												ClassNames: htmx.ClassNames{
+													"btn-outline": true,
+												},
+											},
+											htmx.ID("dropdown"),
+											htmx.Text("Dropdown"),
+										),
+										dropdowns.DropdownMenuItems(
+											dropdowns.DropdownMenuItemsProps{},
+											forms.TextInputBordered(
+												forms.TextInputProps{
+													ClassNames: htmx.ClassNames{
+														"input-sm": true,
+													},
+													Placeholder: "Search...",
+												},
+												htmx.HxPost("/dropdown"),
+												htmx.HxTrigger("input changed delay:500ms, search"),
+												htmx.HxTarget("#search-results"),
+											),
+											htmx.Div(
+												htmx.ID("search-results"),
+											),
+										),
+									),
 									htmx.Div(
 										tables.Table(
 											tables.TableProps{
@@ -560,11 +601,45 @@ func (w *webSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			return &exampleController{}
 		}))
 
+		app.Use("/static", bundle.New(bundle.Config{PathPrefix: "/static"}))
+
 		app.Get("/sse", sse.NewSSEHandler(w.manager))
 
 		app.Post("/error", htmx.NewHxControllerHandler(func() htmx.Controller {
 			return &exampleController{}
 		}))
+
+		app.Post("/dropdown", htmx.NewCompHandler(
+			htmx.Fragment(
+				dropdowns.DropdownMenuItem(
+					dropdowns.DropdownMenuItemProps{},
+					htmx.Input(
+						htmx.ID("selected"),
+						htmx.Attribute("type", "hidden"),
+						htmx.Attribute("name", "selected"),
+						htmx.Value("demo"),
+					),
+					htmx.A(
+						htmx.Text("Item 1"),
+						htmx.HyperScript(`on click put parentElement.innerHTML of me into #dropdown.innerHTML`),
+					),
+				),
+				dropdowns.DropdownMenuItem(
+					dropdowns.DropdownMenuItemProps{},
+					forms.Checkbox(
+						forms.CheckboxProps{},
+						htmx.Text("Item 2"),
+					),
+				),
+				dropdowns.DropdownMenuItem(
+					dropdowns.DropdownMenuItemProps{},
+					forms.Checkbox(
+						forms.CheckboxProps{},
+						htmx.Text("Item 3"),
+					),
+				),
+			),
+		))
 
 		err := app.Listen(cfg.Flags.Addr)
 		if err != nil {
