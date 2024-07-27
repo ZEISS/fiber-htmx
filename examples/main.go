@@ -189,6 +189,10 @@ func (c *exampleController) Get() error {
 						htmx.Attribute("type", "application/javascript"),
 					),
 					htmx.Script(
+						htmx.Attribute("src", "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"),
+						htmx.Defer(),
+					),
+					htmx.Script(
 						htmx.Attribute("src", "/static/out.js"),
 					),
 				},
