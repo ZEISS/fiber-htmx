@@ -72,8 +72,8 @@ func XIgnore() htmx.Node {
 }
 
 // XRef returns an attribute that tells Alpine.js to reference an element.
-func XRef() htmx.Node {
-	return htmx.Attribute("x-ref", "")
+func XRef(name string) htmx.Node {
+	return htmx.Attribute("x-ref", name)
 }
 
 // XCloak returns an attribute that tells Alpine.js to hide an element until it is initialized.
