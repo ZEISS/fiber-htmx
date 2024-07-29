@@ -488,6 +488,11 @@ func CrossOrigin(v string) Node {
 	return Attribute("crossorigin", v)
 }
 
+// List sets the list attribute for input elements.
+func List(v string) Node {
+	return Attribute("list", v)
+}
+
 // OnePasswordIgnore sets the data-1p-ignore attribute for elements.
 func OnePasswordIgnore() Node {
 	return Attribute("data-1p-ignore")
