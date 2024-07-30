@@ -17,6 +17,12 @@ A Go package to write HTML5 and HTMX components in Go. The package is designed t
 - Easy to use and learn.
 - Easy to extend and customize.
 
+## Installation
+
+```bash
+go get github.com/zeiss/fiber-htmx
+```
+
 ### Example
 
 Creating a button leveraging htmx is as easy as this.
@@ -49,12 +55,6 @@ This will create the following HTML element.
 ```
 
 There is support for all HTML5 elements and Tailwind classes. Use `import "github.com/zeiss/fiber-htmx/tailwind"` to include Tailwind classes.
-
-## Installation
-
-```bash
-go get github.com/zeiss/fiber-htmx
-```
 
 ## Components
 
@@ -172,6 +172,20 @@ The package supports server-side events (SSE) to update the components on the cl
 ```go
 manager := sse.NewBroadcastManager(5)
 app.Get("/sse", sse.NewSSEHandler(manager))
+```
+## Error Handling
+
+There are components that enable handling fallbacks in case of errors and to recover from panics in rendering components.
+
+```go
+htmx.Fallback(
+  htmx.ErrorBoundary(
+    func() htmx.Node {
+      return utils.Panic(errors.New("panic"))
+    },
+  ),
+  htmx.Text("Fallback"),
+),
 ```
 
 ## Examples
