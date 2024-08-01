@@ -412,14 +412,18 @@ func (c *exampleController) Get() error {
 											),
 										),
 									),
-									htmx.Fallback(htmx.Markdown([]byte("## Hello, Markdown!")), htmx.Text("Fallback")),
+									htmx.Fallback(htmx.Markdown([]byte("## Hello, Markdown!")), func(err error) htmx.Node {
+										return htmx.Text("Fallback")
+									}),
 									htmx.Fallback(
 										htmx.ErrorBoundary(
 											func() htmx.Node {
-												return utils.Panic(errors.New("panic"))
+												return utils.Panic(errors.New("this is a new panic"))
 											},
 										),
-										htmx.Text("Fallback"),
+										func(err error) htmx.Node {
+											return htmx.Text(err.Error())
+										},
 									),
 									htmx.Raw(`<multi-select>Click me</multi-select>`),
 									dropdowns.Dropdown(

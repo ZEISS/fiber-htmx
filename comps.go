@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/yuin/goldmark"
+	"github.com/zeiss/pkg/errorx"
 )
 
 // Node is a node in the HTML tree.
@@ -293,30 +294,35 @@ func (c errorBoundary) Render(w io.Writer) error {
 
 type fallback struct {
 	n Node
-	f Node
+	f FallbackFunc
 }
 
+// FallbackFunc is a function that returns a node.
+type FallbackFunc func(error) Node
+
 // Fallback is a node that renders a fallback node if a condition is false.
-func Fallback(n Node, f Node) Node {
+func Fallback(n Node, f FallbackFunc) Node {
 	return fallback{n: n, f: f}
 }
 
 // Render is a node that renders a fallback node.
 func (c fallback) Render(w io.Writer) (err error) {
 	if c.n == nil {
-		return c.f.Render(w)
+		n := c.f(nil)
+		return n.Render(w)
 	}
 
 	defer func() {
 		if r := recover(); r != nil {
-			err = c.f.Render(w)
+			n := c.f(errorx.RecoverError(r))
+			err = n.Render(w)
 		}
 	}()
 
 	var b bytes.Buffer
 
 	if err := c.n.Render(&b); err != nil {
-		return c.f.Render(w)
+		return c.f(err).Render(w)
 	}
 
 	_, err = io.Copy(w, &b)
