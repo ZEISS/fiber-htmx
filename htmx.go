@@ -164,6 +164,14 @@ func RenderComp(c *fiber.Ctx, n Node, opt ...RenderOpt) error {
 	return n.Render(c)
 }
 
+// RenderCompFunc is a helper function to render a component function.
+type ControllerComponentFactory func(ctrl Controller) Node
+
+// ControllerComponent is a helper function to render a controller component.
+func ControllerComponent(ctrl Controller, fn ControllerComponentFactory) Node {
+	return fn(ctrl)
+}
+
 // StopPolling is a helper function to stop polling.
 func StopPolling(c *fiber.Ctx) error {
 	return c.SendStatus(StatusStopPolling)
