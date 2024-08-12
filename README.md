@@ -35,6 +35,15 @@ htmx.Button(
 )
 ```
 
+There are additional complex components that help to write HTML5 and HTMX components in Go.
+
+- [x] [htmx](https://htmx.org/)
+- [x] [HTML5](https://www.w3.org/TR/2011/WD-html5-20110405/)
+- [x] [TailwindCSS](https://tailwindcss.com/)
+- [x] [Alpine.js](https://alpinejs.dev/)
+- [ ] [DaisyUI](https://daisyui.com/) (WIP)
+- [ ] [Heroicons](https://heroicons.com/) (WIP)
+
 ## Elements
 
 HTML and HTMX elements are represented as functions in Go. The functions are used to create the elements.
@@ -120,14 +129,6 @@ func HelloWorld(classes htmx.ClassNames) htmx.Node {
     )
 }
 ```
-
-There are additional complex components that help to write HTML5 and HTMX components in Go.
-
-- [x] [htmx](https://htmx.org/)
-- [x] [HTML5](https://www.w3.org/TR/2011/WD-html5-20110405/)
-- [x] [TailwindCSS](https://tailwindcss.com/)
-- [ ] [DaisyUI](https://daisyui.com/) (WIP)
-- [ ] [Heroicons](https://heroicons.com/) (WIP)
 
 There is also the option to use `htmx.Controller` to encapsulate the logic of the components.
 
