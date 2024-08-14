@@ -5,6 +5,8 @@ package htmx
 
 import (
 	"fmt"
+
+	"github.com/zeiss/pkg/conv"
 )
 
 // HxEventType represents the type of htmx event.
@@ -25,7 +27,7 @@ const (
 
 // HxBoost sets the hx-boost attribute to enable or disable boosting.
 func HxBoost(v bool) Node {
-	return Attribute("hx-boost", AsStr(v))
+	return Attribute("hx-boost", conv.String(v))
 }
 
 // HxGet sets the hx-get attribute to specify the URL for GET requests.
@@ -40,7 +42,7 @@ func HxPost(url string) Node {
 
 // HxPushUrl sets the hx-push-url attribute to enable or disable URL pushing.
 func HxPushUrl(v bool) Node {
-	return Attribute("hx-boost", AsStr(v))
+	return Attribute("hx-boost", conv.String(v))
 }
 
 // HxTarget sets the hx-target attribute to specify the target element for the response.
@@ -170,7 +172,7 @@ func HxDisabledElt(target string) Node {
 
 // HxValidate sets the hx-validate attribute to enable or disable form validation.
 func HxValidate(v bool) Node {
-	return Attribute("hx-validate", AsStr(v))
+	return Attribute("hx-validate", conv.String(v))
 }
 
 // HxInclude sets the hx-include attribute to specify the target element for inclusion.

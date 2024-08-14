@@ -10,8 +10,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/katallaxie/pkg/server"
 	"github.com/valyala/fasthttp"
+	"github.com/zeiss/pkg/server"
 )
 
 var _ Event = (*EventImpl)(nil)
@@ -98,7 +98,7 @@ func (b *BroadcastManagerImpl) Remove(client Client) {
 func (b *BroadcastManagerImpl) Start(ctx context.Context, ready server.ReadyFunc, run server.RunFunc) func() error {
 	return func() error {
 		if b.poolSize < 1 {
-			return server.NewError(fmt.Errorf("pool size must be greater than 0"))
+			return server.NewServerError(fmt.Errorf("pool size must be greater than 0"))
 		}
 
 		b.startWorkers(ctx)

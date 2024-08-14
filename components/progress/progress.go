@@ -1,6 +1,9 @@
 package progress
 
-import htmx "github.com/zeiss/fiber-htmx"
+import (
+	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/pkg/conv"
+)
 
 // ProgressProps is a struct that contains the props of the progress component
 type ProgressProps struct {
@@ -19,8 +22,8 @@ func Progress(p ProgressProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
-		htmx.Attribute("max", htmx.IntAsString(p.Max)),
-		htmx.Attribute("value", htmx.IntAsString(p.Value)),
+		htmx.Attribute("max", conv.String(p.Max)),
+		htmx.Attribute("value", conv.String(p.Value)),
 		htmx.Group(children...),
 	)
 }
@@ -36,8 +39,8 @@ func ProgressPrimary(p ProgressProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
-		htmx.Attribute("max", htmx.IntAsString(p.Max)),
-		htmx.Attribute("value", htmx.IntAsString(p.Value)),
+		htmx.Attribute("max", conv.String(p.Max)),
+		htmx.Attribute("value", conv.String(p.Value)),
 		htmx.Group(children...),
 	)
 }
@@ -53,8 +56,8 @@ func ProgressSecondary(p ProgressProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
-		htmx.Attribute("max", htmx.IntAsString(p.Max)),
-		htmx.Attribute("value", htmx.IntAsString(p.Value)),
+		htmx.Attribute("max", conv.String(p.Max)),
+		htmx.Attribute("value", conv.String(p.Value)),
 		htmx.Group(children...),
 	)
 }
@@ -70,8 +73,8 @@ func ProgressSuccess(p ProgressProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
-		htmx.Attribute("max", htmx.IntAsString(p.Max)),
-		htmx.Attribute("value", htmx.IntAsString(p.Value)),
+		htmx.Attribute("max", conv.String(p.Max)),
+		htmx.Attribute("value", conv.String(p.Value)),
 		htmx.Group(children...),
 	)
 }
@@ -87,8 +90,8 @@ func ProgressInfo(p ProgressProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
-		htmx.Attribute("max", htmx.IntAsString(p.Max)),
-		htmx.Attribute("value", htmx.IntAsString(p.Value)),
+		htmx.Attribute("max", conv.String(p.Max)),
+		htmx.Attribute("value", conv.String(p.Value)),
 		htmx.Group(children...),
 	)
 }
@@ -103,8 +106,8 @@ func ProgressWarning(p ProgressProps, children ...htmx.Node) htmx.Node {
 				"progress-warning": true,
 			},
 		),
-		htmx.Attribute("max", htmx.IntAsString(p.Max)),
-		htmx.Attribute("value", htmx.IntAsString(p.Value)),
+		htmx.Attribute("max", conv.String(p.Max)),
+		htmx.Attribute("value", conv.String(p.Value)),
 		htmx.Group(children...),
 	)
 }

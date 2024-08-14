@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/katallaxie/pkg/server"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/bundle"
 	"github.com/zeiss/fiber-htmx/components/alerts"
@@ -28,6 +27,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/toasts"
 	"github.com/zeiss/fiber-htmx/components/utils"
 	"github.com/zeiss/fiber-htmx/sse"
+	"github.com/zeiss/pkg/server"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"

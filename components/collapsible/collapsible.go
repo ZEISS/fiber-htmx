@@ -1,6 +1,9 @@
 package collapsible
 
-import htmx "github.com/zeiss/fiber-htmx"
+import (
+	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/pkg/conv"
+)
 
 // CollapseProps is a component that can be expanded and collapsed.
 type CollapseProps struct {
@@ -18,7 +21,7 @@ func Collapse(props CollapseProps, children ...htmx.Node) htmx.Node {
 			},
 			props.ClassNames,
 		),
-		htmx.Attribute("tabindex", htmx.IntAsString(props.TabIndex)),
+		htmx.Attribute("tabindex", conv.String(props.TabIndex)),
 		htmx.Group(children...),
 	)
 }
@@ -26,7 +29,7 @@ func Collapse(props CollapseProps, children ...htmx.Node) htmx.Node {
 // CollapseArrow is a component that can be expanded and collapsed.
 func CollapseArrow(p CollapseProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.Attribute("tabindex", htmx.IntAsString(p.TabIndex)),
+		htmx.Attribute("tabindex", conv.String(p.TabIndex)),
 		htmx.Merge(
 			htmx.ClassNames{
 				"collapse":        true,

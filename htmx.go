@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	authz "github.com/zeiss/fiber-authz"
+	"github.com/zeiss/pkg/conv"
 )
 
 // The contextKey type is unexported to prevent collisions with context keys defined in
@@ -112,7 +113,7 @@ func HxTriggers(c *fiber.Ctx, target string) {
 
 // Boosted returns true if the request is boosted.
 func Boosted(c *fiber.Ctx) bool {
-	return AsBool(c.Get(HxRequestHeaderBoosted.String()))
+	return conv.Bool(c.Get(HxRequestHeaderBoosted.String()))
 }
 
 // CurrentURL returns the current URL.
@@ -122,7 +123,7 @@ func CurrentURL(c *fiber.Ctx) string {
 
 // HistoryRestoreRequest returns true if the request is a history restore request.
 func HistoryRestoreRequest(c *fiber.Ctx) bool {
-	return AsBool(c.Get(HxRequestHeaderHistoryRestoreRequest.String()))
+	return conv.Bool(c.Get(HxRequestHeaderHistoryRestoreRequest.String()))
 }
 
 // Prompt returns the prompt.
@@ -132,7 +133,7 @@ func Prompt(c *fiber.Ctx) string {
 
 // Request returns true if the request is an htmx request.
 func Request(c *fiber.Ctx) bool {
-	return AsBool(c.Get(HxRequestHeaderRequest.String()))
+	return conv.Bool(c.Get(HxRequestHeaderRequest.String()))
 }
 
 // Targets is a helper function to get the target.

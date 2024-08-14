@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/pkg/conv"
 )
 
 func BenchmarkElement(b *testing.B) {
@@ -32,7 +33,7 @@ func ExampleElement_tag() {
 }
 
 func ExampleAttribute_bool() {
-	_ = htmx.Attribute("disabled", htmx.AsStr(true)).Render(os.Stdout)
+	_ = htmx.Attribute("disabled", conv.String(true)).Render(os.Stdout)
 	// Output: disabled="true"
 }
 

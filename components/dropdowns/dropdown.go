@@ -2,6 +2,7 @@ package dropdowns
 
 import (
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/pkg/conv"
 )
 
 // DropdownProps represents the properties for a dropdown element.
@@ -31,7 +32,7 @@ type DropdownButtonProps struct {
 // DropdownButton generates a dropdown summary element based on the provided properties.
 func DropdownButton(p DropdownButtonProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.TabIndex(htmx.IntAsString(p.TabIndex)),
+		htmx.TabIndex(conv.String(p.TabIndex)),
 		htmx.Role("button"),
 		htmx.Merge(
 			htmx.ClassNames{
@@ -55,7 +56,7 @@ type DropdownMenuItemsProps struct {
 func DropdownMenuItems(p DropdownMenuItemsProps, children ...htmx.Node) htmx.Node {
 	return htmx.Ul(
 		htmx.TabIndex(
-			htmx.IntAsString(p.TabIndex),
+			conv.String(p.TabIndex),
 		),
 		htmx.Merge(
 			htmx.ClassNames{

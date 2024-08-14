@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/zeiss/pkg/cast"
+	"github.com/zeiss/pkg/conv"
 )
 
 var (
@@ -181,15 +184,15 @@ func (s *Swap) String() string {
 	}
 
 	if s.transition != nil {
-		parts = append(parts, fmt.Sprintf("transition:%s", AsStr(*s.transition)))
+		parts = append(parts, fmt.Sprintf("transition:%s", conv.String(cast.Value(s.transition))))
 	}
 
 	if s.ignoreTitle != nil {
-		parts = append(parts, fmt.Sprintf("ignoreTitle:%s", AsStr(*s.ignoreTitle)))
+		parts = append(parts, fmt.Sprintf("ignoreTitle:%s", conv.String(cast.Value(s.ignoreTitle))))
 	}
 
 	if s.focusScroll != nil {
-		parts = append(parts, fmt.Sprintf("focus-scroll:%s", AsStr(*s.focusScroll)))
+		parts = append(parts, fmt.Sprintf("focus-scroll:%s", conv.String(cast.Value(s.focusScroll))))
 	}
 
 	if s.timing != nil {
