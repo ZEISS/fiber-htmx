@@ -49,6 +49,13 @@ func RenderToasts(c *fiber.Ctx, children ...htmx.Node) error {
 	return htmx.RenderComp(c, htmx.Fragment(children...))
 }
 
+// Notify is the container for the toast.
+func Notify(c *fiber.Ctx, children ...htmx.Node) htmx.Node {
+	htmx.ReSwap(c, "none")
+
+	return htmx.Fragment(children...)
+}
+
 // Toasts are messsage to toast.
 func Toasts(props ToastsProps, children ...htmx.Node) htmx.Node {
 	if props.ID == "" {
