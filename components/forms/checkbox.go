@@ -31,55 +31,60 @@ func Checkbox(p CheckboxProps, children ...htmx.Node) htmx.Node {
 
 // CheckboxPrimary is a component that displays a primary checkbox.
 func CheckboxPrimary(p CheckboxProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"checkbox-primary": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
+	p.ClassNames = htmx.Merge(
+		htmx.ClassNames{
+			"checkbox-primary": true,
+		},
+		p.ClassNames,
+	)
 
 	return Checkbox(p, children...)
 }
 
 // CheckboxSuccess is a component that displays a success checkbox.
 func CheckboxSuccess(p CheckboxProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"checkbox-success": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
+	p.ClassNames = htmx.Merge(
+		htmx.ClassNames{
+			"checkbox-success": true,
+		},
+		p.ClassNames,
+	)
 
 	return Checkbox(p, children...)
 }
 
 // CheckboxWarning is a component that displays a warning checkbox.
 func CheckboxWarning(p CheckboxProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"checkbox-warning": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
+	p.ClassNames = htmx.Merge(
+		htmx.ClassNames{
+			"checkbox-warning": true,
+		},
+		p.ClassNames,
+	)
 
 	return Checkbox(p, children...)
 }
 
 // CheckboxError is a component that displays an error checkbox.
 func CheckboxError(p CheckboxProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"checkbox-error": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
+	p.ClassNames = htmx.Merge(
+		htmx.ClassNames{
+			"checkbox-error": true,
+		},
+		p.ClassNames,
+	)
 
 	return Checkbox(p, children...)
 }
 
 // CheckboxInfo is a component that displays an info checkbox.
 func CheckboxInfo(p CheckboxProps, children ...htmx.Node) htmx.Node {
-	classNames := htmx.ClassNames{
-		"checkbox-info": true,
-	}.Merge(p.ClassNames)
-
-	p.ClassNames = classNames
+	p.ClassNames = htmx.Merge(
+		htmx.ClassNames{
+			"checkbox-info": true,
+		},
+		p.ClassNames,
+	)
 
 	return Checkbox(p, children...)
 }

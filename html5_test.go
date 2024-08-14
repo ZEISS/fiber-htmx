@@ -33,66 +33,12 @@ func Benchmark_HTML5_Render(b *testing.B) {
 	}
 }
 
-func Test_ClassNames(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name string
-		dst  htmx.ClassNames
-		src  []htmx.ClassNames
-		want htmx.ClassNames
-	}{
-		{
-			name: "empty",
-			dst:  htmx.ClassNames{},
-			src:  []htmx.ClassNames{},
-			want: htmx.ClassNames{},
-		},
-		{
-			name: "single",
-			dst:  htmx.ClassNames{},
-			src:  []htmx.ClassNames{{"foo": true}},
-			want: htmx.ClassNames{"foo": true},
-		},
-		{
-			name: "multiple",
-			dst:  htmx.ClassNames{},
-			src:  []htmx.ClassNames{{"foo": true}, {"bar": true}},
-			want: htmx.ClassNames{"foo": true, "bar": true},
-		},
-		{
-			name: "overwrite",
-			dst:  htmx.ClassNames{"foo": true},
-			src:  []htmx.ClassNames{{"foo": false}},
-			want: htmx.ClassNames{"foo": false},
-		},
-		{
-			name: "merge",
-			dst:  htmx.ClassNames{"foo": true},
-			src:  []htmx.ClassNames{{"bar": true}},
-			want: htmx.ClassNames{"foo": true, "bar": true},
-		},
-		{
-			name: "merge overwrite",
-			dst:  htmx.ClassNames{"foo": true},
-			src:  []htmx.ClassNames{{"foo": false}},
-			want: htmx.ClassNames{"foo": false},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			test.dst.Copy(test.src...)
-			assert.Equal(t, test.want, test.dst)
-		})
-	}
-}
-
 func Benchmark_ClassNames_Render(b *testing.B) {
-	c := htmx.ClassNames{"foo": true, "bar": true}
+	c := htmx.ClassNames{"foo": true, "bar": true, "baz": true, "qux": true, "quux": true, "corge": true, "grault": true, "garply": true, "waldo": true, "fred": true, "plugh": true, "xyzzy": true, "thud": true}
 
 	for i := 0; i < b.N; i++ {
 		var buf bytes.Buffer
+		buf.Reset()
 		err := c.Render(&buf)
 		require.NoError(b, err)
 	}

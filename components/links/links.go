@@ -39,8 +39,6 @@ func Primary(props LinkProps, children ...htmx.Node) htmx.Node {
 			},
 			props.ClassNames,
 		),
-
-		htmx.ClassNames{}.Merge(props.ClassNames),
 		htmx.Href(props.Href),
 		htmx.Rel(props.Rel),
 		htmx.Group(children...),

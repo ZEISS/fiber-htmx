@@ -10,10 +10,13 @@ type BreadcrumbsProps struct {
 // BreadCrumbs generates a breadcrumb element based on the provided properties.
 func Breadcrumbs(p BreadcrumbsProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"breadcrumbs": true,
-			"text-sm":     true,
-		}.Merge(p.ClassNames),
+		htmx.Merge(
+			htmx.ClassNames{
+				"breadcrumbs": true,
+				"text-sm":     true,
+			},
+			p.ClassNames,
+		),
 		htmx.Ul(
 			htmx.Group(children...),
 		),
