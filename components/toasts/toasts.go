@@ -1,6 +1,7 @@
 package toasts
 
 import (
+	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/pkg/errorx"
@@ -29,11 +30,15 @@ func Toast(p ToastProps, children ...htmx.Node) htmx.Node {
 }
 
 // Error is a component for the htmx toast extension.
-func Error(props ToastsProps, err error) htmx.Node {
+func Error(c *fiber.Ctx, err error) htmx.Node {
+	if !errorx.Empty(err) {
+		htmx.ReSwap(c, "none")
+	}
+
 	return htmx.If(
 		!errorx.Empty(err),
 		Toasts(
-			props,
+			ToastsProps{},
 			ToastAlertError(
 				ToastProps{},
 				htmx.Text(err.Error()),
