@@ -212,6 +212,11 @@ func (c *DefaultController) Path() string {
 	return c.ctx.Path()
 }
 
+// OriginalURL returns the original URL.
+func (c *DefaultController) OriginalURL() string {
+	return c.ctx.OriginalURL()
+}
+
 // Reset resets the controller.
 func (c *DefaultController) Reset() {
 	c.ctx = nil

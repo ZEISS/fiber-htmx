@@ -3,14 +3,17 @@ package tables
 import (
 	"fmt"
 	"math"
+	"strings"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/utils"
-	"gorm.io/gorm"
+	"github.com/zeiss/pkg/conv"
+	"github.com/zeiss/pkg/utilx"
 
+	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
+	"gorm.io/gorm"
 )
 
 // Paginated is a struct that contains the properties of a pagination
@@ -122,6 +125,11 @@ func (p *Results[T]) GetSort() string {
 	return p.Sort
 }
 
+// GetSearch returns the search.
+func (p *Results[T]) GetSearch() string {
+	return p.Search
+}
+
 // GetRows returns the rows as pointers.
 func (p *Results[T]) GetRows() []*T {
 	rows := make([]*T, 0, len(p.Rows))
@@ -169,8 +177,23 @@ func PaginatedResults[T any](value interface{}, pagination *Results[T], db *gorm
 	totalPages := int(math.Ceil(float64(totalRows) / float64(pagination.Limit)))
 	pagination.TotalPages = totalPages
 
+	db.Scopes(searchScope(pagination))
+
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Offset(pagination.GetOffset()).Limit(pagination.GetLimit())
+	}
+}
+
+func searchScope[T any](pagination *Results[T]) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if utilx.Empty(pagination.GetSearch()) {
+			return db
+		}
+
+		s := strings.SplitN(pagination.GetSearch(), ",", 2)
+		db = db.Where(fmt.Sprintf("%s LIKE ? ", s[0]), fmt.Sprintf("%%%s%%", s[1]))
+
+		return db
 	}
 }
 
@@ -179,15 +202,21 @@ var DefaultLimits = []int{5, 10, 25, 50}
 
 // PaginationProps is a struct that contains the properties of a pagination
 type PaginationProps struct {
+	// ClassNames is a struct that contains the class names of a pagination.
 	ClassNames htmx.ClassNames
-	Limit      int
-	Offset     int
-	Target     string
-	Total      int
-	URL        string
+	// Limit is the number of items to return.
+	Limit int
+	// Offset is the number of items to skip.
+	Offset int
+	// Target is the target of the pagination.
+	Target string
+	// Total is the total number of items.
+	Total int
+	// URL is the URL of the pagination.
+	URL string
 }
 
-// Pagination ...
+// Pagination is a component that renders a pagination.
 func Pagination(p PaginationProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.Merge(
@@ -200,7 +229,7 @@ func Pagination(p PaginationProps, children ...htmx.Node) htmx.Node {
 	)
 }
 
-// Prev ...
+// Prev is a component that renders a previous button.
 func Prev(p PaginationProps) htmx.Node {
 	return htmx.Form(
 		htmx.Method("GET"),
@@ -208,22 +237,25 @@ func Prev(p PaginationProps) htmx.Node {
 		htmx.Input(
 			htmx.Type("hidden"),
 			htmx.Name("offset"),
-			htmx.Value(fmt.Sprintf("%d", p.Offset-p.Limit)),
+			htmx.Value(conv.String(p.Offset-p.Limit)),
 		),
 		htmx.Input(
 			htmx.Type("hidden"),
 			htmx.Name("limit"),
-			htmx.Value(fmt.Sprintf("%d", p.Limit)),
+			htmx.Value(conv.String(p.Limit)),
 		),
 		htmx.HxBoost(true),
 		buttons.Button(
 			buttons.ButtonProps{
-				ClassNames: htmx.ClassNames{
-					"join-item":      true,
-					"btn":            true,
-					"btn-outline":    true,
-					"input-bordered": true,
-				},
+				ClassNames: htmx.Merge(
+					htmx.ClassNames{
+						"btn-outline":    true,
+						"btn":            true,
+						"input-bordered": true,
+						"join-item":      true,
+					},
+					p.ClassNames,
+				),
 				Type: "submit",
 			},
 			htmx.If(p.Offset-p.Limit < 0, htmx.Disabled()),
@@ -232,7 +264,7 @@ func Prev(p PaginationProps) htmx.Node {
 	)
 }
 
-// Next ...
+// Next is a component that renders a next button.
 func Next(p PaginationProps) htmx.Node {
 	return htmx.Form(
 		htmx.Method("GET"),
@@ -240,22 +272,25 @@ func Next(p PaginationProps) htmx.Node {
 		htmx.Input(
 			htmx.Type("hidden"),
 			htmx.Name("offset"),
-			htmx.Value(fmt.Sprintf("%d", p.Offset+p.Limit)),
+			htmx.Value(conv.String(p.Offset+p.Limit)),
 		),
 		htmx.Input(
 			htmx.Type("hidden"),
 			htmx.Name("limit"),
-			htmx.Value(fmt.Sprintf("%d", p.Limit)),
+			htmx.Value(conv.String(p.Limit)),
 		),
 		htmx.HxBoost(true),
 		buttons.Button(
 			buttons.ButtonProps{
-				ClassNames: htmx.ClassNames{
-					"join-item":      true,
-					"btn":            true,
-					"btn-outline":    true,
-					"input-bordered": true,
-				},
+				ClassNames: htmx.Merge(
+					htmx.ClassNames{
+						"join-item":      true,
+						"btn":            true,
+						"btn-outline":    true,
+						"input-bordered": true,
+					},
+					p.ClassNames,
+				),
 				Type: "submit",
 			},
 			htmx.If(p.Offset+p.Limit > p.Total, htmx.Disabled()),
@@ -264,27 +299,36 @@ func Next(p PaginationProps) htmx.Node {
 	)
 }
 
-// SelectProps ...
+// SelectProps are the properties of a select.
 type SelectProps struct {
+	// ID is the id of the select.
+	ID string
+	// ClassNames is a struct that contains the class names of a select.
 	ClassNames htmx.ClassNames
-	Limit      int
-	Limits     []int
-	Offset     int
-	Target     string
-	Total      int
-	URL        string
+	// Limit is the number of items to return.
+	Limit int
+	// Limits is a list of limits.
+	Limits []int
+	// Offset is the number of items to skip.
+	Offset int
+	// Target is the target of the select.
+	Target string
+	// Total is the total number of items.
+	Total int
+	// URL is the URL of the select.
+	URL string
 }
 
-// Select ...
+// Select is a component that renders a select.
 func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 	return htmx.Form(
 		htmx.Method("GET"),
 		htmx.Action(p.URL),
-		htmx.HxTrigger("change from:#select-table-options"),
+		htmx.IfElse(utilx.NotEmpty(p.ID), htmx.HxTrigger(fmt.Sprintf("change from:#%s", p.ID)), htmx.HxTrigger("change from:#select-table-options")),
 		htmx.Input(
 			htmx.Type("hidden"),
 			htmx.Name("offset"),
-			htmx.Value(fmt.Sprintf("%d", p.Offset)),
+			htmx.Value(conv.String(p.Offset)),
 		),
 		htmx.HxBoost(true),
 		forms.Select(
@@ -297,15 +341,15 @@ func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 					p.ClassNames,
 				),
 			},
-			htmx.ID("select-table-options"),
+			htmx.IfElse(utilx.NotEmpty(p.ID), htmx.ID(p.ID), htmx.ID("select-table-options")),
 			htmx.Attribute("name", "limit"),
 			utils.Map(func(limit int) htmx.Node {
 				return forms.Option(
 					forms.OptionProps{
 						Selected: limit == p.Limit,
 					},
-					htmx.Text(fmt.Sprintf("%d", limit)),
-					htmx.Value(fmt.Sprintf("%d", limit)),
+					htmx.Text(conv.String(limit)),
+					htmx.Value(conv.String(limit)),
 				)
 			}, p.Limits...),
 		),
@@ -368,10 +412,14 @@ type Row interface {
 
 // TableProps is a struct that contains the properties of a table
 type TableProps struct {
+	// ClassNames is a struct that contains the class names of a table.
 	ClassNames htmx.ClassNames
-	ID         string
+	// ID is the id of the table.
+	ID string
+	// Pagination is the pagination of the table.
 	Pagination htmx.Node
-	Toolbar    htmx.Node
+	// Toolbar is the toolbar of the table.
+	Toolbar htmx.Node
 }
 
 // Columns returns a new column definition.
@@ -379,11 +427,17 @@ type Columns[R Row] []ColumnDef[R]
 
 // ColumnDef returns a new column definition.
 type ColumnDef[R Row] struct {
-	ID              string
-	AccessorKey     string
-	Header          func(p TableProps) htmx.Node
-	Cell            func(p TableProps, row R) htmx.Node
-	EnableSorting   bool
+	// ID is the id of the column.
+	ID string
+	// AccessorKey is the accessor key of the column.
+	AccessorKey string
+	// Header is the header of the column.
+	Header func(p TableProps) htmx.Node
+	// Cell is the cell of the column.
+	Cell func(p TableProps, row R) htmx.Node
+	// EnableSorting is a flag to enable sorting.
+	EnableSorting bool
+	// EnableFiltering is a flag to enable filtering.
 	EnableFiltering bool
 }
 
