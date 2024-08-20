@@ -331,6 +331,8 @@ type SearchProps struct {
 	URL string
 	// Name is the name of the search.
 	Name string
+	// Value is the value of the search.
+	Value string
 }
 
 // Search is a component that renders a search.
@@ -345,6 +347,7 @@ func Search(props SearchProps, children ...htmx.Node) htmx.Node {
 				),
 				Name:        props.Name,
 				Placeholder: props.Placeholder,
+				Value:       props.Value,
 			},
 			htmx.Group(children...),
 		),
