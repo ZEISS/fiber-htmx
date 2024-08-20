@@ -20,7 +20,7 @@ require (
 	github.com/yuin/goldmark v1.7.4
 	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.11
-	github.com/zeiss/pkg v0.1.8-0.20240820092709-193dc1657dbb
+	github.com/zeiss/pkg v0.1.8-0.20240820122414-ce95f079ee32
 	gorm.io/gorm v1.25.11
 	mvdan.cc/gofumpt v0.7.0
 )

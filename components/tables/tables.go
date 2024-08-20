@@ -8,6 +8,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/utils"
 	"github.com/zeiss/pkg/conv"
+	"github.com/zeiss/pkg/urlx"
 	"github.com/zeiss/pkg/utilx"
 
 	"github.com/gofiber/fiber/v2"
@@ -234,7 +235,7 @@ func Pagination(p PaginationProps, children ...htmx.Node) htmx.Node {
 func Prev(p PaginationProps) htmx.Node {
 	return htmx.Form(
 		htmx.Method("GET"),
-		htmx.Action(p.URL),
+		htmx.Action(urlx.MustRemoveQueryValues(p.URL, "offset", "limit")),
 		htmx.Input(
 			htmx.Type("hidden"),
 			htmx.Name("offset"),
@@ -269,7 +270,7 @@ func Prev(p PaginationProps) htmx.Node {
 func Next(p PaginationProps) htmx.Node {
 	return htmx.Form(
 		htmx.Method("GET"),
-		htmx.Action(p.URL),
+		htmx.Action(urlx.MustRemoveQueryValues(p.URL, "offset", "limit")),
 		htmx.Input(
 			htmx.Type("hidden"),
 			htmx.Name("offset"),
@@ -336,7 +337,7 @@ type SearchProps struct {
 func Search(props SearchProps, children ...htmx.Node) htmx.Node {
 	return htmx.Form(
 		htmx.Method("GET"),
-		htmx.Action(props.URL),
+		htmx.Action(urlx.MustRemoveQueryValues(props.URL, props.Name)),
 		forms.TextInputBordered(
 			forms.TextInputProps{
 				ClassNames: htmx.Merge(
@@ -355,7 +356,7 @@ func Search(props SearchProps, children ...htmx.Node) htmx.Node {
 func Select(p SelectProps, children ...htmx.Node) htmx.Node {
 	return htmx.Form(
 		htmx.Method("GET"),
-		htmx.Action(p.URL),
+		htmx.Action(urlx.MustRemoveQueryValues(p.URL, "offset", "limit")),
 		htmx.IfElse(utilx.NotEmpty(p.ID), htmx.HxTrigger(fmt.Sprintf("change from:#%s", p.ID)), htmx.HxTrigger("change from:#select-table-options")),
 		htmx.Input(
 			htmx.Type("hidden"),

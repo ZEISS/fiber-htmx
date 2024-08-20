@@ -490,6 +490,10 @@ github.com/zeiss/fiber-goth v1.2.11 h1:24EiIKF1iPrmlspbW/BylcqVyj4Ltwzmx9DM7pRs6
 github.com/zeiss/fiber-goth v1.2.11/go.mod h1:9NuXxIeKZgmk3dfl7HWbZK/eAfukvjMCHHacGo0m84Y=
 github.com/zeiss/pkg v0.1.8-0.20240820092709-193dc1657dbb h1:ADg+FSvKUAPAM1RgKc0D1/rMGZLgMXdPsGbqhuWuiyc=
 github.com/zeiss/pkg v0.1.8-0.20240820092709-193dc1657dbb/go.mod h1:MDEraF5xLbffG1zSfbrFWIP8bGFyvQMlvRG/xgJKozE=
+github.com/zeiss/pkg v0.1.8-0.20240820122115-4c39e253e2aa h1:x1G7sEpISk2kYwfzrGD1I00YUvE/iDZjskCEwRbUKFg=
+github.com/zeiss/pkg v0.1.8-0.20240820122115-4c39e253e2aa/go.mod h1:MDEraF5xLbffG1zSfbrFWIP8bGFyvQMlvRG/xgJKozE=
+github.com/zeiss/pkg v0.1.8-0.20240820122414-ce95f079ee32 h1:cycuVXit5Emm5+tX5zwbgJrmlMHqfkI0u5UIs4LmJng=
+github.com/zeiss/pkg v0.1.8-0.20240820122414-ce95f079ee32/go.mod h1:MDEraF5xLbffG1zSfbrFWIP8bGFyvQMlvRG/xgJKozE=
 gitlab.com/bosi/decorder v0.4.2 h1:qbQaV3zgwnBZ4zPMhGLW4KZe7A7NwxEhJx39R3shffo=
 gitlab.com/bosi/decorder v0.4.2/go.mod h1:muuhHoaJkA9QLcYHq4Mj8FJUwDZ+EirSHRiaTcTf6T8=
 go-simpler.org/assert v0.9.0 h1:PfpmcSvL7yAnWyChSjOz6Sp6m9j5lyK8Ok9pEL31YkQ=
