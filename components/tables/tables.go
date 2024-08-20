@@ -177,9 +177,8 @@ func PaginatedResults[T any](value interface{}, pagination *Results[T], db *gorm
 	totalPages := int(math.Ceil(float64(totalRows) / float64(pagination.Limit)))
 	pagination.TotalPages = totalPages
 
-	db.Scopes(searchScope(pagination))
-
 	return func(db *gorm.DB) *gorm.DB {
+		db = db.Scopes(searchScope(pagination))
 		return db.Offset(pagination.GetOffset()).Limit(pagination.GetLimit())
 	}
 }
