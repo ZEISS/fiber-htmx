@@ -3,7 +3,6 @@ package tables
 import (
 	"fmt"
 	"math"
-	"strings"
 
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
@@ -88,6 +87,8 @@ type Results[T any] struct {
 	Offset int `json:"offset" xml:"offset" form:"offset" query:"offset"`
 	// Search is the search term to filter the results.
 	Search string `json:"search,omitempty" xml:"search" form:"search" query:"search"`
+	// SearchFields is the search term to filter the results.
+	SearchFields []string `json:"-"`
 	// Sort is the sorting order.
 	Sort string `json:"sort,omitempty" xml:"sort" form:"sort" query:"sort"`
 	// TotalRows is the total number of rows.
@@ -189,8 +190,9 @@ func searchScope[T any](pagination *Results[T]) func(db *gorm.DB) *gorm.DB {
 			return db
 		}
 
-		s := strings.SplitN(pagination.GetSearch(), ",", 2)
-		db = db.Where(fmt.Sprintf("%s LIKE ? ", s[0]), fmt.Sprintf("%%%s%%", s[1]))
+		for _, field := range pagination.SearchFields {
+			db = db.Where(fmt.Sprintf("%s LIKE ? ", field), fmt.Sprintf("%%%s%%", pagination.GetSearch()))
+		}
 
 		return db
 	}
@@ -316,6 +318,37 @@ type SelectProps struct {
 	Total int
 	// URL is the URL of the select.
 	URL string
+}
+
+// SearchProps are the properties of a search.
+type SearchProps struct {
+	// ClassNames is a struct that contains the class names of a search.
+	ClassNames htmx.ClassNames
+	// Placehholder is the placeholder of the search.
+	Placeholder string
+	// URL is the URL of the search.
+	URL string
+	// Name is the name of the search.
+	Name string
+}
+
+// Search is a component that renders a search.
+func Search(props SearchProps, children ...htmx.Node) htmx.Node {
+	return htmx.Form(
+		htmx.Method("GET"),
+		htmx.Action(props.URL),
+		forms.TextInputBordered(
+			forms.TextInputProps{
+				ClassNames: htmx.Merge(
+					props.ClassNames,
+				),
+				Name:        props.Name,
+				Placeholder: props.Placeholder,
+			},
+			htmx.Group(children...),
+		),
+		htmx.HxBoost(true),
+	)
 }
 
 // Select is a component that renders a select.
