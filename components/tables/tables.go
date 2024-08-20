@@ -173,7 +173,7 @@ func FromContext[T any](c *fiber.Ctx) (Results[T], error) {
 // PaginatedResults returns a function that paginates the results.
 func PaginatedResults[T any](value interface{}, pagination *Results[T], db *gorm.DB) func(db *gorm.DB) *gorm.DB {
 	var totalRows int64
-	db.Model(value).Count(&totalRows).Where("deleted_at IS NULL")
+	db.Model(value).Scopes(searchScope(pagination)).Count(&totalRows).Where("deleted_at IS NULL")
 
 	pagination.TotalRows = int(totalRows)
 	totalPages := int(math.Ceil(float64(totalRows) / float64(pagination.Limit)))
