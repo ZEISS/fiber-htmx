@@ -1,6 +1,8 @@
 package forms
 
 import (
+	"fmt"
+
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/pkg/utilx"
 )
@@ -36,7 +38,7 @@ func Datalist(props DatalistProps, children ...htmx.Node) htmx.Node {
 			},
 			htmx.List(props.Name),
 			htmx.HxGet(props.URL),
-			htmx.HxTarget(props.ID),
+			htmx.HxTarget(fmt.Sprintf("#%s", props.ID)),
 			htmx.HxTrigger("load, keyup[checkUserKeydown.call(this, event)] changed delay:350ms"),
 			htmx.HxIndicator(utilx.IfElse(utilx.Empty(props.Indicator), htmx.HxClssNameIndicatorSelector, props.Indicator)),
 		),
