@@ -26,7 +26,7 @@ type DatalistProps struct {
 }
 
 // Datalist is a component that displays a datalist.
-func Datalist(props DatalistProps, children ...htmx.Node) htmx.Node {
+func Datalist(props DatalistProps) htmx.Node {
 	return htmx.Fragment(
 		htmx.Script(htmx.Raw(`function checkUserKeydown(event) {return event instanceof KeyboardEvent}`)),
 		TextInputBordered(
@@ -45,6 +45,5 @@ func Datalist(props DatalistProps, children ...htmx.Node) htmx.Node {
 		htmx.DataList(
 			htmx.ID(props.ID),
 		),
-		htmx.Group(children...),
 	)
 }
