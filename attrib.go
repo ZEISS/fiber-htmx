@@ -4,6 +4,7 @@
 package htmx
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/zeiss/pkg/conv"
@@ -178,6 +179,13 @@ func HxValidate(v bool) Node {
 // HxInclude sets the hx-include attribute to specify the target element for inclusion.
 func HxInclude(target string) Node {
 	return Attribute("hx-include", target)
+}
+
+// HxHeaders sets the hx-headers attribute to specify the headers for the request.
+func HxHeaders(headers map[string]string) Node {
+	b, _ := json.Marshal(headers)
+
+	return Attribute("hx-headers", string(b))
 }
 
 // Async sets the async attribute for script elements.

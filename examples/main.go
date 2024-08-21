@@ -199,6 +199,7 @@ func (c *exampleController) Get() error {
 			},
 			htmx.Body(
 				htmx.HxBoost(true),
+				htmx.HxHeaders(map[string]string{"X-CSRFToken": "123456"}),
 				htmx.Fragment(
 					htmx.Div(),
 					htmx.Div(),
