@@ -36,7 +36,7 @@ func Datalist(props DatalistProps) htmx.Node {
 				Placeholder: props.Placeholder,
 				Disabled:    props.Disabled,
 			},
-			htmx.List(props.Name),
+			htmx.List(props.ID),
 			htmx.HxGet(props.URL),
 			htmx.HxTarget(fmt.Sprintf("#%s", props.ID)),
 			htmx.HxTrigger("load, keyup[checkUserKeydown.call(this, event)] changed delay:350ms"),
