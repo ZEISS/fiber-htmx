@@ -4,6 +4,7 @@ import htmx "github.com/zeiss/fiber-htmx"
 
 // SpinnerProps is the type of the props for the Spinner component
 type SpinnerProps struct {
+	// ClassNames is a map of class names to conditionally add to the component
 	ClassNames htmx.ClassNames
 }
 
@@ -14,10 +15,10 @@ func Spinner(p SpinnerProps, children ...htmx.Node) htmx.Node {
 			htmx.ClassNames{
 				"loading":         true,
 				"loading-spinner": true,
-				"loading-sm":      true,
 			},
 			p.ClassNames,
 		),
+		htmx.Group(children...),
 	)
 }
 
@@ -32,6 +33,7 @@ func SpinnerSmall(p SpinnerProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.Group(children...),
 	)
 }
 
@@ -46,6 +48,7 @@ func SpinnerXtraSmall(p SpinnerProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.Group(children...),
 	)
 }
 
@@ -60,6 +63,7 @@ func SpinnerLarge(p SpinnerProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.Group(children...),
 	)
 }
 
@@ -74,5 +78,6 @@ func SpinnerMedium(p SpinnerProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
+		htmx.Group(children...),
 	)
 }
