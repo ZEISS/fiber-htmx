@@ -43,7 +43,7 @@ func Datalist(props DatalistProps) htmx.Node {
 			htmx.HxIndicator(utilx.IfElse(utilx.Empty(props.Indicator), htmx.HxClssNameIndicatorSelector, props.Indicator)),
 		),
 		htmx.DataList(
-			htmx.ID(props.Name),
+			htmx.ID(props.ID),
 		),
 	)
 }
