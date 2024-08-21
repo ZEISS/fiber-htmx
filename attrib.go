@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/zeiss/pkg/conv"
+	"github.com/zeiss/pkg/errorx"
 )
 
 // HxEventType represents the type of htmx event.
@@ -183,9 +184,7 @@ func HxInclude(target string) Node {
 
 // HxHeaders sets the hx-headers attribute to specify the headers for the request.
 func HxHeaders(headers map[string]string) Node {
-	b, _ := json.Marshal(headers)
-
-	return Attribute("hx-headers", string(b))
+	return Attribute("hx-headers", string(errorx.Ignore(json.Marshal(headers))))
 }
 
 // Async sets the async attribute for script elements.
