@@ -49,6 +49,14 @@ const (
 	HxClassNameSwapping  HxClassName = "htmx-swapping"
 )
 
+const (
+	HxClssNameAddedSelector     = ".htmx-added"
+	HxClssNameIndicatorSelector = ".htmx-indicator"
+	HxClssNameRequestSelector   = ".htmx-request"
+	HxClssNameSettlingSelector  = ".htmx-settling"
+	HxClssNameSwappingSelector  = ".htmx-swapping"
+)
+
 // ClassNames represents a set of class names.
 type ClassNames map[string]bool
 
