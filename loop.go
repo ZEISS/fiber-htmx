@@ -57,12 +57,12 @@ func Filter(f func(n Node) bool, children ...Node) []Node {
 	return nodes
 }
 
-// Map loops and maps the content.
-func Map(f func(i int) Node, children ...Node) []Node {
-	nodes := make([]Node, len(children))
+// Map is using a map to transform into htmx nodes.
+func Map[T1 comparable, T2 any](m map[T1]T2, f func(T1, T2) Node) Nodes {
+	nodes := make([]Node, 0, len(m))
 
-	for i := 0; i < len(children); i++ {
-		nodes[i] = f(i)
+	for k, v := range m {
+		nodes = append(nodes, f(k, v))
 	}
 
 	return nodes
