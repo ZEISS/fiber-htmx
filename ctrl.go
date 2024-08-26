@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	goth "github.com/zeiss/fiber-goth"
 	"github.com/zeiss/fiber-goth/adapters"
+	reload "github.com/zeiss/fiber-reload"
 	"gorm.io/gorm"
 )
 
@@ -193,6 +194,16 @@ func (c *DefaultController) Context() context.Context {
 // Ctx returns the fiber.Ctx.
 func (c *DefaultController) Ctx() *fiber.Ctx {
 	return c.ctx
+}
+
+// IsDevelopment returns true if the environment is development.
+func (c *DefaultController) IsDevelopment() bool {
+	return reload.IsDevelopment(c.ctx.UserContext())
+}
+
+// IsProduction returns true if the environment is production.
+func (c *DefaultController) IsProduction() bool {
+	return reload.IsProduction(c.ctx.UserContext())
 }
 
 // Redirect redirects to the given path.
