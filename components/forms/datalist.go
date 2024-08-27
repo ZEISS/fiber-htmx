@@ -39,6 +39,7 @@ func Datalist(props DatalistProps, children ...htmx.Node) htmx.Node {
 			htmx.List(props.ID),
 			htmx.HxGet(props.URL),
 			htmx.HxTarget(fmt.Sprintf("#%s", props.ID)),
+			htmx.HxSwap("innerHTML"),
 			htmx.HxTrigger("load, keyup[checkUserKeydown.call(this, event)] changed delay:350ms"),
 			htmx.HxIndicator(utilx.IfElse(utilx.Empty(props.Indicator), htmx.HxClssNameIndicatorSelector, props.Indicator)),
 			htmx.Group(children...),
