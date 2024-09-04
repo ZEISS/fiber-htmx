@@ -30,3 +30,40 @@ func TestMerge(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkMerge(b *testing.B) {
+	classNames := []htmx.ClassNames{
+		{"a": true, "b": false},
+		{"b": true, "c": false},
+		{"c": true, "d": false},
+		{"d": true, "e": false},
+		{"e": true, "f": false},
+		{"f": true, "g": false},
+		{"g": true, "h": false},
+		{"h": true, "i": false},
+		{"i": true, "j": false},
+		{"j": true, "k": false},
+		{"k": true, "l": false},
+		{"l": true, "m": false},
+		{"m": true, "n": false},
+		{"n": true, "o": false},
+		{"o": true, "p": false},
+		{"p": true, "q": false},
+		{"q": true, "r": false},
+		{"r": true, "s": false},
+		{"s": true, "t": false},
+		{"t": true, "u": false},
+		{"u": true, "v": false},
+		{"v": true, "w": false},
+		{"w": true, "x": false},
+		{"x": true, "y": false},
+		{"y": true, "z": false},
+		{"z": true, "a": false},
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		htmx.Merge(classNames...)
+	}
+}
