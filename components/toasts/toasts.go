@@ -115,10 +115,6 @@ func Toaster() htmx.Node {
 			alpine.XFor("notification in notifications"),
 			htmx.Attribute(":key", "notification.id"),
 			htmx.Div(
-				htmx.ClassNames{
-					"toast":     true,
-					"z-[99999]": true,
-				},
 				alpine.XData(`{
         show: false,
         init() {
