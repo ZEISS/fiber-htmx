@@ -24,7 +24,6 @@ import (
 	"github.com/zeiss/fiber-htmx/components/swap"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
-	"github.com/zeiss/fiber-htmx/components/toasts"
 	"github.com/zeiss/fiber-htmx/components/utils"
 	"github.com/zeiss/fiber-htmx/sse"
 	"github.com/zeiss/pkg/server"
@@ -393,23 +392,6 @@ func (c *exampleController) Get() error {
 												htmx.HxPost("/error"),
 												htmx.Type("submit"),
 												htmx.Text("Submit"),
-											),
-										),
-									),
-									htmx.Div(
-										toasts.Toast(
-											toasts.ToastProps{},
-											toasts.ToastAlertInfo(
-												toasts.ToastProps{},
-												htmx.Text("message 1"),
-											),
-											toasts.ToastAlertInfo(
-												toasts.ToastProps{},
-												htmx.Text("message 2"),
-											),
-											toasts.ToastAlertInfo(
-												toasts.ToastProps{},
-												htmx.Text("message 3"),
 											),
 										),
 									),
