@@ -2,6 +2,7 @@ package toasts
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
@@ -207,17 +208,18 @@ type ToastsProps struct {
 
 // RenderToas is the handler for rendering the toasts.
 func RenderToasts(c *fiber.Ctx, err error) error {
-	te, ok := err.(Toast)
+	var toastErr Toast
+	ok := errors.As(err, &toastErr)
 
 	if !ok {
-		te = Error("there has been an unexpected error")
+		toastErr = Error("there has been an unexpected error")
 	}
 
-	if te.Level != SUCCESS {
+	if toastErr.Level != SUCCESS {
 		htmx.ReSwap(c, "none")
 	}
 
-	return te.SetHXTriggerHeader(c)
+	return toastErr.SetHXTriggerHeader(c)
 }
 
 // Notify is the container for the toast.
