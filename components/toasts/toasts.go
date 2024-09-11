@@ -92,20 +92,21 @@ type ToasterProps struct {
 
 // Toaster is the layout host for the toasts.
 func Toaster() htmx.Node {
-	return htmx.Fragment(
+	return Toasts(
+		ToastsProps{},
 		alpine.XData(`{
-			notifications: [],
-			add(e) {
-				this.notifications.push({
-					id: e.timeStamp,
-					level: e.detail.level,
-					message: e.detail.message,
-				})
-			},
-			remove(notification) {
-				this.notifications = this.notifications.filter(i => i.id !== notification.id)
-			},
-		}`),
+    notifications: [],
+    add(e) {
+      this.notifications.push({
+        id: e.timeStamp,
+        level: e.detail.level,
+        message: e.detail.message,
+      })
+    },
+    remove(notification) {
+      this.notifications = this.notifications.filter(i => i.id !== notification.id)
+    },
+  }`),
 		htmx.Role("status"),
 		htmx.Attribute("aria-live", "polite"),
 		alpine.XOn("notify.window", "add($event)"),
@@ -118,18 +119,18 @@ func Toaster() htmx.Node {
 					"z-[99999]": true,
 				},
 				alpine.XData(`{
-					show: false,
-					init() {
-						this.$nextTick(() => this.show = true)
+        show: false,
+        init() {
+          this.$nextTick(() => this.show = true)
 
-						setTimeout(() => this.transitionOut(), 3000)
-					},
-					transitionOut() {
-						this.show = false
+          setTimeout(() => this.transitionOut(), 3000)
+        },
+        transitionOut() {
+          this.show = false
 
-						setTimeout(() => this.remove(this.notification), 500)
-					},
-				}`),
+          setTimeout(() => this.remove(this.notification), 500)
+        },
+      }`),
 				alpine.XShow("show"),
 				alpine.XTransition("duration.500ms"),
 				htmx.Div(
