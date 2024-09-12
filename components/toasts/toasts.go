@@ -12,7 +12,7 @@ import (
 
 const defaultToasterID = "toaster"
 
-// ToastDirection ...
+// ToastDirection symbolizes the direction of the toast.
 type ToastDirection int
 
 const (
@@ -22,20 +22,27 @@ const (
 )
 
 const (
-	INFO    = "info"
+	// INFO is the info level.
+	INFO = "info"
+	// SUCCESS is the success level.
 	SUCCESS = "success"
-	ERROR   = "error"
+	// ERROR is the error level.
+	ERROR = "error"
 )
 
 // Toast is a message to display to the user.
 type Toast struct {
-	Level   string `json:"level"`
+	// Level is the level of the toast.
+	Level string `json:"level"`
+	// Message is the message of the toast.
 	Message string `json:"message"`
+	// Code is the http status code of the toast.
+	Code int `json:"code"`
 }
 
 // New returns a new Toast.
-func New(level string, message string) Toast {
-	return Toast{level, message}
+func New(level string, message string, code int) Toast {
+	return Toast{level, message, 200}
 }
 
 // Error returns the error message.
@@ -45,17 +52,22 @@ func (t Toast) Error() string {
 
 // Info returns an info message.
 func Info(message string) Toast {
-	return New(INFO, message)
+	return New(INFO, message, 200)
 }
 
 // Success returns a success message.
 func Success(c *fiber.Ctx, message string) {
-	New(SUCCESS, message).SetHXTriggerHeader(c)
+	New(SUCCESS, message, 200).SetHXTriggerHeader(c)
 }
 
 // Error returns an error message.
 func Error(message string) Toast {
-	return New(ERROR, message)
+	return New(ERROR, message, 500)
+}
+
+// SetCode sets the code of the toast.
+func (t Toast) SetCode(code int) {
+	t.Code = code
 }
 
 // ToJson returns the JSON representation of the toast.

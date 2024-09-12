@@ -16,16 +16,17 @@ var DefaultErrorHandler = func(c *fiber.Ctx, err error) error {
 		te = Error("there has been an unexpected error")
 	}
 
+	var e *fiber.Error // if this is not a toast then use the error message
+	if errors.As(err, &e) {
+		code = e.Code
+		te = Error(e.Message)
+	}
+
 	if te.Level != SUCCESS {
 		htmx.ReSwap(c, "none")
 	}
 
 	te.SetHXTriggerHeader(c)
-
-	var e *fiber.Error
-	if errors.As(err, &e) {
-		code = e.Code
-	}
 
 	c.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
 
