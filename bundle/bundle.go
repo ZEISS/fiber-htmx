@@ -31,7 +31,7 @@ type Config struct {
 var ConfigDefault = Config{
 	Next:               nil,
 	Bundle:             htmx.Bundle,
-	Root:               htmx.BundleFoler,
+	Root:               htmx.BundleFolder,
 	PathPrefix:         "",
 	MaxAge:             0,
 	ContentTypeCharset: "",
@@ -55,7 +55,7 @@ func New(config ...Config) fiber.Handler {
 
 		p := strings.TrimPrefix(c.Path(), cfg.PathPrefix)
 
-		f, err := cfg.Bundle.Open(path.Join(htmx.BundleFoler, p))
+		f, err := cfg.Bundle.Open(path.Join(htmx.BundleFolder, p))
 		if err != nil && errors.Is(err, fs.ErrNotExist) {
 			return fiber.ErrNotFound
 		}

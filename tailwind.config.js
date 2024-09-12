@@ -1,8 +1,9 @@
 module.exports = {
-  // (your config props)
-  safelist: [
-    {
-      pattern: /.+/,
-    },
+  content: ["src/**/*.{ts,html,css,scss}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [
+    require('daisyui')
   ],
 };

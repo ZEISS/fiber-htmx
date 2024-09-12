@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	BundleFoler       = "dist"
+	BundleFolder      = "dist"
 	DefaultBundleFile = "out.js"
 )
 

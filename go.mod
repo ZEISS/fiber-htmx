@@ -2,8 +2,6 @@ module github.com/zeiss/fiber-htmx
 
 go 1.23
 
-toolchain go1.23.0
-
 require (
 	github.com/ettle/strcase v0.2.0
 	github.com/go-playground/validator/v10 v10.22.1

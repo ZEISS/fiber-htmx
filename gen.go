@@ -3,4 +3,4 @@
 
 package htmx
 
-//go:generate npx tailwindcss -i ./src/input.css -o ./static/output.css
+//go:generate npx esbuild --bundle --minify --sourcemap --outfile=dist/out.js src/main.ts
