@@ -15,6 +15,11 @@ func Doctype(sibling Node) Node {
 	})
 }
 
+// CustomElement represents a custom HTML element.
+func CustomElement(tag string, children ...Node) Node {
+	return Element(tag, children...)
+}
+
 // A represents an HTML anchor element.
 func A(children ...Node) Node {
 	return Element("a", children...)
