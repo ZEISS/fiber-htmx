@@ -41,8 +41,13 @@ type Toast struct {
 }
 
 // New returns a new Toast.
-func New(level string, message string, code int) Toast {
-	return Toast{level, message, 200}
+func New(level string, message string, code ...int) Toast {
+	statusCode := 200
+	if len(code) > 0 {
+		statusCode = code[0]
+	}
+
+	return Toast{level, message, statusCode}
 }
 
 // Error returns the error message.
@@ -51,23 +56,33 @@ func (t Toast) Error() string {
 }
 
 // Info returns an info message.
-func Info(message string) Toast {
-	return New(INFO, message, 200)
+func Info(message string, code ...int) Toast {
+	statusCode := 200
+	if len(code) > 0 {
+		statusCode = code[0]
+	}
+
+	return New(INFO, message, statusCode)
 }
 
 // Success returns a success message.
-func Success(c *fiber.Ctx, message string) {
-	New(SUCCESS, message, 200).SetHXTriggerHeader(c)
+func Success(c *fiber.Ctx, message string, code ...int) {
+	statusCode := 200
+	if len(code) > 0 {
+		statusCode = code[0]
+	}
+
+	New(SUCCESS, message, statusCode).SetHXTriggerHeader(c)
 }
 
 // Error returns an error message.
-func Error(message string) Toast {
-	return New(ERROR, message, 500)
-}
+func Error(message string, code ...int) Toast {
+	statusCode := 500
+	if len(code) > 0 {
+		statusCode = code[0]
+	}
 
-// SetCode sets the code of the toast.
-func (t Toast) SetCode(code int) {
-	t.Code = code
+	return New(ERROR, message, statusCode)
 }
 
 // ToJson returns the JSON representation of the toast.
