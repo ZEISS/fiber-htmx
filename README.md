@@ -23,6 +23,14 @@ A Go package to write HTML5 and HTMX components in Go. The package is designed t
 go get github.com/zeiss/fiber-htmx
 ```
 
+The available web components are published in the `fiber-htmx` package.
+
+```html
+<script src="https://unpkg.com/fiber-htmx@1.3.26"></script>
+<!-- have toast notifcations in your app -->
+<htmx-toasts></htmx-toasts>
+```
+
 ### Example
 
 Creating a button leveraging htmx is as easy as this.
