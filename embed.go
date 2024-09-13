@@ -6,7 +6,7 @@ import (
 
 const (
 	BundleFolder      = "dist"
-	DefaultBundleFile = "out.js"
+	DefaultBundleFile = "fiber-htmx.min.js"
 )
 
 //go:embed dist
