@@ -1,7 +1,7 @@
 {
   "name": "fiber-htmx",
   "description": "Components for building modern web applications with htmx",
-  "version": "1.3.26",
+  "version": "1.3.27",
   "keywords": [
     "AJAX",
     "HTML",
@@ -15,7 +15,8 @@
     "build:esm": "esbuild --bundle --sourcemap --platform=neutral --packages=external --outfile=out/fiber-htmx.esm.js src/main.ts",
     "build:cjs": "esbuild --bundle --minify --sourcemap --outfile=out/fiber-htmx.min.js src/main.ts",
     "types": "tsc --declaration --emitDeclarationOnly --outDir dist",
-    "build": "npm run build:esm && npm run build:cjs"
+    "build": "npm run build:esm && npm run build:cjs",
+    "prepare": "npm run build"
   },
   "files": [
     "LICENSE",
