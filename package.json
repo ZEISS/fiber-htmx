@@ -12,8 +12,8 @@
     "url": "https://github.com/zeiss/fiber-htmx/issues"
   },
   "scripts": {
-    "build:esm": "esbuild --bundle --sourcemap --platform=neutral --packages=external --outfile=out/fiber-htmx.esm.js src/main.ts",
-    "build:cjs": "esbuild --bundle --minify --sourcemap --outfile=out/fiber-htmx.min.js src/main.ts",
+    "build:esm": "esbuild --bundle --sourcemap --platform=neutral --packages=external --outfile=dist/fiber-htmx.esm.js src/main.ts",
+    "build:cjs": "esbuild --bundle --minify --sourcemap --outfile=dist/fiber-htmx.min.js src/main.ts",
     "types": "tsc --declaration --emitDeclarationOnly --outDir dist",
     "build": "npm run build:esm && npm run build:cjs",
     "prepare": "npm run build"
