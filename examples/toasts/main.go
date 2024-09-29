@@ -6,7 +6,6 @@ import (
 	"os"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/bundle"
 	"github.com/zeiss/fiber-htmx/components/avatars"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/drawers"
@@ -86,7 +85,8 @@ func (c *exampleController) Get() error {
 						htmx.Attribute("src", "https://cdn.tailwindcss.com"),
 					),
 					htmx.Script(
-						htmx.Attribute("src", "/static/out.js"),
+						htmx.Attribute("src", "https://unpkg.com/fiber-htmx@1.3.27"),
+						htmx.Defer(),
 					),
 				},
 			},
@@ -330,8 +330,6 @@ func (w *webSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Use(requestid.New())
 		app.Use(logger.New())
 		app.Use(recover.New())
-
-		app.Use("/static", bundle.New(bundle.Config{PathPrefix: "/static"}))
 
 		app.Get("/", htmx.NewHxControllerHandler(func() htmx.Controller {
 			return &exampleController{}

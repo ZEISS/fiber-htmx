@@ -10,7 +10,6 @@ import (
 	"time"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/bundle"
 	"github.com/zeiss/fiber-htmx/components/alerts"
 	"github.com/zeiss/fiber-htmx/components/avatars"
 	"github.com/zeiss/fiber-htmx/components/buttons"
@@ -121,8 +120,9 @@ func (c *exampleController) Error(err error) error {
 				Title:    "error",
 				Language: "en",
 				Head: []htmx.Node{
-					htmx.Link(
-						htmx.Attribute("href", "/static/out.js"),
+					htmx.Script(
+						htmx.Attribute("src", "https://unpkg.com/fiber-htmx@1.3.27"),
+						htmx.Defer(),
 					),
 				},
 			},
@@ -591,8 +591,6 @@ func (w *webSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/", htmx.NewHxControllerHandler(func() htmx.Controller {
 			return &exampleController{}
 		}))
-
-		app.Use("/static", bundle.New(bundle.Config{PathPrefix: "/static"}))
 
 		app.Get("/sse", sse.NewSSEHandler(w.manager))
 
