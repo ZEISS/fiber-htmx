@@ -172,16 +172,18 @@ func (c *exampleController) Get() error {
 						htmx.Attribute("rel", "stylesheet"),
 						htmx.Attribute("type", "text/css"),
 					),
+					htmx.ImportMap(htmx.Imports{
+						Imports: map[string]string{
+							"htmx": "https://unpkg.com/htmx.org@2.0.3/dist/htmx.esm.js",
+						},
+					}),
 					htmx.Script(
-						htmx.Attribute("src", "https://unpkg.com/htmx.org@2.0.0"),
-						htmx.Attribute("type", "application/javascript"),
+						htmx.Type("module"),
+						htmx.Raw(`import htmx from "htmx";`),
+						htmx.Raw(`htmx.logAll();`),
 					),
 					htmx.Script(
 						htmx.Attribute("src", "https://cdn.tailwindcss.com"),
-					),
-					htmx.Script(
-						htmx.Attribute("src", "https://unpkg.com/hyperscript.org@0.9.12"),
-						htmx.Attribute("type", "application/javascript"),
 					),
 					htmx.Script(
 						htmx.Attribute("src", "https://unpkg.com/htmx-ext-sse@2.0.0/sse.js"),
