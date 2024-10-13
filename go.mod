@@ -18,8 +18,8 @@ require (
 	github.com/yuin/goldmark v1.7.4
 	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.12
-	github.com/zeiss/fiber-reload v0.1.0
-	github.com/zeiss/pkg v0.1.8
+	github.com/zeiss/fiber-reload v0.1.1
+	github.com/zeiss/pkg v0.1.11
 	gorm.io/gorm v1.25.12
 	mvdan.cc/gofumpt v0.7.0
 )
@@ -159,7 +159,7 @@ require (
 	github.com/nunnatsa/ginkgolinter v0.16.2 // indirect
 	github.com/oapi-codegen/fiber-middleware v1.0.2 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/openfga/go-sdk v0.6.0 // indirect
+	github.com/openfga/go-sdk v0.6.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
