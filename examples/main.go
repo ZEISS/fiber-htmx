@@ -178,6 +178,11 @@ func (c *exampleController) Get() error {
 						},
 					}),
 					htmx.Script(
+						htmx.Async(),
+						htmx.CrossOrigin("anonymous"),
+						htmx.Src("https://unpkg.com/es-module-shims@1.10.0/dist/es-module-shims.js"),
+					),
+					htmx.Script(
 						htmx.Type("module"),
 						htmx.Raw(`import htmx from "htmx";`),
 						htmx.Raw(`htmx.logAll();`),
