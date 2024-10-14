@@ -17,7 +17,8 @@ generate: ## Generate code.
 
 .PHONY: bundle
 bundle: ## Bundle the project.
-	./node_modules/.bin/esbuild src/**/*.js --minify --sourcemap --bundle --outfile=dist/out.js
+	$(GO_RUN_TOOLS) github.com/evanw/esbuild/cmd/esbuild --bundle --sourcemap --platform=neutral --packages=external --outfile=dist/fiber-htmx.esm.js src/main.ts
+	$(GO_RUN_TOOLS) github.com/evanw/esbuild/cmd/esbuild --bundle --minify --sourcemap --outfile=dist/fiber-htmx.min.js src/main.ts
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.

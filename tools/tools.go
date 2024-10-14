@@ -4,6 +4,7 @@
 package tools
 
 import (
+	_ "github.com/evanw/esbuild/cmd/esbuild"
 	_ "github.com/golang/mock/mockgen/model"
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
 	_ "github.com/goreleaser/goreleaser"

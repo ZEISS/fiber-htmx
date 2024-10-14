@@ -5,6 +5,7 @@ go 1.22.1
 toolchain go1.22.5
 
 require (
+	github.com/evanw/esbuild v0.24.0
 	github.com/golang/mock v1.6.0
 	github.com/golangci/golangci-lint v1.61.0
 	github.com/goreleaser/goreleaser v1.26.2
