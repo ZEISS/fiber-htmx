@@ -31,7 +31,7 @@
   "unpkg": "dist/fiber-htmx.min.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zeiss/fiber-htmx.git"
+    "url": "git+https://github.com/ZEISS/fiber-htmx.git"
   },
   "license": "MIT",
   "dependencies": {
