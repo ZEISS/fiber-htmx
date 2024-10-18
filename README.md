@@ -23,12 +23,30 @@ A Go package to write HTML5 and HTMX components in Go. The package is designed t
 go get github.com/zeiss/fiber-htmx
 ```
 
+```html
+ht
+```
+
 The available web components are published in the `fiber-htmx` package.
 
-```html
-<script src="https://unpkg.com/fiber-htmx@1.3.26"></script>
-<!-- have toast notifcations in your app -->
-<htmx-toasts></htmx-toasts>
+```go
+htmx.HTML5(
+    htmx.HTML5Props{
+        Head: []htmx.Node{
+            htmx.Script(
+                htmx.Src("https://unpkg.com/fiber-htmx@1.3.28"),
+            ),
+            htmx.Link(
+                htmx.Rel("stylesheet"),
+                htmx.Href("https://unpkg.com/fiber-htmx@1.3.28/dist/out.css"),
+            ),
+        },
+    },
+    htmx.Body(
+        htmx.ClassNames{},
+        htmx.Toasts(),
+    ),
+)
 ```
 
 ### Example
