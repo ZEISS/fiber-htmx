@@ -15,6 +15,10 @@ release: ## Release the project.
 generate: ## Generate code.
 	$(GO) generate ./...
 
+.PHONY: start
+start: ## Run air live reload.
+	$(GO_RUN_TOOLS) github.com/air-verse/air
+
 .PHONY: bundle
 bundle: ## Bundle the project.
 	$(GO_RUN_TOOLS) github.com/evanw/esbuild/cmd/esbuild --format=esm --packages=external --outdir=dist src/*.ts

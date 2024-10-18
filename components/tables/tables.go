@@ -73,7 +73,6 @@ func Paginate[T any](value interface{}, pagination *Paginated[T], db *gorm.DB) f
 func RowsPtr[T any](rows []T) []*T {
 	rowsPtr := make([]*T, 0, len(rows))
 	for _, row := range rows {
-		row := row
 		rowsPtr = append(rowsPtr, &row)
 	}
 
@@ -136,7 +135,6 @@ func (p *Results[T]) GetSearch() string {
 func (p *Results[T]) GetRows() []*T {
 	rows := make([]*T, 0, len(p.Rows))
 	for _, row := range p.Rows {
-		row := row
 		rows = append(rows, &row)
 	}
 
