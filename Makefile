@@ -1,10 +1,10 @@
 .DEFAULT_GOAL := release
 
-GO 						?= go
-GO_RUN_TOOLS 	?= $(GO) run -modfile ./tools/go.mod
+GO 					?= go
+GO_RUN_TOOLS 		?= $(GO) run -modfile ./tools/go.mod
 GO_TEST 			?= $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
-GO_RELEASER 	?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
-GO_BENCHSTAT 	?= $(GO_RUN_TOOLS) golang.org/x/perf/cmd/benchstat
+GO_RELEASER 		?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
+GO_BENCHSTAT 		?= $(GO_RUN_TOOLS) golang.org/x/perf/cmd/benchstat
 GO_MOD 				?= $(shell ${GO} list -m)
 
 .PHONY: release
@@ -17,8 +17,9 @@ generate: ## Generate code.
 
 .PHONY: bundle
 bundle: ## Bundle the project.
-	$(GO_RUN_TOOLS) github.com/evanw/esbuild/cmd/esbuild --bundle --sourcemap --platform=neutral --packages=external --outfile=dist/fiber-htmx.esm.js src/main.ts
-	$(GO_RUN_TOOLS) github.com/evanw/esbuild/cmd/esbuild --bundle --minify --sourcemap --outfile=dist/fiber-htmx.min.js src/main.ts
+	$(GO_RUN_TOOLS) github.com/evanw/esbuild/cmd/esbuild --format=esm --packages=external --outdir=dist src/*.ts
+	# $(GO_RUN_TOOLS) github.com/evanw/esbuild/cmd/esbuild --bundle --sourcemap --platform=neutral --packages=external --outfile=dist/fiber-htmx.esm.js src/main.ts
+	# $(GO_RUN_TOOLS) github.com/evanw/esbuild/cmd/esbuild --bundle --minify --sourcemap --outfile=dist/fiber-htmx.min.js src/main.ts
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.

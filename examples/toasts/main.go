@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"net/http"
 	"os"
 
 	htmx "github.com/zeiss/fiber-htmx"
@@ -19,6 +20,7 @@ import (
 	"github.com/zeiss/pkg/server"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
@@ -73,20 +75,13 @@ func (c *exampleController) Get() error {
 				},
 				Head: []htmx.Node{
 					htmx.Link(
-						htmx.Attribute("href", "https://cdn.jsdelivr.net/npm/daisyui/dist/full.css"),
+						htmx.Attribute("href", "/assets/output.css"),
 						htmx.Attribute("rel", "stylesheet"),
 						htmx.Attribute("type", "text/css"),
 					),
 					htmx.Script(
 						htmx.Attribute("src", "https://unpkg.com/htmx.org@2.0.2"),
 						htmx.Attribute("type", "application/javascript"),
-					),
-					htmx.Script(
-						htmx.Attribute("src", "https://cdn.tailwindcss.com"),
-					),
-					htmx.Script(
-						htmx.Attribute("src", "https://unpkg.com/fiber-htmx@1.3.27"),
-						htmx.Defer(),
 					),
 				},
 			},
@@ -330,6 +325,9 @@ func (w *webSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Use(requestid.New())
 		app.Use(logger.New())
 		app.Use(recover.New())
+		app.Use("/assets", filesystem.New(filesystem.Config{
+			Root: http.Dir("./dist"),
+		}))
 
 		app.Get("/", htmx.NewHxControllerHandler(func() htmx.Controller {
 			return &exampleController{}
