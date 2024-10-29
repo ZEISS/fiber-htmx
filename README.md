@@ -34,11 +34,11 @@ htmx.HTML5(
     htmx.HTML5Props{
         Head: []htmx.Node{
             htmx.Script(
-                htmx.Src("https://unpkg.com/fiber-htmx@1.3.28"),
+                htmx.Src("https://unpkg.com/fiber-htmx@1.3.29"),
             ),
             htmx.Link(
                 htmx.Rel("stylesheet"),
-                htmx.Href("https://unpkg.com/fiber-htmx@1.3.28/dist/out.css"),
+                htmx.Href("https://unpkg.com/fiber-htmx@1.3.29/dist/out.css"),
             ),
         },
     },
