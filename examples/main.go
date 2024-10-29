@@ -22,6 +22,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/navbars"
 	"github.com/zeiss/fiber-htmx/components/swap"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/fiber-htmx/components/tabs"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/fiber-htmx/components/utils"
 	"github.com/zeiss/fiber-htmx/sse"
@@ -367,6 +368,37 @@ func (c *exampleController) Get() error {
 											),
 										),
 									),
+									htmx.Div(
+										htmx.ClassNames{
+											"bg-base-100": true,
+										},
+										tabs.TabsBoxed(
+											tabs.TabsProps{},
+											tabs.Tab(
+												tabs.TabProps{
+													Name:   "my_tabs_1",
+													Label:  "Tab 1",
+													Active: true,
+												},
+												htmx.Text("Tab 1"),
+											),
+											tabs.Tab(
+												tabs.TabProps{
+													Name:  "my_tabs_1",
+													Label: "Tab 2",
+												},
+												htmx.Text("Tab 2"),
+											),
+											tabs.Tab(
+												tabs.TabProps{
+													Name:  "my_tabs_1",
+													Label: "Tab 3",
+												},
+												htmx.Text("Tab 3"),
+											),
+										),
+									),
+
 									alerts.Info(
 										alerts.AlertProps{},
 										htmx.Text("Hello, World!"),

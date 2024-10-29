@@ -6,6 +6,7 @@ import (
 
 // TabsProps is a struct that contains the properties of the Tabs component
 type TabsProps struct {
+	ID         string
 	ClassNames htmx.ClassNames
 }
 
@@ -41,20 +42,34 @@ func TabsBoxed(props TabsProps, children ...htmx.Node) htmx.Node {
 // TabProps is a struct that contains the properties of the Tab component
 type TabProps struct {
 	ClassNames htmx.ClassNames
+	Name       string
+	Label      string
 	Active     bool
+	Disabled   bool
 }
 
 // Tab is a component that renders a tab.
 func Tab(props TabProps, children ...htmx.Node) htmx.Node {
-	return htmx.A(
-		htmx.Merge(
-			htmx.ClassNames{
-				"tab":        true,
-				"tab-active": props.Active,
-			},
-			props.ClassNames,
+	return htmx.Fragment(
+		htmx.Input(
+			htmx.Type("radio"),
+			htmx.Name(props.Name),
+			htmx.Role("tab"),
+			htmx.Class("tab"),
+			htmx.Aria("label", props.Label),
+			htmx.If(props.Disabled, htmx.Disabled()),
+			htmx.If(props.Active, htmx.Checked()),
 		),
-		htmx.Role("tab"),
-		htmx.Group(children...),
+		htmx.Div(
+			htmx.Merge(
+				htmx.ClassNames{
+					"tab-content": true,
+					"p-10":        true,
+				},
+				props.ClassNames,
+			),
+			htmx.Role("tabpanel"),
+			htmx.Group(children...),
+		),
 	)
 }
