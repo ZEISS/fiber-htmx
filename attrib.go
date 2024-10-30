@@ -506,3 +506,8 @@ func List(v string) Node {
 func OnePasswordIgnore() Node {
 	return Attribute("data-1p-ignore")
 }
+
+// ContentEditable sets the contenteditable attribute for elements.
+func ContentEditable(v string) Node {
+	return Attribute("contenteditable", v)
+}
