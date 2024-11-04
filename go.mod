@@ -4,6 +4,7 @@ go 1.23
 
 require (
 	github.com/ettle/strcase v0.2.0
+	github.com/go-playground/form/v4 v4.2.1
 	github.com/go-playground/validator/v10 v10.22.1
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/google/uuid v1.6.0
@@ -17,7 +18,7 @@ require (
 	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.15
 	github.com/zeiss/fiber-reload v0.1.1
-	github.com/zeiss/pkg v0.1.17
+	github.com/zeiss/pkg v0.1.18-0.20241104221956-c2a72271b74b
 	gorm.io/gorm v1.25.12
 )
 

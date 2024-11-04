@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/alerts"
 	"github.com/zeiss/fiber-htmx/components/avatars"
@@ -24,9 +25,12 @@ import (
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/fiber-htmx/components/tabs"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
+	"github.com/zeiss/fiber-htmx/components/typography"
 	"github.com/zeiss/fiber-htmx/components/utils"
+	"github.com/zeiss/fiber-htmx/components/validate"
 	"github.com/zeiss/fiber-htmx/sse"
 	"github.com/zeiss/pkg/server"
+	"github.com/zeiss/pkg/utilx"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -113,6 +117,13 @@ type exampleController struct {
 	htmx.UnimplementedController
 }
 
+var v *validator.Validate
+
+type ExampleForm struct {
+	Name        string `json:"name" validate:"required"`
+	Description string `json:"description" validate:"required,min=10"`
+}
+
 func (c *exampleController) Error(err error) error {
 	return htmx.RenderComp(
 		c.Ctx(),
@@ -158,6 +169,16 @@ func (c *exampleController) Get() error {
 	msg.Add(htmx.HtmxMessage{
 		Message: "Hello, World!",
 	})
+
+	v = validator.New()
+
+	form := &ExampleForm{
+		Name:        "Demo",
+		Description: "",
+	}
+
+	err := v.Struct(form)
+	errz := validate.Errors(err.(validator.ValidationErrors))
 
 	return c.Render(
 		htmx.HTML5(
@@ -414,6 +435,60 @@ func (c *exampleController) Get() error {
 									htmx.Div(
 										forms.TextInput(
 											forms.TextInputProps{},
+										),
+										forms.FormControl(
+											forms.FormControlProps{},
+											forms.FormControlLabel(
+												forms.FormControlLabelProps{},
+												forms.FormControlLabelText(
+													forms.FormControlLabelTextProps{
+														ClassNames: htmx.ClassNames{
+															"label-text": true,
+														},
+													},
+													htmx.Text("Hello, World!"),
+												),
+											),
+											forms.TextInput(
+												forms.TextInputProps{
+													Error: errz.Field("name"),
+													Value: "Hello, World!",
+												},
+											),
+											htmx.If(
+												utilx.NotEmpty(errz.Field("name")),
+												typography.Error(
+													typography.Props{},
+													htmx.Text("This field is required."),
+												),
+											),
+										),
+										forms.FormControl(
+											forms.FormControlProps{},
+											forms.FormControlLabel(
+												forms.FormControlLabelProps{},
+												forms.FormControlLabelText(
+													forms.FormControlLabelTextProps{
+														ClassNames: htmx.ClassNames{
+															"label-text": true,
+														},
+													},
+													htmx.Text("Hello, World!"),
+												),
+											),
+											forms.TextInput(
+												forms.TextInputProps{
+													Error: errz.Field("Description"),
+													Value: "Hello, World!",
+												},
+											),
+											htmx.If(
+												utilx.NotEmpty(errz.Field("Description")),
+												typography.Error(
+													typography.Props{},
+													htmx.Text("This field is required."),
+												),
+											),
 										),
 										htmx.Div(
 											htmx.Merge(

@@ -1,6 +1,9 @@
 package forms
 
-import htmx "github.com/zeiss/fiber-htmx"
+import (
+	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/pkg/utilx"
+)
 
 // TextInputProps represents the properties for a text input element.
 type TextInputProps struct {
@@ -10,6 +13,7 @@ type TextInputProps struct {
 	Disabled    bool            // Whether the text input element is disabled.
 	Placeholder string          // The placeholder of the text input element.
 	Icon        htmx.Node       // The icon of the text input element.
+	Error       string          // The error message of the text input element.
 }
 
 // TextInput returns a text input element based on the provided properties.
@@ -17,8 +21,9 @@ func TextInput(p TextInputProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
 		htmx.Merge(
 			htmx.ClassNames{
-				"input":  true,
-				"w-full": true,
+				"input":       true,
+				"input-error": utilx.NotEmpty(p.Error),
+				"w-full":      true,
 			},
 			p.ClassNames,
 		),
