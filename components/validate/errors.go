@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/zeiss/pkg/slices"
+	"github.com/zeiss/pkg/utilx"
 )
 
 // Errors is a map of field names to error messages.
@@ -20,6 +21,11 @@ func (e Errors) Field(name string) string {
 	}
 
 	return ""
+}
+
+// HasError returns true if the field has an error.
+func (e Errors) HasError(name string) bool {
+	return utilx.NotEmpty(e.Field(name))
 }
 
 // TagNameFunc returns the tag name for the provided field.

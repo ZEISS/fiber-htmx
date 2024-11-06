@@ -113,6 +113,56 @@ func init() {
 	rootCmd.SilenceUsage = true
 }
 
+type RegisterFormProps struct {
+	errors validate.Errors
+}
+
+func RegisterForm(props RegisterFormProps) htmx.Node {
+	return htmx.Form(
+		htmx.HxPost("/register"),
+		htmx.HxSwap("outerHTML"),
+		htmx.Target("cloesest div"),
+		forms.FormControl(
+			forms.FormControlProps{},
+			forms.FormControlLabel(
+				forms.FormControlLabelProps{},
+				forms.FormControlLabelText(
+					forms.FormControlLabelTextProps{
+						ClassNames: htmx.ClassNames{
+							"label-text": true,
+						},
+					},
+					htmx.Text("Email"),
+				),
+			),
+			forms.TextInput(
+				forms.TextInputProps{
+					Error: props.errors.Field("email"),
+					Name:  "email",
+					Value: "Hello, World!",
+				},
+				htmx.Type("email"),
+				htmx.Required(),
+			),
+			htmx.If(
+				props.errors.HasError("email"),
+				htmx.Div(
+					htmx.ClassNames{
+						"text-error": true,
+					},
+					htmx.Text("A valid email is required."),
+				),
+			),
+		),
+		buttons.Button(
+			buttons.ButtonProps{
+				Type: "submit",
+			},
+			htmx.Text("Register"),
+		),
+	)
+}
+
 type exampleController struct {
 	htmx.UnimplementedController
 }
@@ -419,7 +469,7 @@ func (c *exampleController) Get() error {
 											),
 										),
 									),
-
+									RegisterForm(RegisterFormProps{}),
 									alerts.Info(
 										alerts.AlertProps{},
 										htmx.Text("Hello, World!"),
@@ -710,6 +760,27 @@ func (w *webSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		app.Post("/error", htmx.NewHxControllerHandler(func() htmx.Controller {
 			return &exampleController{}
+		}))
+
+		app.Post("/register", htmx.NewCompFuncHandler(func(c *fiber.Ctx) (htmx.Node, error) {
+			type Form struct {
+				Email string `json:"email" validate:"required,email"`
+			}
+
+			var f Form
+			if err := c.BodyParser(&f); err != nil {
+				return nil, err
+			}
+
+			v := validator.New()
+			v.RegisterTagNameFunc(validate.TagNameFunc)
+			if err := v.Struct(f); err != nil {
+				return RegisterForm(RegisterFormProps{
+					errors: validate.Errors(err.(validator.ValidationErrors)),
+				}), nil
+			}
+
+			return RegisterForm(RegisterFormProps{}), nil
 		}))
 
 		app.Post("/dropdown", htmx.NewCompHandler(

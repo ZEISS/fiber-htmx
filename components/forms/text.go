@@ -31,6 +31,7 @@ func TextInput(p TextInputProps, children ...htmx.Node) htmx.Node {
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),
 		htmx.If(p.Disabled, htmx.Disabled()),
+		htmx.If(utilx.NotEmpty(p.Error), htmx.Attribute("aria-invalid", "true")),
 		htmx.Attribute("placeholder", p.Placeholder),
 		htmx.Group(children...),
 	)
