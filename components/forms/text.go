@@ -9,6 +9,7 @@ import (
 type TextInputProps struct {
 	ClassNames  htmx.ClassNames // The class names for the text input element.
 	Disabled    bool            // Whether the text input element is disabled.
+	Type        string          // The type of the text input element.
 	Error       error           // The error message of the text input element.
 	Icon        htmx.Node       // The icon of the text input element.
 	Name        string          // The name of the text input element.
@@ -27,7 +28,11 @@ func TextInput(p TextInputProps, children ...htmx.Node) htmx.Node {
 			},
 			p.ClassNames,
 		),
-		htmx.Attribute("type", "text"),
+		htmx.IfElse(
+			utilx.NotEmpty(p.Type),
+			htmx.Attribute("type", p.Type),
+			htmx.Attribute("type", "text"),
+		),
 		htmx.Attribute("name", p.Name),
 		htmx.Attribute("value", p.Value),
 		htmx.If(p.Disabled, htmx.Disabled()),

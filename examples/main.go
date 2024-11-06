@@ -119,6 +119,9 @@ type RegisterFormProps struct {
 
 func RegisterForm(props RegisterFormProps) htmx.Node {
 	return htmx.Form(
+		htmx.ClassNames{
+			"group": true,
+		},
 		htmx.HxPost("/register"),
 		htmx.HxSwap("outerHTML"),
 		htmx.Target("cloesest div"),
@@ -138,12 +141,28 @@ func RegisterForm(props RegisterFormProps) htmx.Node {
 			),
 			forms.TextInput(
 				forms.TextInputProps{
-					Error: props.errors.Field("email"),
-					Name:  "email",
-					Value: "Hello, World!",
+					Error:       props.errors.Field("email"),
+					Name:        "email",
+					Value:       "",
+					Type:        "email",
+					Placeholder: "indy@example.com",
+					ClassNames: htmx.ClassNames{
+						"peer": true,
+						"invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500": true,
+					},
 				},
-				htmx.Type("email"),
+				htmx.Attribute("type", "email"),
 				htmx.Required(),
+			),
+			htmx.Span(
+				htmx.ClassNames{
+					"mt-2":         true,
+					"hidden":       true,
+					"text-sm":      true,
+					"text-red-500": true,
+					"peer-[&:not(:placeholder-shown):not(:focus):invalid]:block": true,
+				},
+				htmx.Text("A valid email is required."),
 			),
 			htmx.If(
 				props.errors.HasError("email"),
@@ -189,6 +208,9 @@ func RegisterForm(props RegisterFormProps) htmx.Node {
 		buttons.Button(
 			buttons.ButtonProps{
 				Type: "submit",
+				ClassNames: htmx.ClassNames{
+					"group-invalid:pointer-events-none group-invalid:opacity-30": true,
+				},
 			},
 			htmx.Text("Register"),
 		),
