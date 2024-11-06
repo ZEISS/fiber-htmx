@@ -492,6 +492,11 @@ func Integrity(v string) Node {
 	return Attribute("integrity", v)
 }
 
+// NoValidate sets the novalidate attribute for form elements.
+func NoValidate() Node {
+	return Attribute("novalidate")
+}
+
 // CrossOrigin sets the crossorigin attribute for elements.
 func CrossOrigin(v string) Node {
 	return Attribute("crossorigin", v)

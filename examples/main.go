@@ -122,6 +122,7 @@ func RegisterForm(props RegisterFormProps) htmx.Node {
 		htmx.HxPost("/register"),
 		htmx.HxSwap("outerHTML"),
 		htmx.Target("cloesest div"),
+		htmx.NoValidate(),
 		forms.FormControl(
 			forms.FormControlProps{},
 			forms.FormControlLabel(
@@ -151,6 +152,37 @@ func RegisterForm(props RegisterFormProps) htmx.Node {
 						"text-error": true,
 					},
 					htmx.Text("A valid email is required."),
+				),
+			),
+		),
+		forms.FormControl(
+			forms.FormControlProps{},
+			forms.FormControlLabel(
+				forms.FormControlLabelProps{},
+				forms.FormControlLabelText(
+					forms.FormControlLabelTextProps{
+						ClassNames: htmx.ClassNames{
+							"label-text": true,
+						},
+					},
+					htmx.Text("Option 1"),
+				),
+			),
+			forms.Radio(
+				forms.RadioProps{
+					Name:  "option",
+					Value: "1",
+					Error: props.errors.Field("option"),
+				},
+				htmx.Required(),
+			),
+			htmx.If(
+				props.errors.HasError("option"),
+				htmx.Div(
+					htmx.ClassNames{
+						"text-error": true,
+					},
+					htmx.Text("A valid option is required."),
 				),
 			),
 		),
@@ -764,7 +796,8 @@ func (w *webSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		app.Post("/register", htmx.NewCompFuncHandler(func(c *fiber.Ctx) (htmx.Node, error) {
 			type Form struct {
-				Email string `json:"email" validate:"required,email"`
+				Email  string `json:"email" form:"email" validate:"required,email"`
+				Option string `json:"option" form:"option" validate:"required"`
 			}
 
 			var f Form

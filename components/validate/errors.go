@@ -13,14 +13,14 @@ import (
 type Errors validator.ValidationErrors
 
 // Field returns the error message for the provided field.
-func (e Errors) Field(name string) string {
+func (e Errors) Field(name string) error {
 	for _, err := range e {
 		if err.Field() == name {
-			return err.Error()
+			return err
 		}
 	}
 
-	return ""
+	return nil
 }
 
 // HasError returns true if the field has an error.

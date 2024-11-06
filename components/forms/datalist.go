@@ -23,6 +23,8 @@ type DatalistProps struct {
 	Disabled bool
 	// Indicator is the indicator of the datalist
 	Indicator string
+	// Error is the error of the datalist
+	Error error
 }
 
 // Datalist is a component that displays a datalist.
@@ -35,6 +37,7 @@ func Datalist(props DatalistProps, children ...htmx.Node) htmx.Node {
 				Name:        props.Name,
 				Placeholder: props.Placeholder,
 				Disabled:    props.Disabled,
+				Error:       props.Error,
 			},
 			htmx.List(props.ID),
 			htmx.HxGet(props.URL),

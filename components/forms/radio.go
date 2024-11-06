@@ -1,6 +1,9 @@
 package forms
 
-import htmx "github.com/zeiss/fiber-htmx"
+import (
+	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/pkg/utilx"
+)
 
 // RadioProps represents the properties for a radio element.
 type RadioProps struct {
@@ -9,6 +12,7 @@ type RadioProps struct {
 	Value      string          // The value of the radio element.
 	Checked    bool            // Whether the radio element is checked.
 	Disabled   bool
+	Error      error
 }
 
 // Radio generates a radio element based on the provided properties.
@@ -16,7 +20,8 @@ func Radio(p RadioProps, children ...htmx.Node) htmx.Node {
 	return htmx.Input(
 		htmx.Merge(
 			htmx.ClassNames{
-				"radio": true,
+				"radio":       true,
+				"radio-error": utilx.NotEmpty(p.Error),
 			},
 			p.ClassNames,
 		),
