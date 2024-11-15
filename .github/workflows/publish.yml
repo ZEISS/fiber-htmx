@@ -4,9 +4,11 @@ name: Publish Package to npmjs
 
 on:
   workflow_dispatch:
-  release:
+  worflow_run:
+    workflows: ["Release"]
     types:
-      - created
+      - completed
+  
 jobs:
   build:
     runs-on: ubuntu-latest
