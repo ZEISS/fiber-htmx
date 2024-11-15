@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   release:
     types:
-      - published
+      - created
 jobs:
   build:
     runs-on: ubuntu-latest
