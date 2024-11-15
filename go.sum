@@ -23,11 +23,8 @@ github.com/go-openapi/jsonpointer v0.21.0 h1:YgdVicSA9vH5RiHs9TZW5oyafXZFc6+2Vc1
 github.com/go-openapi/jsonpointer v0.21.0/go.mod h1:IUyH9l/+uyhIYQ/PXVA41Rexl+kOkAPDdXEYns6fzUY=
 github.com/go-openapi/swag v0.23.0 h1:vsEVJDUo2hPJ2tu0/Xc+4noaxyEffXNIs3cOULZ+GrE=
 github.com/go-openapi/swag v0.23.0/go.mod h1:esZ8ITTYEsH1V2trKHjAN8Ai7xHb8RV+YSZ577vPjgQ=
-github.com/go-playground/assert/v2 v2.0.1/go.mod h1:VDjEfimB/XKnb+ZQfWdccd7VUvScMdVu0Titje2rxJ4=
 github.com/go-playground/assert/v2 v2.2.0 h1:JvknZsQTYeFEAhQwI4qEt9cyV5ONwRHC+lYKSsYSR8s=
 github.com/go-playground/assert/v2 v2.2.0/go.mod h1:VDjEfimB/XKnb+ZQfWdccd7VUvScMdVu0Titje2rxJ4=
-github.com/go-playground/form/v4 v4.2.1 h1:HjdRDKO0fftVMU5epjPW2SOREcZ6/wLUzEobqUGJuPw=
-github.com/go-playground/form/v4 v4.2.1/go.mod h1:q1a2BY+AQUUzhl6xA/6hBetay6dEIhMHjgvJiGo6K7U=
 github.com/go-playground/locales v0.14.1 h1:EWaQ/wswjilfKLTECiXz7Rh+3BjFhfDFKv/oXslEjJA=
 github.com/go-playground/locales v0.14.1/go.mod h1:hxrqLVvrK65+Rwrd5Fc6F2O76J/NuW9t0sjnWqG1slY=
 github.com/go-playground/universal-translator v0.18.1 h1:Bcnm0ZwsGyWbCzImXv+pAJnYK9S473LQFuzCbDbfSFY=
@@ -144,8 +141,6 @@ github.com/zeiss/fiber-goth v1.2.15 h1:5imQDAf6lG8xKAzjjsaab25TAYdc5QtyaaqaCwEUb
 github.com/zeiss/fiber-goth v1.2.15/go.mod h1:nBus53MvxBZwPIul1TJVwg4bDOvoIoqs9Bj86YFUkoo=
 github.com/zeiss/fiber-reload v0.1.1 h1:ozSpAjXfCkHa4x2y+lY4cqBWiQ9ORbECMBsMruMexo0=
 github.com/zeiss/fiber-reload v0.1.1/go.mod h1:n8KLvNS6qbfcmQhgHhUNrOfEkiQWxscweIvBBsHy2XI=
-github.com/zeiss/pkg v0.1.17 h1:rDvBtaRUSD1ypeu66R3UHMtEphPSBaZ52484BQtPEVI=
-github.com/zeiss/pkg v0.1.17/go.mod h1:2k/MCcM0p8KiHJMdUG3Rnx90pE7UfzaGd0GIXm6V7/8=
 github.com/zeiss/pkg v0.1.18-0.20241104221956-c2a72271b74b h1:NNrJRp+x1pOSwuwv7kdMBIwN6cIYiu4wWA7bD+VE3js=
 github.com/zeiss/pkg v0.1.18-0.20241104221956-c2a72271b74b/go.mod h1:rELEGr/y1hKp6R/s1gQTRje/RLz3TmetTvXumPQN+8A=
 go.opentelemetry.io/otel v1.29.0 h1:PdomN/Al4q/lN6iBJEN3AwPvUiHPMlt93c8bqTG5Llw=
