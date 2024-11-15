@@ -24,7 +24,7 @@ jobs:
       - run: npm ci
       - run: npm version ${TAG_NAME} --git-tag-version=false
         env:
-          TAG_NAME: ${{ github.event.release.tag_name }}
+          TAG_NAME: ${{ github.event.workflow_run.head_branch }}
       - run: npm whoami; npm publish --ignore-scripts --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
