@@ -1,12 +1,17 @@
 module.exports = {
   content: [
     "src/**/*.{ts,html,css,scss}",
-    "components/**/*.go"
+    "components/**/*.go",
+    "dist/**/*.html",
   ],
   theme: {
     extend: {},
   },
   plugins: [
-    require('daisyui')
+    require('daisyui'),
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/container-queries'),
   ],
 };

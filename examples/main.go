@@ -298,6 +298,11 @@ func (c *exampleController) Get() error {
 						htmx.Attribute("rel", "stylesheet"),
 						htmx.Attribute("type", "text/css"),
 					),
+					htmx.Link(
+						htmx.Attribute("href", "/static/out.css"),
+						htmx.Attribute("rel", "stylesheet"),
+						htmx.Attribute("type", "text/css"),
+					),
 					htmx.ImportMap(htmx.Imports{
 						Imports: map[string]string{
 							"htmx": "https://unpkg.com/htmx.org@2.0.3/dist/htmx.esm.js",
@@ -314,15 +319,8 @@ func (c *exampleController) Get() error {
 						htmx.Raw(`htmx.logAll();`),
 					),
 					htmx.Script(
-						htmx.Attribute("src", "https://cdn.tailwindcss.com"),
-					),
-					htmx.Script(
 						htmx.Attribute("src", "https://unpkg.com/htmx-ext-sse@2.0.0/sse.js"),
 						htmx.Attribute("type", "application/javascript"),
-					),
-					htmx.Script(
-						htmx.Attribute("src", "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"),
-						htmx.Defer(),
 					),
 					htmx.Script(
 						htmx.Attribute("src", "/static/out.js"),
