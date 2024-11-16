@@ -194,8 +194,11 @@ func Page() htmx.Node {
 		Description: "",
 	}
 
+	var verr validator.ValidationErrors
 	err := v.Struct(form)
-	errz := validate.Errors(err.(validator.ValidationErrors))
+	errors.As(err, &verr)
+
+	errz := validate.Errors(verr)
 
 	return htmx.HTML5(
 		htmx.HTML5Props{
@@ -709,7 +712,7 @@ func main() {
 		panic(err)
 	}
 
-	f, err := os.OpenFile(filepath.Join(cwd, "examples/index.html"), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0o600)
+	f, err := os.OpenFile(filepath.Join(filepath.Clean(cwd), "examples/index.html"), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0o600)
 	if err != nil {
 		panic(err)
 	}
