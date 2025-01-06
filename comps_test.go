@@ -190,3 +190,37 @@ func TestFragment(t *testing.T) {
 		})
 	}
 }
+
+func TestRaw(t *testing.T) {
+	tests := []struct {
+		desc string
+		in   string
+		out  string
+	}{
+		{
+			desc: "empty",
+			in:   "",
+			out:  "",
+		},
+		{
+			desc: "text",
+			in:   "hello",
+			out:  "hello",
+		},
+		{
+			desc: "html",
+			in:   "<div></div>",
+			out:  "<div></div>",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			var bb bytes.Buffer
+
+			err := htmx.Raw(test.in).Render(&bb)
+			require.NoError(t, err)
+			assert.Equal(t, test.out, bb.String())
+		})
+	}
+}

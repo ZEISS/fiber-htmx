@@ -67,3 +67,28 @@ func BenchmarkMerge(b *testing.B) {
 		htmx.Merge(classNames...)
 	}
 }
+
+func TestJsonSerializeOrEmpty(t *testing.T) {
+	tests := []struct {
+		name string
+		in   interface{}
+		out  string
+	}{
+		{
+			name: "serialize",
+			in:   map[string]interface{}{"a": 1, "b": "2"},
+			out:  `{"a":1,"b":"2"}`,
+		},
+		{
+			name: "empty",
+			in:   nil,
+			out:  "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.out, htmx.JsonSerializeOrEmpty(tt.in))
+		})
+	}
+}

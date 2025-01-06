@@ -214,6 +214,11 @@ func Raw(t string) Node {
 	})
 }
 
+// UnsafeRaw is a node that renders an unsafe raw HTML.
+func UnsafeRaw(t string) Node {
+	return Raw(t)
+}
+
 // Rawf is a node that renders a formatted raw HTML.
 func Rawf(format string, a ...interface{}) Node {
 	return NodeFunc(func(w io.Writer) error {
@@ -221,6 +226,25 @@ func Rawf(format string, a ...interface{}) Node {
 
 		return err
 	})
+}
+
+// UnsafeRawf is a node that renders an unsafe formatted raw HTML.
+func UnsafeRawf(format string, a ...interface{}) Node {
+	return Rawf(format, a...)
+}
+
+// RawScript is a node that renders a raw script.
+func RawScript(t string) Node {
+	return NodeFunc(func(w io.Writer) error {
+		_, err := w.Write([]byte("<script>" + t + "</script>"))
+
+		return err
+	})
+}
+
+// UnsafeRawScript is a node that renders an unsafe raw script.
+func UnsafeRawScript(t string) Node {
+	return RawScript(t)
 }
 
 type group struct {

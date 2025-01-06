@@ -11,6 +11,46 @@ import (
 	"github.com/zeiss/pkg/errorx"
 )
 
+// JSEvetType represents the type of JavaScript event.
+type JSEventType string
+
+// String returns the string representation of the JSEventType.
+func (e JSEventType) String() string {
+	return string(e)
+}
+
+// List of predefined JavaScript event types.
+const (
+	JSEventTypeClickEvent       JSEventType = "onclick"
+	JSEventTypeChangeEvent      JSEventType = "onchange"
+	JSEventTypeInputEvent       JSEventType = "oninput"
+	JSEventTypeFocusEvent       JSEventType = "onfocus"
+	JSEventTypeBlurEvent        JSEventType = "onblur"
+	JSEventTypeKeyDownEvent     JSEventType = "onkeydown"
+	JSEventTypeKeyUpEvent       JSEventType = "onkeyup"
+	JSEventTypeKeyPressEvent    JSEventType = "onkeypress"
+	JSEventTypeSubmitEvent      JSEventType = "onsubmit"
+	JSEventTypeLoadDomEvent     JSEventType = "onload"
+	JSEventTypeLoadEvent        JSEventType = "onload"
+	JSEventTypeUnloadEvent      JSEventType = "onunload"
+	JSEventTypeResizeEvent      JSEventType = "onresize"
+	JSEventTypeScrollEvent      JSEventType = "onscroll"
+	JSEventTypeDblClickEvent    JSEventType = "ondblclick"
+	JSEventTypeMouseOverEvent   JSEventType = "onmouseover"
+	JSEventTypeMouseOutEvent    JSEventType = "onmouseout"
+	JSEventTypeMouseMoveEvent   JSEventType = "onmousemove"
+	JSEventTypeMouseDownEvent   JSEventType = "onmousedown"
+	JSEventTypeMouseUpEvent     JSEventType = "onmouseup"
+	JSEventTypeContextMenuEvent JSEventType = "oncontextmenu"
+	JSEventTypeDragStartEvent   JSEventType = "ondragstart"
+	JSEventTypeDragEvent        JSEventType = "ondrag"
+	JSEventTypeDragEnterEvent   JSEventType = "ondragenter"
+	JSEventTypeDragLeaveEvent   JSEventType = "ondragleave"
+	JSEventTypeDragOverEvent    JSEventType = "ondragover"
+	JSEventTypeDropEvent        JSEventType = "ondrop"
+	JSEventTypeDragEndEvent     JSEventType = "ondragend"
+)
+
 // HxEventType represents the type of htmx event.
 type HxEventType string
 
@@ -20,76 +60,187 @@ func (e HxEventType) String() string {
 }
 
 // List of predefined htmx event types.
+// See: https://htmx.org/reference/#events
 const (
-	HxEventTypeAbort            HxEventType = "htmx:abort"
-	HxEventTypeAfterLoad        HxEventType = "htmx:afterLoad"
-	HxEventTypeAfterProcessNode HxEventType = "htmx:afterProcessNode"
-	HxEventTypeAfterRequest     HxEventType = "htmx:afterRequest"
+	HxEventTypeAbort                      HxEventType = "htmx:abort"
+	HxEventTypeAfterLoad                  HxEventType = "htmx:afterLoad"
+	HxEventTypeAfterProcessNode           HxEventType = "htmx:afterProcessNode"
+	HxEventTypeAfterRequest               HxEventType = "htmx:afterRequest"
+	HxEventTypeBeforeHistorySaveEvent     HxEventType = "htmx:beforeHistorySave"
+	HxEventTypeBeforeOnAbort              HxEventType = "htmx:beforeOnAbort"
+	HxEventTypeBeforeOnConfigRequest      HxEventType = "htmx:beforeOnConfigRequest"
+	HxEventTypeBeforeOnConfigSwap         HxEventType = "htmx:beforeOnConfigSwap"
+	HxEventTypeBeforeOnConfigTrigger      HxEventType = "htmx:beforeOnConfigTrigger"
+	HxEventTypeBeforeOnError              HxEventType = "htmx:beforeOnError"
+	HxEventTypeBeforeOnLoad               HxEventType = "htmx:beforeOnLoad"
+	HxEventTypeBeforeOnRequest            HxEventType = "htmx:beforeOnRequest"
+	HxEventTypeBeforeOnSettle             HxEventType = "htmx:beforeOnSettle"
+	HxEventTypeBeforeOnSwap               HxEventType = "htmx:beforeOnSwap"
+	HxEventTypeBeforeOnTrigger            HxEventType = "htmx:beforeOnTrigger"
+	HxEventTypeBeforeRequest              HxEventType = "htmx:beforeRequest"
+	HxEventTypeBeforeSettle               HxEventType = "htmx:beforeSettle"
+	HxEventTypeBeforeSwap                 HxEventType = "htmx:beforeSwap"
+	HxEventTypeConfigRequest              HxEventType = "htmx:configRequest"
+	HxEventTypeConfigSwap                 HxEventType = "htmx:configSwap"
+	HxEventTypeConfigTrigger              HxEventType = "htmx:configTrigger"
+	HxEventTypeError                      HxEventType = "htmx:error"
+	HxEventTypeHistoryCacheErrorEvent     HxEventType = "htmx:historyCacheError"
+	HxEventTypeHistoryCacheMissErrorEvent HxEventType = "htmx:historyCacheMissError"
+	HxEventTypeHistoryCacheMissEvent      HxEventType = "htmx:historyCacheMiss"
+	HxEventTypeHistoryCacheMissLoadEvent  HxEventType = "htmx:historyCacheMissLoad"
+	HxEventTypeHistoryRestoreEvent        HxEventType = "htmx:historyRestore"
+	HxEventTypeLoad                       HxEventType = "htmx:load"
+	HxEventTypeNoSSESourceErrorEvent      HxEventType = "htmx:noSSESourceError"
+	HxEventTypeOnAbort                    HxEventType = "htmx:onAbort"
+	HxEventTypeOnConfigRequest            HxEventType = "htmx:onConfigRequest"
+	HxEventTypeOnConfigSwap               HxEventType = "htmx:onConfigSwap"
+	HxEventTypeOnConfigTrigger            HxEventType = "htmx:onConfigTrigger"
+	HxEventTypeOnError                    HxEventType = "htmx:onError"
+	HxEventTypeOnLoad                     HxEventType = "htmx:onLoad"
+	HxEventTypeOnLoadErrorEvent           HxEventType = "htmx:onLoadError"
+	HxEventTypeOnRequest                  HxEventType = "htmx:onRequest"
+	HxEventTypeOnSettle                   HxEventType = "htmx:onSettle"
+	HxEventTypeOnSwap                     HxEventType = "htmx:onSwap"
+	HxEventTypeOnTrigger                  HxEventType = "htmx:onTrigger"
+	HxEventTypeOobAfterSwapEvent          HxEventType = "htmx:oobAfterSwap"
+	HxEventTypeOobBeforeSwapEvent         HxEventType = "htmx:oobBeforeSwap"
+	HxEventTypePromptEvent                HxEventType = "htmx:prompt"
+	HxEventTypePushedIntoHistoryEvent     HxEventType = "htmx:pushedIntoHistory"
+	HxEventTypeRequest                    HxEventType = "htmx:request"
+	HxEventTypeResponseErrorEvent         HxEventType = "htmx:responseError"
+	HxEventTypeSendErrorEvent             HxEventType = "htmx:sendError"
+	HxEventTypeSettle                     HxEventType = "htmx:settle"
+	HxEventTypeSseAfterMessageEvent       HxEventType = "htmx:sseAfterMessage"
+	HxEventTypeSseBeforeMessageEvent      HxEventType = "htmx:sseBeforeMessage"
+	HxEventTypeSseClosedEvent             HxEventType = "htmx:sseClose"
+	HxEventTypeSseConnectedEvent          HxEventType = "htmx:sseOpen"
+	HxEventTypeSseConnectingEvent         HxEventType = "htmx:sseConnecting"
+	HxEventTypeSseErrorEvent              HxEventType = "htmx:sseError"
+	HxEventTypeSSEErrorEvent              HxEventType = "htmx:sseError"
+	HxEventTypeSSEOpenEvent               HxEventType = "htmx:sseOpen"
+	HxEventTypeSwap                       HxEventType = "htmx:swap"
+	HxEventTypeSwapErrorEvent             HxEventType = "htmx:swapError"
+	HxEventTypeTargetErrorEvent           HxEventType = "htmx:targetError"
+	HxEventTypeTimeoutEvent               HxEventType = "htmx:timeout"
+	HxEventTypeTrigger                    HxEventType = "htmx:trigger"
+	HxEventTypeValidationFailedEvent      HxEventType = "htmx:validation:failed"
+	HxEventTypeValidationHaltedEvent      HxEventType = "htmx:validation:halted"
+	HxEventTypeValidationValidateEvent    HxEventType = "htmx:validation:validate"
+	HxEventTypeXhrAbortEvent              HxEventType = "htmx:xhr:abort"
+	HxEventTypeXhrLoadEndEvent            HxEventType = "htmx:xhr:loadend"
+	HxEventTypeXhrLoadStartEvent          HxEventType = "htmx:xhr:loadstart"
+	HxEventTypeXhrProgressEvent           HxEventType = "htmx:xhr:progress"
+	HxEventTypeOobErrorNoTargetEvent      HxEventType = "htmx:oobErrorNoTarget"
+)
+
+type HxAttribute string // https://htmx.org/reference/#attributes
+
+func (a HxAttribute) String() string {
+	return string(a)
+}
+
+const (
+	HxAttributeBoost       HxAttribute = "hx-boost"
+	HxAttributeGet         HxAttribute = "hx-get"
+	HxAttributePost        HxAttribute = "hx-post"
+	HxAttributePushUrl     HxAttribute = "hx-push-url"
+	HxAttributeTarget      HxAttribute = "hx-target"
+	HxAttributeSelect      HxAttribute = "hx-select"
+	HxAttributeSelectOob   HxAttribute = "hx-select-oob"
+	HxAttributeSwap        HxAttribute = "hx-swap"
+	HxAttributeSwapOob     HxAttribute = "hx-swap-oob"
+	HxAttributeTrigger     HxAttribute = "hx-trigger"
+	HxAttributeConfirm     HxAttribute = "hx-confirm"
+	HxAttributePrompt      HxAttribute = "hx-prompt"
+	HxAttributeDelete      HxAttribute = "hx-delete"
+	HxAttributeOn          HxAttribute = "hx-on"
+	HxAttributePut         HxAttribute = "hx-put"
+	HxAttributePatch       HxAttribute = "hx-patch"
+	HxAttributeIndicator   HxAttribute = "hx-indicator"
+	HxAttributeEncoding    HxAttribute = "hx-encoding"
+	HxAttributeExt         HxAttribute = "hx-ext"
+	HxAttributeTarget404   HxAttribute = "hx-target-404"
+	HxAttributeTarget403   HxAttribute = "hx-target-403"
+	HxAttributeTarget401   HxAttribute = "hx-target-401"
+	HxAttributeTarget500   HxAttribute = "hx-target-500"
+	HxAttributeTarget5xx   HxAttribute = "hx-target-5xx"
+	HxAttributeTarget4xx   HxAttribute = "hx-target-4xx"
+	HxAttributeTargetError HxAttribute = "hx-target-error"
+	HxAttributeTarget50x   HxAttribute = "hx-target-50x"
+	HxAttributeDisable     HxAttribute = "hx-disable"
+	HxAttributeDisabledElt HxAttribute = "hx-disabled-elt"
+	HxAttributeValidate    HxAttribute = "hx-validate"
+	HxAttributeInclude     HxAttribute = "hx-include"
+	HxAttributeHeaders     HxAttribute = "hx-headers"
+	HxAttributeVars        HxAttribute = "hx-vars"
+	HxAttributeSync        HxAttribute = "hx-sync"
+	HxAttributeParams      HxAttribute = "hx-params"
+	HxAttributeVals        HxAttribute = "hx-vals"
 )
 
 // HxBoost sets the hx-boost attribute to enable or disable boosting.
 func HxBoost(v bool) Node {
-	return Attribute("hx-boost", conv.String(v))
+	return Attribute(HxAttributeBoost.String(), conv.String(v))
 }
 
 // HxGet sets the hx-get attribute to specify the URL for GET requests.
 func HxGet(url string) Node {
-	return Attribute("hx-get", url)
+	return Attribute(HxAttributeGet.String(), url)
 }
 
 // HxPost sets the hx-post attribute to specify the URL for POST requests.
 func HxPost(url string) Node {
-	return Attribute("hx-post", url)
+	return Attribute(HxAttributePost.String(), url)
 }
 
 // HxPushUrl sets the hx-push-url attribute to enable or disable URL pushing.
 func HxPushUrl(v bool) Node {
-	return Attribute("hx-boost", conv.String(v))
+	return Attribute(HxAttributeBoost.String(), conv.String(v))
 }
 
 // HxTarget sets the hx-target attribute to specify the target element for the response.
 func HxTarget(target string) Node {
-	return Attribute("hx-target", target)
+	return Attribute(HxAttributeTarget.String(), target)
 }
 
 // HxSelect sets the hx-select attribute to specify the target element for selection.
 func HxSelect(target string) Node {
-	return Attribute("hx-select", target)
+	return Attribute(HxAttributeSelect.String(), target)
 }
 
 // HxSelectOob sets the hx-select-oob attribute to specify the target element for out-of-band selection.
 func HxSelectOob(target string) Node {
-	return Attribute("hx-select-oob", target)
+	return Attribute(HxAttributeSelectOob.String(), target)
 }
 
 // HxSwap sets the hx-swap attribute to specify the target element for swapping.
 func HxSwap(target string) Node {
-	return Attribute("hx-swap", target)
+	return Attribute(HxAttributeSwap.String(), target)
 }
 
 // HxSwapOob sets the hx-swap-oob attribute to specify the target element for out-of-band swapping.
 func HxSwapOob(target string) Node {
-	return Attribute("hx-swap-oob", target)
+	return Attribute(HxAttributeSwapOob.String(), target)
 }
 
 // HxTrigger sets the hx-trigger attribute to specify the target element for triggering an event.
 func HxTrigger(target string) Node {
-	return Attribute("hx-trigger", target)
+	return Attribute(HxAttributeTrigger.String(), target)
 }
 
 // HxConfirm sets the hx-confirm attribute to display a confirmation message.
 func HxConfirm(msg string) Node {
-	return Attribute("hx-confirm", msg)
+	return Attribute(HxAttributeConfirm.String(), msg)
 }
 
 // HxPrompt sets the hx-prompt attribute to display a prompt message.
 func HxPrompt(msg string) Node {
-	return Attribute("hx-prompt", msg)
+	return Attribute(HxAttributePrompt.String(), msg)
 }
 
 // HxDelete sets the hx-delete attribute to specify the URL for DELETE requests.
 func HxDelete(url string) Node {
-	return Attribute("hx-delete", url)
+	return Attribute(HxAttributeDelete.String(), url)
 }
 
 // HxOn sets the hx-put-{target} attribute to specify the JavaScript code to execute on a PUT request.
@@ -99,87 +250,87 @@ func HxOn(target string, js string) Node {
 
 // HxPut sets the hx-put attribute to specify the URL for PUT requests.
 func HxPut(url string) Node {
-	return Attribute("hx-put", url)
+	return Attribute(HxAttributePut.String(), url)
 }
 
 // HxPatch sets the hx-patch attribute to specify the URL for PATCH requests.
 func HxPatch(url string) Node {
-	return Attribute("hx-patch", url)
+	return Attribute(HxAttributePatch.String(), url)
 }
 
 // HxIndicator sets the hx-indicator attribute to specify the target element for showing an indicator.
 func HxIndicator(target string) Node {
-	return Attribute("hx-indicator", target)
+	return Attribute(HxAttributeIndicator.String(), target)
 }
 
 // HxEncoding sets the hx-encoding attribute to specify the encoding type for form submission.
 func HxEncoding(enc string) Node {
-	return Attribute("hx-encoding", enc)
+	return Attribute(HxAttributeEncoding.String(), enc)
 }
 
 // HxExt sets the hx-ext attribute to specify the file extension for file uploads.
 func HxExt(ext string) Node {
-	return Attribute("hx-ext", ext)
+	return Attribute(HxAttributeExt.String(), ext)
 }
 
 // HxTarget404 sets the hx-target-404 attribute to specify the target element for 404 responses.
 func HxTarget404(target string) Node {
-	return Attribute("hx-target-404", target)
+	return Attribute(HxAttributeTarget404.String(), target)
 }
 
 // HxTarget403 sets the hx-target-403 attribute to specify the target element for 403 responses.
 func HxTarget403(target string) Node {
-	return Attribute("hx-target-403", target)
+	return Attribute(HxAttributeTarget403.String(), target)
 }
 
 // HxTarget401 sets the hx-target-401 attribute to specify the target element for 401 responses.
 func HxTarget401(target string) Node {
-	return Attribute("hx-target-401", target)
+	return Attribute(HxAttributeTarget401.String(), target)
 }
 
 // HxTarget500 sets the hx-target-500 attribute to specify the target element for 500 responses.
 func HxTarget500(target string) Node {
-	return Attribute("hx-target-500", target)
+	return Attribute(HxAttributeTarget500.String(), target)
 }
 
 // HxTarget5xx sets the hx-target-5xx attribute to specify the target element for 5xx responses.
 func HxTarget5xx(target string) Node {
-	return Attribute("hx-target-5*", target)
+	return Attribute(HxAttributeTarget5xx.String(), target)
 }
 
 // HxTarget4xx sets the hx-target-4xx attribute to specify the target element for 4xx responses.
 func HxTarget4xx(target string) Node {
-	return Attribute("hx-target-4*", target)
+	return Attribute(HxAttributeTarget4xx.String(), target)
 }
 
 // HxTargetError sets the hx-target-error attribute to specify the target element for error responses.
 func HxTargetError(target string) Node {
-	return Attribute("hx-target-error", target)
+	return Attribute(HxAttributeTargetError.String(), target)
 }
 
 // HxTarget50x sets the hx-target-50x attribute to specify the target element for 50x responses.
 func HxTarget50x(target string) Node {
-	return Attribute("hx-target-50*", target)
+	return Attribute(HxAttributeTarget5xx.String(), target)
 }
 
 // HxDisable sets the hx-disable attribute to disable htmx functionality.
 func HxDisable() Node {
-	return Attribute("hx-disable")
+	return Attribute(HxAttributeDisable.String())
 }
 
 // HxDisabledElt sets the hx-disable-elt attribute to disable the target element.
 func HxDisabledElt(target string) Node {
-	return Attribute("hx-disabled-elt", target)
+	return Attribute(HxAttributeDisabledElt.String(), target)
 }
 
 // HxValidate sets the hx-validate attribute to enable or disable form validation.
 func HxValidate(v bool) Node {
-	return Attribute("hx-validate", conv.String(v))
+	return Attribute(HxAttributeValidate.String(), conv.String(v))
 }
 
 // HxInclude sets the hx-include attribute to specify the target element for inclusion.
 func HxInclude(target string) Node {
-	return Attribute("hx-include", target)
+	return Attribute(HxAttributeInclude.String(), target)
 }
 
 // HxHeaders sets the hx-headers attribute to specify the headers for the request.
