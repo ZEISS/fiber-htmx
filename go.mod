@@ -1,6 +1,8 @@
 module github.com/zeiss/fiber-htmx
 
-go 1.23
+go 1.23.0
+
+toolchain go1.23.4
 
 require (
 	github.com/ettle/strcase v0.2.0
@@ -17,7 +19,7 @@ require (
 	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.15
 	github.com/zeiss/fiber-reload v0.1.1
-	github.com/zeiss/pkg v0.1.19
+	github.com/zeiss/pkg v0.1.20-0.20250106044546-2cb9c2123e21
 	gorm.io/gorm v1.25.12
 )
 
@@ -70,7 +72,7 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/net v0.31.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect

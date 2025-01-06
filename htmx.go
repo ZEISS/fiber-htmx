@@ -106,7 +106,7 @@ func ReSelect(c *fiber.Ctx, target string) {
 	c.Set(HXReselect.String(), target)
 }
 
-// Triggers is a helper function to trigger an event.
+// HxTriggers is a helper function to trigger an event.
 func HxTriggers(c *fiber.Ctx, target string) {
 	c.Set(HXTrigger.String(), target)
 }

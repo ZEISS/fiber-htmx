@@ -6,6 +6,7 @@ package htmx
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/zeiss/pkg/conv"
 	"github.com/zeiss/pkg/errorx"
@@ -223,9 +224,33 @@ func HxSwapOob(target string) Node {
 	return Attribute(HxAttributeSwapOob.String(), target)
 }
 
+const (
+	TriggerClick        = "click"
+	TriggerClickOnce    = TriggerClick + " once"
+	TriggerDblClick     = JSEventTypeDblClickEvent
+	TriggerKeyUpEnter   = "keyup[keyCode==13]"
+	TriggerEnterPressed = TriggerKeyUpEnter
+	TriggerBlur         = "blur"
+	TriggerEvery1s      = "every:1s"
+	TriggerEvery2s      = "every:2s"
+	TriggerEvery5s      = "every:5s"
+	TriggerEvery10s     = "every:10s"
+	TriggerEvery30s     = "every:30s"
+	TriggerEvery1m      = "every:1m"
+	TriggerLoad         = "onload"
+)
+
 // HxTrigger sets the hx-trigger attribute to specify the target element for triggering an event.
-func HxTrigger(target string) Node {
-	return Attribute(HxAttributeTrigger.String(), target)
+func HxTrigger(targets ...string) Node {
+	var b strings.Builder
+	for i, t := range targets {
+		if i > 0 {
+			b.WriteString(" ")
+		}
+		b.WriteString(t)
+	}
+
+	return Attribute(HxAttributeTrigger.String(), b.String())
 }
 
 // HxConfirm sets the hx-confirm attribute to display a confirmation message.

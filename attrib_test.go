@@ -165,18 +165,28 @@ func Test_HxTrigger(t *testing.T) {
 	tests := []struct {
 		name  string
 		want  string
-		event string
+		event []string
 	}{
 		{
 			name:  "hx-trigger",
 			want:  " hx-trigger=\"\"",
-			event: "",
+			event: []string{},
+		},
+		{
+			name:  "hx-trigger",
+			want:  " hx-trigger=\"click\"",
+			event: []string{"click"},
+		},
+		{
+			name:  "hx-trigger",
+			want:  " hx-trigger=\"click onload\"",
+			event: []string{htmx.TriggerClick, htmx.TriggerLoad},
 		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			h := htmx.HxTrigger(test.event)
+			h := htmx.HxTrigger(test.event...)
 			assert.Equal(t, test.want, h)
 		})
 	}

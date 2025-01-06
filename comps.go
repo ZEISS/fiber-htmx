@@ -247,6 +247,11 @@ func UnsafeRawScript(t string) Node {
 	return RawScript(t)
 }
 
+// Empty is a node that renders an empty string.
+func Empty() Node {
+	return Text("")
+}
+
 type group struct {
 	children []Node
 }
