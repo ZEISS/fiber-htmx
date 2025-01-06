@@ -23,10 +23,6 @@ A Go package to write HTML5 and HTMX components in Go. The package is designed t
 go get github.com/zeiss/fiber-htmx
 ```
 
-```html
-ht
-```
-
 The available web components are published in the `fiber-htmx` package.
 
 ```go
