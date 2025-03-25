@@ -1,37 +1,42 @@
-.DEFAULT_GOAL := release
+.DEFAULT_GOAL := build
 
+# Go variables
 GO 					?= go
-GO_RUN_TOOLS 		?= $(GO) run -modfile ./tools/go.mod
-GO_TEST 			?= $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
-GO_RELEASER 		?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
-GO_BENCHSTAT 		?= $(GO_RUN_TOOLS) golang.org/x/perf/cmd/benchstat
-GO_MOD 				?= $(shell ${GO} list -m)
+GO_TOOL 			?= $(GO) tool
+GO_TEST 			?= $(GO_TOOL) gotest.tools/gotestsum --format pkgname
+GO_RELEASER 		?= $(GO_TOOL) github.com/goreleaser/goreleaser/v2
 
 .PHONY: release
 release: ## Release the project.
 	$(GO_RELEASER) release --clean
 
+.PHONY: build
+build: ## Build the binary file.
+	$(GO_RELEASER) build --snapshot --clean
+
 .PHONY: generate
 generate: ## Generate code.
 	$(GO) generate ./...
 
-.PHONY: start
-start: ## Run air live reload.
-	$(GO_RUN_TOOLS) github.com/air-verse/air
-
-.PHONY: bundle
-bundle: ## Bundle the project.
-	$(GO_RUN_TOOLS) github.com/evanw/esbuild/cmd/esbuild --format=esm --packages=external --outdir=dist src/*.ts
-	# $(GO_RUN_TOOLS) github.com/evanw/esbuild/cmd/esbuild --bundle --sourcemap --platform=neutral --packages=external --outfile=dist/fiber-htmx.esm.js src/main.ts
-	# $(GO_RUN_TOOLS) github.com/evanw/esbuild/cmd/esbuild --bundle --minify --sourcemap --outfile=dist/fiber-htmx.min.js src/main.ts
-
-.PHONY: fmt
-fmt: ## Run go fmt against code.
-	$(GO_RUN_TOOLS) mvdan.cc/gofumpt -w .
-
 .PHONY: bench
 bench: ## Run benchmarks.
 	$(GO) test -bench=. ./...
+
+.PHONY: start
+start: ## Run air live reload.
+	$(GO_TOOL) github.com/air-verse/air
+
+.PHONY: bundle
+bundle: ## Bundle the project.
+	$(GO_TOOL) github.com/evanw/esbuild/cmd/esbuild --format=esm --packages=external --outdir=dist src/*.ts
+
+.PHONY: mocks
+mocks: ## Generate mocks.
+	$(GO_TOOL) mockery
+
+.PHONY: fmt
+fmt: ## Run go fmt against code.
+	$(GO_TOOL) mvdan.cc/gofumpt -w .
 
 .PHONY: vet
 vet: ## Run go vet against code.
@@ -44,13 +49,13 @@ test: fmt vet ## Run tests.
 
 .PHONY: lint
 lint: ## Run lint.
-	$(GO_RUN_TOOLS) github.com/golangci/golangci-lint/cmd/golangci-lint run --timeout 5m -c .golangci.yml
+	$(GO_TOOL) golangci-lint run --timeout 5m -c .golangci.yml
 
 .PHONY: clean
 clean: ## Remove previous build.
-	rm -rf .test .dist
-	find . -type f -name '*.gen.go' -exec rm {} +
-	git checkout go.mod
+	@rm -rf .test .dist
+	@find . -type f -name '*.gen.go' -exec rm {} +
+	@git checkout go.mod
 
 .PHONY: help
 help: ## Display this help screen.

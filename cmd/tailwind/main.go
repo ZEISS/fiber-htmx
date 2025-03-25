@@ -9,7 +9,7 @@ import (
 	"text/template"
 
 	"github.com/ettle/strcase"
-	"github.com/katallaxie/pkg/logger"
+	"github.com/katallaxie/pkg/logx"
 	"github.com/spf13/pflag"
 	"github.com/tdewolff/parse/v2"
 	"github.com/tdewolff/parse/v2/css"
@@ -23,7 +23,7 @@ func main() {
 	log.SetFlags(0)
 	log.SetOutput(os.Stderr)
 
-	logger.RedirectStdLog(logger.LogSink)
+	logx.RedirectStdLog(logx.LogSink)
 
 	f := &flags{}
 
