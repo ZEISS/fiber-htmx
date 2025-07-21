@@ -16,7 +16,7 @@ tool (
 require (
 	github.com/ettle/strcase v0.2.0
 	github.com/go-playground/validator/v10 v10.27.0
-	github.com/gofiber/fiber/v2 v2.52.8
+	github.com/gofiber/fiber/v2 v2.52.9
 	github.com/google/uuid v1.6.0
 	github.com/katallaxie/pkg v0.7.7
 	github.com/spf13/cobra v1.9.1
