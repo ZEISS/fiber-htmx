@@ -29,7 +29,7 @@ require (
 	github.com/zeiss/fiber-goth v1.2.15
 	github.com/zeiss/fiber-reload v0.1.1
 	github.com/zeiss/pkg v0.1.23
-	gorm.io/gorm v1.30.0
+	gorm.io/gorm v1.30.1
 )
 
 require (
