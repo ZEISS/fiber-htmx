@@ -24,7 +24,7 @@ require (
 	github.com/stretchr/testify v1.11.1
 	github.com/tdewolff/parse/v2 v2.8.10
 	github.com/valyala/fasthttp v1.69.0
-	github.com/yuin/goldmark v1.8.1
+	github.com/yuin/goldmark v1.8.2
 	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.15
 	github.com/zeiss/fiber-reload v0.1.1
