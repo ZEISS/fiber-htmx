@@ -22,7 +22,7 @@ require (
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/pflag v1.0.10
 	github.com/stretchr/testify v1.12.1
-	github.com/tdewolff/parse/v2 v2.8.19
+	github.com/tdewolff/parse/v2 v2.8.20
 	github.com/valyala/fasthttp v1.76.0
 	github.com/yuin/goldmark v1.8.6
 	github.com/zeiss/fiber-authz v1.0.33
