@@ -1,10 +1,15 @@
 .DEFAULT_GOAL := build
 
 # Go variables
-GO 					?= go
+GO 						?= go
 GO_TOOL 			?= $(GO) tool
 GO_TEST 			?= $(GO_TOOL) gotest.tools/gotestsum --format pkgname
-GO_RELEASER 		?= $(GO_TOOL) github.com/goreleaser/goreleaser/v2
+GO_RELEASER 	?= $(GO_TOOL) github.com/goreleaser/goreleaser
+GO_AIR 				?= air
+
+.PHONY: start
+start: ## Start the application.
+	$(GO_AIR) -c .air.toml
 
 .PHONY: release
 release: ## Release the project.
@@ -22,17 +27,9 @@ generate: ## Generate code.
 bench: ## Run benchmarks.
 	$(GO) test -bench=. ./...
 
-.PHONY: start
-start: ## Run air live reload.
-	$(GO_TOOL) github.com/air-verse/air
-
-.PHONY: bundle
-bundle: ## Bundle the project.
-	$(GO_TOOL) github.com/evanw/esbuild/cmd/esbuild --format=esm --packages=external --outdir=dist src/*.ts
-
 .PHONY: mocks
 mocks: ## Generate mocks.
-	$(GO_TOOL) mockery
+	$(GO_TOOL) github.com/vektra/mockery/v2
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.
@@ -49,7 +46,7 @@ test: fmt vet ## Run tests.
 
 .PHONY: lint
 lint: ## Run lint.
-	$(GO_TOOL) golangci-lint run --timeout 5m -c .golangci.yml
+	$(GO_TOOL) github.com/golangci/golangci-lint/v2/cmd/golangci-lint run --timeout 5m -c .golangci.yml
 
 .PHONY: clean
 clean: ## Remove previous build.

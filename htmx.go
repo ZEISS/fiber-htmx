@@ -7,23 +7,19 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	authz "github.com/zeiss/fiber-authz"
-	"github.com/zeiss/pkg/conv"
+	h "github.com/katallaxie/htmx"
+	"github.com/katallaxie/pkg/conv"
 )
 
 // The contextKey type is unexported to prevent collisions with context keys defined in
 // other packages.
 type contextKey int
 
-// The keys for the values in context
-const (
-	messagesKey contextKey = iota
-)
+// The keys for the values in context.
+const messagesKey contextKey = iota
 
-const (
-	// StatusStopPolling is a helper status code to stop polling.
-	StatusStopPolling = 286
-)
+// StatusStopPolling is a helper status code to stop polling.
+const StatusStopPolling = 286
 
 // HxRequestHeader is a helper type for htmx request headers.
 type HxRequestHeader string
@@ -58,10 +54,10 @@ func (h *HxResponseHeaders) Get(k HxResponseHeader) string {
 
 const (
 	HXLocation           HxResponseHeader = "HX-Location"             // Allows you to do a client-side redirect that does not do a full page reload
-	HXPushUrl            HxResponseHeader = "HX-Push-Url"             // pushes a new url into the history stack
+	HXPushURL            HxResponseHeader = "HX-Push-Url"             // pushes a new url into the history stack
 	HXRedirect           HxResponseHeader = "HX-Redirect"             // can be used to do a client-side redirect to a new location
 	HXRefresh            HxResponseHeader = "HX-Refresh"              // if set to "true" the client side will do a full refresh of the page
-	HXReplaceUrl         HxResponseHeader = "HX-Replace-Url"          // replaces the current URL in the location bar
+	HXReplaceURL         HxResponseHeader = "HX-Replace-Url"          // replaces the current URL in the location bar
 	HXReswap             HxResponseHeader = "HX-Reswap"               // Allows you to specify how the response will be swapped. See hx-swap for possible values
 	HXRetarget           HxResponseHeader = "HX-Retarget"             // A CSS selector that updates the target of the content update to a different element on the page
 	HXReselect           HxResponseHeader = "HX-Reselect"             // A CSS selector that allows you to choose which part of the response is used to be swapped in. Overrides an existing hx-select on the triggering element
@@ -88,7 +84,7 @@ func Redirect(c *fiber.Ctx, url string) {
 
 // ReplaceURL is a helper function to replace the current URL.
 func ReplaceURL(c *fiber.Ctx, url string) {
-	c.Set(HXReplaceUrl.String(), url)
+	c.Set(HXReplaceURL.String(), url)
 }
 
 // ReSwap is a helper function to swap the response.
@@ -157,20 +153,12 @@ func RenderPartial(c *fiber.Ctx) bool {
 }
 
 // RenderComp is a helper function to render a component.
-func RenderComp(c *fiber.Ctx, n Node, opt ...RenderOpt) error {
+func RenderComp(c *fiber.Ctx, n h.Node, opt ...RenderOpt) error {
 	for _, o := range opt {
 		o(c)
 	}
 
 	return n.Render(c)
-}
-
-// RenderCompFunc is a helper function to render a component function.
-type ControllerComponentFactory func(ctrl Controller) Node
-
-// ControllerComponent is a helper function to render a controller component.
-func ControllerComponent(ctrl Controller, fn ControllerComponentFactory) Node {
-	return fn(ctrl)
 }
 
 // StopPolling is a helper function to stop polling.
@@ -181,17 +169,12 @@ func StopPolling(c *fiber.Ctx) error {
 // FilterFunc is a function that filters the context.
 type FilterFunc func(c *fiber.Ctx) error
 
-// ControllerFactory is a factory function that creates a new controller.
-type ControllerFactory func() Controller
-
 // Config ...
 type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	Next func(c *fiber.Ctx) bool
 	// Filters is a list of filters that filter the context.
 	Filters []FilterFunc
-	// AuthzChecker is a function that authenticates the user.
-	AuthzChecker authz.AuthzChecker
 	// ErrorHandler is executed when an error is returned from fiber.Handler.
 	//
 	// Optional. Default: DefaultErrorHandler
@@ -204,11 +187,9 @@ var ConfigDefault = Config{
 	ErrorHandler: defaultErrorHandler,
 	// Filters is a list of filters that filter the context.
 	Filters: []FilterFunc{},
-	// AuthzChecker is a function that authenticates the user.
-	AuthzChecker: authz.NewNoop(),
 }
 
-// default ErrorHandler that process return error from fiber.Handler
+// default ErrorHandler that process return error from fiber.Handler.
 func defaultErrorHandler(_ *fiber.Ctx, _ error) error {
 	return fiber.ErrBadRequest
 }
@@ -229,8 +210,8 @@ func RenderStatusCode(err error) RenderOpt {
 	}
 }
 
-// NewCompHandler returns a new comp handler.
-func NewCompHandler(n Node, config ...Config) fiber.Handler {
+// NewHandler returns a new handler for a htmx.Node.
+func NewHandler(n h.Node, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
 	return func(c *fiber.Ctx) error {
@@ -250,18 +231,29 @@ func NewCompHandler(n Node, config ...Config) fiber.Handler {
 }
 
 // CompFunc is a helper type for component functions.
-type CompFunc func(c *fiber.Ctx) (Node, error)
+type CompFunc func(c *fiber.Ctx) (h.Node, error)
 
 // NewCompFuncHandler returns a new comp handler.
 func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
-	return func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) (err error) {
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
 		}
 
 		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
+
+		defer func() {
+			if r := recover(); r != nil {
+				var ok bool
+				err, ok = r.(error)
+				if !ok {
+					err = fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("%v", r))
+				}
+				err = cfg.ErrorHandler(c, err)
+			}
+		}()
 
 		n, err := handler(c)
 		if err != nil {
@@ -277,15 +269,8 @@ func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 	}
 }
 
-// NewHxControllerHandler returns a new htmx controller handler.
-// Deprecated: use NewControllerHandler instead.
-func NewHxControllerHandler(ctrl ControllerFactory, config ...Config) fiber.Handler {
-	return NewControllerHandler(ctrl, config...)
-}
-
-// NewControllerHandler returns a new htmx controller handler.
-// nolint:gocyclo
-func NewControllerHandler(factory ControllerFactory, config ...Config) fiber.Handler {
+// NewMessageHandler is a helper function to handle htmx messages.
+func NewMessageHandler(config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
 	return func(c *fiber.Ctx) (err error) {
@@ -293,111 +278,7 @@ func NewControllerHandler(factory ControllerFactory, config ...Config) fiber.Han
 			return c.Next()
 		}
 
-		ctrl := factory()
-
-		// Initialize the controller
-		err = ctrl.Init(c)
-		if err != nil {
-			return cfg.ErrorHandler(c, err)
-		}
-
-		// Recover from panic if controller is initialized
-		defer func() {
-			if r := recover(); r != nil {
-				var ok bool
-				err, ok = r.(error)
-				if !ok {
-					err = fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("%v", r))
-				}
-				err = ctrl.Error(err)
-			}
-		}()
-
-		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
-
-		auth, ok := ctrl.(authz.AuthzController) // check for authz from the controller
-		if ok && cfg.AuthzChecker != nil {
-			principal, err := auth.GetPrincipial(c)
-			if err != nil {
-				return ctrl.Error(err)
-			}
-
-			object, err := auth.GetObject(c)
-			if err != nil {
-				return ctrl.Error(err)
-			}
-
-			action, err := auth.GetAction(c)
-			if err != nil {
-				return ctrl.Error(err)
-			}
-
-			allowed, err := cfg.AuthzChecker.Allowed(c.Context(), principal, object, action)
-			if err != nil {
-				return ctrl.Error(err)
-			}
-
-			if !allowed {
-				return ctrl.Error(authz.ErrForbidden)
-			}
-		}
-
-		for _, f := range cfg.Filters {
-			err = f(c)
-			if err != nil {
-				return ctrl.Error(err)
-			}
-		}
-
-		err = ctrl.Prepare()
-		if err != nil {
-			return ctrl.Error(err)
-		}
-
-		switch c.Method() {
-		case fiber.MethodGet:
-			err = ctrl.Get()
-		case fiber.MethodPost:
-			err = ctrl.Post()
-		case fiber.MethodPut:
-			err = ctrl.Put()
-		case fiber.MethodPatch:
-			err = ctrl.Patch()
-		case fiber.MethodDelete:
-			err = ctrl.Delete()
-		case fiber.MethodOptions:
-			err = ctrl.Options()
-		case fiber.MethodTrace:
-			err = ctrl.Trace()
-		case fiber.MethodHead:
-			err = ctrl.Head()
-		default:
-			err = fiber.ErrMethodNotAllowed
-		}
-
-		if err != nil {
-			return ctrl.Error(err)
-		}
-
-		err = ctrl.Finalize()
-		if err != nil {
-			return ctrl.Error(err)
-		}
-
-		return nil
-	}
-}
-
-// NewHtmxMessageHandler is a helper function to handle htmx messages.
-func NewHtmxMessageHandler(config ...Config) fiber.Handler {
-	cfg := configDefault(config...)
-
-	return func(c *fiber.Ctx) (err error) {
-		if cfg.Next != nil && cfg.Next(c) {
-			return c.Next()
-		}
-
-		header := NewHtmxMessageHeader()
+		header := NewMessageHeader()
 		c.Locals(messagesKey, header.Messages)
 
 		if Request(c) {
@@ -408,7 +289,7 @@ func NewHtmxMessageHandler(config ...Config) fiber.Handler {
 	}
 }
 
-func addHeaders(c *fiber.Ctx, headers *HtmxMessageHeader) error {
+func addHeaders(c *fiber.Ctx, headers *MessageHeader) error {
 	b, err := json.Marshal(headers)
 	if err != nil {
 		return err
@@ -419,38 +300,38 @@ func addHeaders(c *fiber.Ctx, headers *HtmxMessageHeader) error {
 	return nil
 }
 
-// HtmxMessageHeader is a struct that represents a message header.
-type HtmxMessageHeader struct {
+// MessageHeader is a struct that represents a message header.
+type MessageHeader struct {
 	// Message is the message for the user.
-	Messages *HtmxMessages `json:"messages"`
+	Messages *Messages `json:"messages"`
 }
 
-// HtmxMessage is s struct that represents a message.
-type HtmxMessage struct {
+// Message is s struct that represents a message.
+type Message struct {
 	// Message is the message for the user.
 	Message string `json:"message"`
 	// Tags is the tag for the message e.g. info, warning, error, success.
 	Tags string `json:"tags"`
 }
 
-// NewHtmxMessageHeader returns a new htmx messages.
-func NewHtmxMessageHeader() *HtmxMessageHeader {
-	return &HtmxMessageHeader{
-		Messages: &HtmxMessages{},
+// NewMessageHeader returns a new htmx messages.
+func NewMessageHeader() *MessageHeader {
+	return &MessageHeader{
+		Messages: &Messages{},
 	}
 }
 
-// HtmxMessages is a slice of messages.
-type HtmxMessages []HtmxMessage
+// Message is a slice of messages.
+type Messages []Message
 
 // AddMessage adds a message to the messages.
-func (m *HtmxMessages) Add(msg ...HtmxMessage) {
+func (m *Messages) Add(msg ...Message) {
 	*m = append(*m, msg...)
 }
 
 // MessagesFromContext returns the messages from the context.
-func MessagesFromContext(c *fiber.Ctx) *HtmxMessages {
-	messages, ok := c.Locals(messagesKey).(*HtmxMessages)
+func MessagesFromContext(c *fiber.Ctx) *Messages {
+	messages, ok := c.Locals(messagesKey).(*Messages)
 	if !ok {
 		return nil
 	}
@@ -458,7 +339,7 @@ func MessagesFromContext(c *fiber.Ctx) *HtmxMessages {
 	return messages
 }
 
-// Helper function to set default values
+// Helper function to set default values.
 func configDefault(config ...Config) Config {
 	if len(config) < 1 {
 		return ConfigDefault
@@ -473,10 +354,6 @@ func configDefault(config ...Config) Config {
 
 	if cfg.Filters == nil {
 		cfg.Filters = ConfigDefault.Filters
-	}
-
-	if cfg.AuthzChecker == nil {
-		cfg.AuthzChecker = ConfigDefault.AuthzChecker
 	}
 
 	return cfg
