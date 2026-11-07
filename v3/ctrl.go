@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/katallaxie/fiber-goth/adapters"
 	"github.com/katallaxie/htmx"
 
 	"github.com/gofiber/fiber/v3"

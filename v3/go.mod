@@ -11,7 +11,6 @@ tool (
 
 require (
 	github.com/gofiber/fiber/v3 v3.6.1
-	github.com/katallaxie/fiber-goth v1.0.1
 	github.com/katallaxie/fiber-reload/v3 v3.0.0
 	github.com/katallaxie/htmx v0.5.9
 	github.com/katallaxie/pkg v0.7.11

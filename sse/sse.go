@@ -56,9 +56,9 @@ func (e *EventImpl) String() string {
 	sb := strings.Builder{}
 
 	if e.Event != "" {
-		sb.WriteString(fmt.Sprintf("event: %s\n", e.Event))
+		fmt.Fprintf(&sb, "event: %s\n", e.Event)
 	}
-	sb.WriteString(fmt.Sprintf("data: %v\n\n", e.Data))
+	fmt.Fprintf(&sb, "data: %v\n\n", e.Data)
 
 	return sb.String()
 }

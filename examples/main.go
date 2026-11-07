@@ -8,7 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/logger"
-	"github.com/gofiber/fiber/v3/middleware/recover"
+	fiber_recover "github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/gofiber/fiber/v3/middleware/requestid"
 	reload "github.com/katallaxie/fiber-reload/v3"
 	htmx "github.com/katallaxie/htmx"
@@ -57,7 +57,7 @@ func main() {
 	app := fiber.New()
 	app.Use(requestid.New())
 	app.Use(logger.New())
-	app.Use(recover.New())
+	app.Use(fiber_recover.New())
 	app.Use(reload.Environment(reload.Development))
 	reload.WithHotReload(app)
 
