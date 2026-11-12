@@ -20,7 +20,7 @@ require (
 	github.com/katallaxie/htmx v0.5.9
 	github.com/katallaxie/pkg v0.7.11
 	github.com/spf13/pflag v1.1.0
-	github.com/valyala/fasthttp v1.77.0
+	github.com/valyala/fasthttp v1.78.0
 	github.com/zeiss/fiber-htmx/v3 v3.0.0-20261107213022-799f65de4bc4
 )
 
@@ -378,7 +378,7 @@ require (
 	github.com/moby/moby/client v0.5.1 // indirect
 	github.com/moby/term v0.5.2 // indirect
 	github.com/modelcontextprotocol/registry v1.8.7 // indirect
-	github.com/molecule-man/go-brrr v1.3.0 // indirect
+	github.com/molecule-man/go-brrr v1.3.1 // indirect
 	github.com/moricho/tparallel v0.3.2 // indirect
 	github.com/mr-tron/base58 v1.2.0 // indirect
 	github.com/muesli/cancelreader v0.2.2 // indirect
