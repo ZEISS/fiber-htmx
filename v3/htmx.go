@@ -56,98 +56,103 @@ func (h *HxResponseHeaders) Get(k HxResponseHeader) string {
 }
 
 const (
-	HXLocation           HxResponseHeader = "HX-Location"             // Allows you to do a client-side redirect that does not do a full page reload
-	HXPushURL            HxResponseHeader = "HX-Push-Url"             // pushes a new url into the history stack
-	HXRedirect           HxResponseHeader = "HX-Redirect"             // can be used to do a client-side redirect to a new location
-	HXRefresh            HxResponseHeader = "HX-Refresh"              // if set to "true" the client side will do a full refresh of the page
-	HXReplaceURL         HxResponseHeader = "HX-Replace-Url"          // replaces the current URL in the location bar
-	HXReswap             HxResponseHeader = "HX-Reswap"               // Allows you to specify how the response will be swapped. See hx-swap for possible values
-	HXRetarget           HxResponseHeader = "HX-Retarget"             // A CSS selector that updates the target of the content update to a different element on the page
-	HXReselect           HxResponseHeader = "HX-Reselect"             // A CSS selector that allows you to choose which part of the response is used to be swapped in. Overrides an existing hx-select on the triggering element
-	HXTrigger            HxResponseHeader = "HX-Trigger"              // allows you to trigger client side events, see the documentation for more info
-	HXTriggerAfterSettle HxResponseHeader = "HX-Trigger-After-Settle" // allows you to trigger client side events, see the documentation for more info
-	HXTriggerAfterSwap   HxResponseHeader = "HX-Trigger-After-Swap"   // allows you to trigger client side events, see the documentation for more info
+	HxResponseLocation           = "HX-Location"             // Allows you to do a client-side redirect that does not do a full page reload
+	HxResponsePushURL            = "HX-Push-Url"             // pushes a new url into the history stack
+	HxResponseRedirect           = "HX-Redirect"             // can be used to do a client-side redirect to a new location
+	HxResponseRefresh            = "HX-Refresh"              // if set to "true" the client side will do a full refresh of the page
+	HxResponseReplaceURL         = "HX-Replace-Url"          // replaces the current URL in the location bar
+	HxResponseReswap             = "HX-Reswap"               // Allows you to specify how the response will be swapped. See hx-swap for possible values
+	HxResponseRetarget           = "HX-Retarget"             // A CSS selector that updates the target of the content update to a different element on the page
+	HxResponseReselect           = "HX-Reselect"             // A CSS selector that allows you to choose which part of the response is used to be swapped in. Overrides an existing hx-select on the triggering element
+	HxResponseTrigger            = "HX-Trigger"              // allows you to trigger client side events, see the documentation for more info
+	HxResponseTriggerAfterSettle = "HX-Trigger-After-Settle" // allows you to trigger client side events, see the documentation for more info
+	HxResponseTriggerAfterSwap   = "HX-Trigger-After-Swap"   // allows you to trigger client side events, see the documentation for more info
 )
 
 const (
-	HxRequestHeaderBoosted               HxRequestHeader = "HX-Boosted"
-	HxRequestHeaderCurrentURL            HxRequestHeader = "HX-Current-URL"
-	HxRequestHeaderHistoryRestoreRequest HxRequestHeader = "HX-History-Restore-Request"
-	HxRequestHeaderPrompt                HxRequestHeader = "HX-Prompt"
-	HxRequestHeaderRequest               HxRequestHeader = "HX-Request"
-	HxRequestHeaderTarget                HxRequestHeader = "HX-Target"
-	HxRequestHeaderTrigger               HxRequestHeader = "HX-Trigger"
-	HxRequestHeaderTriggerName           HxRequestHeader = "HX-Trigger-Name"
+	HxRequestHeaderBoosted               = "HX-Boosted"
+	HxRequestHeaderCurrentURL            = "HX-Current-URL"
+	HxRequestHeaderHistoryRestoreRequest = "HX-History-Restore-Request"
+	HxRequestHeaderPrompt                = "HX-Prompt"
+	HxRequestHeaderRequest               = "HX-Request"
+	HxRequestHeaderTarget                = "HX-Target"
+	HxRequestHeaderTrigger               = "HX-Trigger"
+	HxRequestHeaderTriggerName           = "HX-Trigger-Name"
 )
 
 // Redirect is a helper function to redirect the client.
 func Redirect(c fiber.Ctx, url string) {
-	c.Set(HXRedirect.String(), url)
+	c.Set(HxResponseRedirect, url)
 }
 
 // ReplaceURL is a helper function to replace the current URL.
 func ReplaceURL(c fiber.Ctx, url string) {
-	c.Set(HXReplaceURL.String(), url)
+	c.Set(HxResponseReplaceURL, url)
 }
 
 // ReSwap is a helper function to swap the response.
 func ReSwap(c fiber.Ctx, target string) {
-	c.Set(HXReswap.String(), target)
+	c.Set(HxResponseReswap, target)
+}
+
+// ReSwapOuterHTML is a helper function to swap the response with outerHTML.
+func ReSwapOuterHTML(c fiber.Ctx) {
+	c.Set(HxResponseReswap, "outerHTML")
 }
 
 // ReTarget is a helper function to retarget the response.
 func ReTarget(c fiber.Ctx, target string) {
-	c.Set(HXRetarget.String(), target)
+	c.Set(HxResponseRetarget, target)
 }
 
 // ReSelect is a helper function to reselect the response.
 func ReSelect(c fiber.Ctx, target string) {
-	c.Set(HXReselect.String(), target)
+	c.Set(HxResponseReselect, target)
 }
 
 // HxTriggers is a helper function to trigger an event.
 func HxTriggers(c fiber.Ctx, target string) {
-	c.Set(HXTrigger.String(), target)
+	c.Set(HxResponseTrigger, target)
 }
 
 // Boosted returns true if the request is boosted.
 func Boosted(c fiber.Ctx) bool {
-	return conv.Bool(c.Get(HxRequestHeaderBoosted.String()))
+	return conv.Bool(c.Get(HxRequestHeaderBoosted))
 }
 
 // CurrentURL returns the current URL.
 func CurrentURL(c fiber.Ctx) string {
-	return c.Get(HxRequestHeaderCurrentURL.String())
+	return c.Get(HxRequestHeaderCurrentURL)
 }
 
 // HistoryRestoreRequest returns true if the request is a history restore request.
 func HistoryRestoreRequest(c fiber.Ctx) bool {
-	return conv.Bool(c.Get(HxRequestHeaderHistoryRestoreRequest.String()))
+	return conv.Bool(c.Get(HxRequestHeaderHistoryRestoreRequest))
 }
 
 // Prompt returns the prompt.
 func Prompt(c fiber.Ctx) string {
-	return c.Get(HxRequestHeaderPrompt.String())
+	return c.Get(HxRequestHeaderPrompt)
 }
 
 // Request returns true if the request is an htmx request.
 func Request(c fiber.Ctx) bool {
-	return conv.Bool(c.Get(HxRequestHeaderRequest.String()))
+	return conv.Bool(c.Get(HxRequestHeaderRequest))
 }
 
 // Targets is a helper function to get the target.
 func Targets(c fiber.Ctx) string {
-	return c.Get(HxRequestHeaderTarget.String())
+	return c.Get(HxRequestHeaderTarget)
 }
 
 // TriggerName is a helper function to get the trigger name.
 func TriggerName(c fiber.Ctx) string {
-	return c.Get(HxRequestHeaderTriggerName.String())
+	return c.Get(HxRequestHeaderTriggerName)
 }
 
 // Trigger is a helper function to trigger an event.
 func Trigger(c fiber.Ctx, target string) {
-	c.Set(HxRequestHeaderTrigger.String(), target)
+	c.Set(HxRequestHeaderTrigger, target)
 }
 
 // RenderPartial returns true if the request is an htmx request.
@@ -358,7 +363,7 @@ func addHeaders(c fiber.Ctx, headers *MessageHeader) error {
 		return err
 	}
 
-	c.Append(HXTrigger.String(), string(b))
+	c.Append(HxResponseTrigger, string(b))
 
 	return nil
 }

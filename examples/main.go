@@ -15,16 +15,24 @@ import (
 	slogx "github.com/zeiss/fiber-slogx"
 	htmx "github.com/zeiss/htmx"
 	"github.com/zeiss/htmx/buttons"
+	"github.com/zeiss/htmx/imports"
+	"github.com/zeiss/htmx/imports/cache"
+	"github.com/zeiss/htmx/imports/jsdeliver"
 )
 
 var addr = ":3000"
 
-type GetHelloWorldController struct {
+type HelloWorldController struct {
 	fiber_htmx.UnimplementedController
 }
 
-func (ctrl *GetHelloWorldController) Get(c fiber.Ctx) error {
+func (ctrl *HelloWorldController) Get(c fiber.Ctx) error {
 	return Demo().Render(c)
+}
+
+func (ctrl *HelloWorldController) Post(c fiber.Ctx) error {
+	fiber_htmx.ReSwapOuterHTML(c)
+	return htmx.Text("Success").Render(c)
 }
 
 func Demo() htmx.Node {
@@ -37,10 +45,34 @@ func Demo() htmx.Node {
 					htmx.Src("https://unpkg.com/fiber-reload@0.9.0/reload.js"),
 					htmx.Type("text/javascript"),
 				),
+				htmx.Imports(
+					htmx.ImportsProp{
+						Resolver: cache.New(jsdeliver.New()),
+						Pkgs: []imports.ExactPackage{
+							{
+								Name:    "htmx.org",
+								Version: "4.0.1",
+							},
+						},
+						Requires: []imports.Require{
+							{
+								File: "dist/htmx.esm.js",
+							},
+						},
+					},
+				),
+				htmx.Script(
+					htmx.Type("module"),
+					htmx.Raw(`import htmx from "htmx.org";`),
+				),
 			},
 		},
 		htmx.Body(
-			buttons.Button(buttons.ButtonProps{}, htmx.Text("Demo")),
+			buttons.Button(
+				buttons.ButtonProps{},
+				htmx.HxPost("/"),
+				htmx.Text("Demo"),
+			),
 		),
 	)
 }
@@ -63,9 +95,10 @@ func main() {
 	app.Use(reload.Environment(reload.Development))
 	reload.WithHotReload(app)
 
-	ctrl := &GetHelloWorldController{}
+	ctrl := &HelloWorldController{}
 
 	app.Get("/", fiber_htmx.Handle(ctrl))
+	app.Post("/", fiber_htmx.Handle(ctrl))
 
 	err := app.Listen(addr)
 	if err != nil {
