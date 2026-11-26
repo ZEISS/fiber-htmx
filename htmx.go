@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	h "github.com/katallaxie/htmx"
-	"github.com/katallaxie/pkg/conv"
+	h "github.com/zeiss/htmx"
+	"github.com/zeiss/pkg/conv"
 )
 
 // The contextKey type is unexported to prevent collisions with context keys defined in

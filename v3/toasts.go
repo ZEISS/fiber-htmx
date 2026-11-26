@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/katallaxie/htmx"
+	"github.com/zeiss/htmx"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -16,15 +16,14 @@ var ErrToastsUnexpectedError = Error("there has been an unexpected error")
 var ToastsErrorHandler = func(c fiber.Ctx, err error) error {
 	code := fiber.StatusInternalServerError
 
-	var toast Toast
+	var toast *Toast
 	if !errors.As(err, &toast) {
 		toast = ErrToastsUnexpectedError
 	}
 
-	var e *fiber.Error // if this is not a toast then use the error message
-	if errors.As(err, &e) {
-		code = e.Code
-		toast = Error(e.Message)
+	if fiberErr, ok := errors.AsType[*fiber.Error](err); ok {
+		code = fiberErr.Code
+		toast = Error(fiberErr.Message)
 	}
 
 	if toast.Level != SUCCESS {
@@ -61,22 +60,22 @@ type Toast struct {
 }
 
 // New returns a new Toast.
-func New(level string, message string, code ...int) Toast {
+func New(level string, message string, code ...int) *Toast {
 	statusCode := 200
 	if len(code) > 0 {
 		statusCode = code[0]
 	}
 
-	return Toast{level, message, statusCode}
+	return &Toast{level, message, statusCode}
 }
 
 // Error returns the error message.
-func (t Toast) Error() string {
+func (t *Toast) Error() string {
 	return t.Message
 }
 
 // Info returns an info message.
-func Info(message string, code ...int) Toast {
+func Info(message string, code ...int) *Toast {
 	statusCode := 200
 	if len(code) > 0 {
 		statusCode = code[0]
@@ -97,7 +96,7 @@ func Success(c fiber.Ctx, message string, code ...int) {
 }
 
 // Error returns an error message.
-func Error(message string, code ...int) Toast {
+func Error(message string, code ...int) *Toast {
 	statusCode := 500
 	if len(code) > 0 {
 		statusCode = code[0]

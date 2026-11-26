@@ -1,17 +1,10 @@
 package htmx
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 
-	"github.com/katallaxie/htmx"
-
 	"github.com/gofiber/fiber/v3"
-	reload "github.com/katallaxie/fiber-reload/v3"
-	"github.com/katallaxie/pkg/conv"
-	goth "github.com/zeiss/fiber-goth/v3"
-	"github.com/zeiss/fiber-goth/v3/adapters"
 	"gorm.io/gorm"
 )
 
@@ -20,202 +13,94 @@ var ErrUnimplemented = fiber.NewError(fiber.StatusNotImplemented, "method not im
 
 // Controller is the interface for the htmx controller.
 type Controller interface {
-	// Init is called when the controller is initialized.
-	Init(c fiber.Ctx) error
 	// Prepare is called before the controller is executed.
-	Prepare() error
+	Prepare(c fiber.Ctx) error
 	// Finalize is called after the controller is executed.
-	Finalize() error
+	Finalize(c fiber.Ctx) error
+	// Error is called when the controller returns an error.
+	Error(c fiber.Ctx, err ...error) error
 	// Get is called when the controller is executed with the GET method.
-	Get() error
+	Get(c fiber.Ctx) error
 	// Post is called when the controller is executed with the POST method.
-	Post() error
+	Post(c fiber.Ctx) error
 	// Put is called when the controller is executed with the PUT method.
-	Put() error
+	Put(c fiber.Ctx) error
 	// Patch is called when the controller is executed with the PATCH method.
-	Patch() error
+	Patch(c fiber.Ctx) error
 	// Delete is called when the controller is executed with the DELETE method.
-	Delete() error
+	Delete(c fiber.Ctx) error
 	// Options is called when the controller is executed with the OPTIONS method.
-	Options() error
+	Options(c fiber.Ctx) error
 	// Trace is called when the controller is executed with the TRACE method.
-	Trace() error
-	// Head  is called when the controller is executed with the HEAD method.
-	Head() error
+	Trace(c fiber.Ctx) error
+	// Head is called when the controller is executed with the HEAD method.
+	Head(c fiber.Ctx) error
 	// Reset resets the controller.
 	Reset()
-	// Clone returns a new instance of the controller.
-	Clone() Controller
 }
 
 var _ Controller = (*UnimplementedController)(nil)
 
 // UnimplementedController is the default controller implementation.
-type UnimplementedController struct {
-	ctx fiber.Ctx
-}
-
-// Init is called when the controller is initialized.
-func (c *UnimplementedController) Init(ctx fiber.Ctx) error {
-	c.Reset()
-	c.ctx = ctx
-
-	return nil
-}
+type UnimplementedController struct{}
 
 // Prepare is called before the controller is executed.
-func (c *UnimplementedController) Prepare() error {
+func (ctrl *UnimplementedController) Prepare(c fiber.Ctx) error {
 	return nil
 }
 
 // Finalize is called after the controller is executed.
-func (c *UnimplementedController) Finalize() error {
+func (ctrl *UnimplementedController) Finalize(c fiber.Ctx) error {
 	return nil
 }
 
 // Get is called when the controller is executed with the GET method.
-func (c *UnimplementedController) Get() error {
+func (ctrl *UnimplementedController) Get(c fiber.Ctx) error {
 	return ErrUnimplemented
 }
 
 // Post is called when the controller is executed with the POST method.
-func (c *UnimplementedController) Post() error {
+func (ctrl *UnimplementedController) Post(c fiber.Ctx) error {
 	return ErrUnimplemented
 }
 
 // Put is called when the controller is executed with the PUT method.
-func (c *UnimplementedController) Put() error {
+func (ctrl *UnimplementedController) Put(c fiber.Ctx) error {
 	return ErrUnimplemented
 }
 
 // Patch is called when the controller is executed with the PATCH method.
-func (c *UnimplementedController) Patch() error {
+func (ctrl *UnimplementedController) Patch(c fiber.Ctx) error {
 	return ErrUnimplemented
 }
 
 // Delete is called when the controller is executed with the DELETE method.
-func (c *UnimplementedController) Delete() error {
+func (ctrl *UnimplementedController) Delete(c fiber.Ctx) error {
 	return ErrUnimplemented
 }
 
 // Options is called when the controller is executed with the OPTIONS method.
-func (c *UnimplementedController) Options() error {
+func (ctrl *UnimplementedController) Options(c fiber.Ctx) error {
 	return ErrUnimplemented
 }
 
 // Head is called when the controller is executed with the HEAD method.
-func (c *UnimplementedController) Head() error {
+func (ctrl *UnimplementedController) Head(c fiber.Ctx) error {
 	return ErrUnimplemented
 }
 
 // Trace is called when the controller is executed with the TRACE method.
-func (c *UnimplementedController) Trace() error {
+func (ctrl *UnimplementedController) Trace(c fiber.Ctx) error {
 	return ErrUnimplemented
 }
 
-// BindForm binds the form to the given struct.
-func (c *UnimplementedController) BindBody(obj interface{}) error {
-	return c.ctx.Bind().Body(obj)
-}
-
-// BindQuery binds the query to the given struct.
-func (c *UnimplementedController) BindQuery(obj interface{}) error {
-	return c.ctx.Bind().Query(obj)
-}
-
-// BindAll binds the body and query to the given struct.
-func (c *UnimplementedController) BindAll(obj interface{}) error {
-	return c.ctx.Bind().All(obj)
-}
-
-// Values is a helper function to get the values from the context.
-func (c *UnimplementedController) Values(key any) (val any) {
-	return c.ctx.Value(key)
-}
-
-// ValuesString is a helper function to get the values as a string from the context.
-func (c *UnimplementedController) ValuesString(key any) (val string) {
-	return conv.String(c.ctx.Value(key))
-}
-
-// ValuesInt is a helper function to get the values as an int from the context.
-func (c *UnimplementedController) ValuesInt(key any) (val int) {
-	return conv.Int(c.ctx.Value(key))
-}
-
-// ValuesBool is a helper function to get the values as a bool from the context.
-func (c *UnimplementedController) ValuesBool(key any) (val bool) {
-	return conv.Bool(c.ctx.Value(key))
-}
-
-// Session is a helper function to get the session from the context.
-func (c *UnimplementedController) Session() adapters.GothSession {
-	session, err := goth.SessionFromContext(c.ctx)
-	if err != nil {
-		return adapters.GothSession{}
-	}
-
-	return session
-}
-
-// Messages is a helper function to get the message from the context.
-func (c *UnimplementedController) Messages(msgs ...Message) {
-	m := MessagesFromContext(c.ctx)
-	m.Add(msgs...)
-}
-
-// Context returns the context.
-func (c *UnimplementedController) Context() context.Context {
-	return c.ctx
-}
-
-// Ctx returns the fiber.Ctx.
-func (c *UnimplementedController) Ctx() fiber.Ctx {
-	return c.ctx
-}
-
-// Render is a helper function to render a component.
-func (c *UnimplementedController) Render(node htmx.Node, opt ...RenderOpt) error {
-	return RenderComp(c.ctx, node, opt...)
-}
-
-// Clone returns a new instance of the controller.
-func (c *UnimplementedController) Clone() Controller {
-	copy := *c
-	copy.Reset()
-
-	return &copy
-}
-
-// IsDevelopment returns true if the environment is development.
-func (c *UnimplementedController) IsDevelopment() bool {
-	return reload.IsDevelopment(c.ctx.Context())
-}
-
-// IsProduction returns true if the environment is production.
-func (c *UnimplementedController) IsProduction() bool {
-	return reload.IsProduction(c.ctx.Context())
-}
-
-// Redirect redirects to the given path.
-func (c *UnimplementedController) Redirect(path string) {
-	Redirect(c.ctx, path)
-}
-
-// Path returns the path.
-func (c *UnimplementedController) Path() string {
-	return c.ctx.Path()
-}
-
-// OriginalURL returns the original URL.
-func (c *UnimplementedController) OriginalURL() string {
-	return c.ctx.OriginalURL()
+// Error is called when the controller returns an error.
+func (ctrl *UnimplementedController) Error(c fiber.Ctx, err ...error) error {
+	return ErrUnimplemented
 }
 
 // Reset resets the controller.
-func (c *UnimplementedController) Reset() {
-	c.ctx = nil
-}
+func (ctrl *UnimplementedController) Reset() {}
 
 var _ TransactionController = (*UnimplementedTransactionController)(nil)
 

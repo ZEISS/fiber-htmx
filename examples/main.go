@@ -2,32 +2,29 @@ package main
 
 import (
 	"log"
+	"log/slog"
 	"os"
 
-	handler "github.com/zeiss/fiber-htmx/v3"
+	fiber_htmx "github.com/zeiss/fiber-htmx/v3"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/fiber/v3/middleware/logger"
-	fiber_recover "github.com/gofiber/fiber/v3/middleware/recover"
+	safe "github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/gofiber/fiber/v3/middleware/requestid"
-	reload "github.com/katallaxie/fiber-reload/v3"
-	htmx "github.com/katallaxie/htmx"
-	"github.com/katallaxie/htmx/buttons"
 	"github.com/spf13/pflag"
+	reload "github.com/zeiss/fiber-reload/v3"
+	slogx "github.com/zeiss/fiber-slogx"
+	htmx "github.com/zeiss/htmx"
+	"github.com/zeiss/htmx/buttons"
 )
 
 var addr = ":3000"
 
 type GetHelloWorldController struct {
-	handler.UnimplementedController
+	fiber_htmx.UnimplementedController
 }
 
-func (c *GetHelloWorldController) Get() error {
-	return c.Render(Demo())
-}
-
-func (c *GetHelloWorldController) Clone() handler.Controller {
-	return &GetHelloWorldController{}
+func (ctrl *GetHelloWorldController) Get(c fiber.Ctx) error {
+	return Demo().Render(c)
 }
 
 func Demo() htmx.Node {
@@ -52,16 +49,23 @@ func main() {
 	log.SetFlags(0)
 	log.SetOutput(os.Stderr)
 
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	logger = logger.With("env", "development")
+
 	pflag.StringVar(&addr, "addr", addr, "address to listen on")
+
+	cfg := slogx.Config{}
 
 	app := fiber.New()
 	app.Use(requestid.New())
-	app.Use(logger.New())
-	app.Use(fiber_recover.New())
+	app.Use(slogx.New(logger.WithGroup("http"), cfg))
+	app.Use(safe.New())
 	app.Use(reload.Environment(reload.Development))
 	reload.WithHotReload(app)
 
-	app.Get("/", handler.NewControllerHandler(&GetHelloWorldController{}))
+	ctrl := &GetHelloWorldController{}
+
+	app.Get("/", fiber_htmx.Handle(ctrl))
 
 	err := app.Listen(addr)
 	if err != nil {

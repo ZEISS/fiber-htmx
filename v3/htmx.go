@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/katallaxie/htmx"
+	"github.com/zeiss/htmx"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/zeiss/pkg/conv"
@@ -155,15 +155,6 @@ func RenderPartial(c fiber.Ctx) bool {
 	return (Request(c) || Boosted(c)) && !HistoryRestoreRequest(c)
 }
 
-// RenderComp is a helper function to render a component.
-func RenderComp(c fiber.Ctx, n htmx.Node, opt ...RenderOpt) error {
-	for _, o := range opt {
-		o(c)
-	}
-
-	return n.Render(c)
-}
-
 // StopPolling is a helper function to stop polling.
 func StopPolling(c fiber.Ctx) error {
 	return c.SendStatus(StatusStopPolling)
@@ -276,8 +267,8 @@ func NewCompFuncHandler(handler CompFunc, config ...Config) fiber.Handler {
 	}
 }
 
-// NewControllerHandler returns a new htmx controller handler.
-func NewControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
+// Handle returns a new htmx controller handler.
+func Handle(ctrl Controller, config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
 	return func(c fiber.Ctx) (err error) {
@@ -285,16 +276,6 @@ func NewControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 			return c.Next()
 		}
 
-		// Clone the controller to avoid spoiling data
-		i := ctrl.Clone()
-
-		// Initialize the controller
-		err = i.Init(c)
-		if err != nil {
-			return cfg.ErrorHandler(c, err)
-		}
-
-		// Recover from panic if controller is panicking.
 		defer func() {
 			if r := recover(); r != nil {
 				var ok bool
@@ -307,35 +288,33 @@ func NewControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 
 		c.Set(fiber.HeaderContentType, cfg.ContentType)
 
-		err = slices.FailForEach(func(v FilterFunc, i int) error {
-			return v(c)
-		}, cfg.Filters...)
+		err = slices.FailForEach(func(v FilterFunc, i int) error { return v(c) }, cfg.Filters...)
 		if err != nil {
 			return cfg.ErrorHandler(c, err)
 		}
 
-		err = i.Prepare()
+		err = ctrl.Prepare(c)
 		if err != nil {
 			return cfg.ErrorHandler(c, err)
 		}
 
 		switch c.Method() {
 		case fiber.MethodGet:
-			err = i.Get()
+			err = ctrl.Get(c)
 		case fiber.MethodPost:
-			err = i.Post()
+			err = ctrl.Post(c)
 		case fiber.MethodPut:
-			err = i.Put()
+			err = ctrl.Put(c)
 		case fiber.MethodPatch:
-			err = i.Patch()
+			err = ctrl.Patch(c)
 		case fiber.MethodDelete:
-			err = i.Delete()
+			err = ctrl.Delete(c)
 		case fiber.MethodOptions:
-			err = i.Options()
+			err = ctrl.Options(c)
 		case fiber.MethodTrace:
-			err = i.Trace()
+			err = ctrl.Trace(c)
 		case fiber.MethodHead:
-			err = i.Head()
+			err = ctrl.Head(c)
 		default:
 			err = fiber.ErrMethodNotAllowed
 		}
@@ -344,7 +323,7 @@ func NewControllerHandler(ctrl Controller, config ...Config) fiber.Handler {
 			return cfg.ErrorHandler(c, err)
 		}
 
-		err = i.Finalize()
+		err = ctrl.Finalize(c)
 		if err != nil {
 			return cfg.ErrorHandler(c, err)
 		}

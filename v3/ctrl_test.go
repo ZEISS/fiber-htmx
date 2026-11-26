@@ -16,7 +16,6 @@ func TestUnimplementedTransactionController(t *testing.T) {
 
 func TestUnimplementedClone(t *testing.T) {
 	ctrl := htmx.UnimplementedController{}
-	clone := ctrl.Clone()
-	require.NotNil(t, clone)
-	require.Implements(t, (*htmx.Controller)(nil), clone)
+	require.NotNil(t, ctrl)
+	require.Implements(t, (*htmx.Controller)(nil), ctrl)
 }
